@@ -123,7 +123,7 @@ In Cursor: type `/` and search for the agent name in agent mode.
 |---|---|---|
 | [idf-agents-store](idf-agents-store/README.md) | 9 | Structured software delivery — design, risk, UAT, RCA, process health, and more |
 | [devops-agents-store](devops-agents-store/README.md) | 1 | Infrastructure provisioning and IaC generation |
-| [architect-agents-store](architect-agents-store/README.md) | — | Architecture and system design *(coming soon)* |
+| [architect-agents-store](architect-agents-store/README.md) | 1 | Architecture review and deployment inspection — cloud deployment fitness assessment |
 | [coding-agents-store](coding-agents-store/README.md) | 1 | Code quality and targeted improvements — error handling audit |
 | [qa-agents-store](qa-agents-store/README.md) | — | Testing and quality assurance *(coming soon)* |
 | [ux-agents-store](ux-agents-store/README.md) | — | UX design and research *(coming soon)* |
