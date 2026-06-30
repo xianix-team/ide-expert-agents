@@ -241,3 +241,18 @@ Once the design artifact is written (or confirmed as not needed), state clearly:
 > "Design foundation is set. I'll now propose units — one at a time — starting with the first logical slice of [intent name]."
 
 Continue directly into the mob elaboration turn structure. Do not pause for engineer acknowledgment before proposing the first unit.
+
+---
+
+## Optional — Confluence Integration
+
+If the Atlassian MCP server is connected, offer to publish the design artifact to Confluence before handing off:
+
+> "The Atlassian MCP server is available. Would you like me to publish the design decisions to Confluence? If yes, please provide the Confluence space key and the parent page name (or ID) where it should live."
+
+If the engineer says yes:
+- Create or update a Confluence page titled `Design — [intent name]`
+- Content: the full design artifact (API contracts, data models, architectural patterns, ADRs, elaboration constraints)
+- Add the Confluence page URL to the design artifact file under a `**Confluence:**` field
+
+If the Atlassian MCP server is not connected, skip this step silently — do not mention it.

@@ -193,4 +193,22 @@ Findings skipped: [N] (engineer chose not to create backlog items)
 
 Next audit scheduled: YYYY-MM-DD
 Process Configuration updated in master rule file.
+
+---
+
+## Optional — Jira Integration
+
+If the Atlassian MCP server is connected, offer to create Jira tickets for the remediation backlog:
+
+> "The Atlassian MCP server is available. Would you like me to create Jira tickets for the [N] remediation items? If yes, please provide the Jira project key."
+
+If the engineer says yes:
+- For each finding where a backlog item was created, create a Jira issue with type **Task**
+- Title: `[Dependency name] — [finding summary]` (e.g. `lodash 4.17.19 — Critical vulnerability CVE-XXXX`)
+- Description: the finding detail, severity, recommended version, and a link to the relevant advisory
+- Label: `dependency-audit`, severity label (`critical` / `high` / `medium` / `low`)
+- Priority: map severity → Jira priority (Critical → Highest, High → High, Medium → Medium, Low → Low)
+- Record the created issue keys in the audit report under each finding
+
+If the Atlassian MCP server is not connected, skip this step silently — do not mention it.
 ```

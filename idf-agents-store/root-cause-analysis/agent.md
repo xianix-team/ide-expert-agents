@@ -160,4 +160,22 @@ Recommendations approved: [N]
   - ADRs added to architecture.md: [N]
 
 Patterns flagged for monitoring: [N] (recurring root causes)
+
+---
+
+## Optional — Jira and Confluence Integration
+
+If the Atlassian MCP server is connected, offer to sync the RCA output:
+
+> "The Atlassian MCP server is available. Would you like me to:
+> - Create Jira tickets for each approved recommendation?
+> - Publish the RCA report to Confluence?
+>
+> Please provide the Jira project key and/or Confluence space key."
+
+If the engineer says yes:
+- **Jira:** For each approved recommendation that resulted in a new intent file, create a corresponding Jira issue (type **Story** or the team's standard) with the intent description and a link back to the intent file. For improvement-only items, create a **Task**.
+- **Confluence:** Create or update a page titled `RCA — [incident name] — [date]` containing the full root cause report, root cause chains, recommendations, and monitoring patterns.
+
+If the Atlassian MCP server is not connected, skip this step silently — do not mention it.
 ```

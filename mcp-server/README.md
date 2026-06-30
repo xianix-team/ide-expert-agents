@@ -182,3 +182,50 @@ Then use the local path in your tool config:
 2. Add an `agent.md` (or `SKILL.md`) with YAML frontmatter containing `name` and `description`.
 3. Rebuild: `npm run build`.
 4. For Option A: redeploy. For Option B: publish a new version. For local clone: restart the MCP connection.
+
+---
+
+## Companion MCP servers
+
+Several agents in this repository are designed to push their output to Jira and Confluence. This is enabled by connecting the **Atlassian MCP server** alongside this one — no changes to this repo are required.
+
+### Atlassian MCP server
+
+Atlassian publishes an official MCP server that exposes Jira and Confluence as callable tools. Once connected, agents will automatically offer to create tickets, update pages, and sync findings.
+
+**Prerequisites:** An Atlassian API token — generate one at your Atlassian account security settings.
+
+Add the server alongside this one in your tool config:
+
+**Claude Code** — `~/.claude/settings.json`:
+```json
+{
+  "mcpServers": {
+    "ide-expert-agents": { "...": "..." },
+    "atlassian": {
+      "command": "npx",
+      "args": ["-y", "@atlassian/mcp-atlassian"],
+      "env": {
+        "ATLASSIAN_URL": "https://your-org.atlassian.net",
+        "ATLASSIAN_USERNAME": "your@email.com",
+        "ATLASSIAN_API_TOKEN": "your-api-token"
+      }
+    }
+  }
+}
+```
+
+**Cursor** — `~/.cursor/mcp.json` and **GitHub Copilot** — `.vscode/mcp.json`: same `atlassian` block added alongside the existing `ide-expert-agents` entry.
+
+> Verify the exact package name and tool names from Atlassian's official MCP documentation — the server is actively maintained and details may change.
+
+**Agents that use Atlassian tools when the server is connected:**
+
+| Agent | Jira | Confluence |
+|---|---|---|
+| `bolt-risk-assessment` | Creates a risk ticket per bolt | — |
+| `design-session` | — | Publishes design decisions as a page |
+| `uat` | Updates the intent issue with UAT outcome | Publishes UAT report |
+| `root-cause-analysis` | Creates improvement/incident tickets | Publishes RCA page |
+| `dependency-audit` | Creates a remediation ticket per finding | — |
+| `progress-digest` | — | Updates the intent's progress page |

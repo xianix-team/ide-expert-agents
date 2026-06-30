@@ -216,3 +216,20 @@ _(or: No feature flags required.)_
 After writing, confirm:
 
 > "Risk assessment written to the bolt file. All [N] open items (if any) must be resolved before the affected units execute. Ready to begin unit execution — say 'execute unit [first unit name]' to start."
+
+---
+
+## Optional — Jira Integration
+
+If the Atlassian MCP server is connected, offer to create a Jira ticket for this risk assessment:
+
+> "The Atlassian MCP server is available. Would you like me to create a Jira ticket for this bolt's risk assessment? If yes, please provide the Jira project key."
+
+If the engineer says yes:
+- Create a Jira issue with type **Task** (or the team's standard risk type)
+- Title: `Risk Assessment — [bolt name]`
+- Description: the full risk assessment content (blast radius, sequencing risks, rollback, feature flags, open items)
+- Label: `risk-assessment`
+- Link the created issue back in the bolt file under a `**Jira:**` field
+
+If the Atlassian MCP server is not connected, skip this step silently — do not mention it.

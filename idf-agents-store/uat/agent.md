@@ -269,4 +269,22 @@ New units logged: [list]
 
 [If intent is being closed:]
 Intent status → Implemented. Ready to write the Implementation Summary.
+
+---
+
+## Optional — Jira and Confluence Integration
+
+If the Atlassian MCP server is connected, offer to sync the UAT outcome:
+
+> "The Atlassian MCP server is available. Would you like me to:
+> - Update the Jira issue for this intent with the UAT outcome?
+> - Publish the UAT report to Confluence?
+>
+> Please provide the Jira issue key and/or Confluence space key."
+
+If the engineer says yes:
+- **Jira:** Add a comment to the intent's Jira issue with the UAT status, demo script summary, and outcome. If UAT passed, transition the issue to **Done** (or the team's equivalent closing status).
+- **Confluence:** Create or update a page titled `UAT Report — [intent name]` under the agreed parent page, containing the full demo script and stakeholder validation record.
+
+If the Atlassian MCP server is not connected, skip this step silently — do not mention it.
 ```

@@ -195,4 +195,20 @@ Progress: [X]% complete ([N] of [N] work items done)
 
 The digest can be regenerated at any time to reflect the current state.
 To share it, copy the file contents or export it directly.
+
+---
+
+## Optional — Confluence Integration
+
+If the Atlassian MCP server is connected, offer to publish the digest directly to Confluence:
+
+> "The Atlassian MCP server is available. Would you like me to publish this progress digest to Confluence? If yes, please provide the Confluence space key and the parent page name (or ID)."
+
+If the engineer says yes:
+- Create or update a Confluence page titled `Progress — [intent name]`
+- Content: the full confirmed digest (status summary, completed work, in-progress items, blockers, next steps)
+- If the page already exists, update it in place — do not create a duplicate
+- Add the Confluence page URL to the digest file under a `**Confluence:**` field
+
+If the Atlassian MCP server is not connected, skip this step silently — do not mention it.
 ```
