@@ -78,105 +78,15 @@ mcp-server/    ← reads all stores, serves agents as MCP prompts
 
 ## Quickstart
 
-Choose the deployment that fits your situation.
+Three deployment options are available — choose what fits your team:
 
----
+| Option | Best for | How it works |
+|---|---|---|
+| **A — Docker** | Shared team server (recommended) | Build once, run centrally; every developer connects via URL |
+| **B — npx** | Personal use, no clone required | Published npm package runs locally via `npx` |
+| **C — Local clone** | Contributors or personal use with full control | Clone the repo, build once, point your tool at the local binary |
 
-### Option A — Docker (recommended for teams)
-
-Run once on a shared host; every team member connects via URL — no local install or build step per developer.
-
-**1. Build the image** (from the repository root):
-
-```bash
-docker build -t ide-expert-agents-mcp .
-```
-
-**2. Run the container:**
-
-```bash
-docker run -d -p 3000:3000 --name ide-expert-agents ide-expert-agents-mcp
-```
-
-**3. Connect each tool to the server URL:**
-
-**Claude Code** — `~/.claude/settings.json`:
-```json
-{
-  "mcpServers": {
-    "ide-expert-agents": {
-      "url": "http://your-server:3000/mcp"
-    }
-  }
-}
-```
-
-**Cursor** — `~/.cursor/mcp.json`:
-```json
-{
-  "mcpServers": {
-    "ide-expert-agents": {
-      "url": "http://your-server:3000/mcp"
-    }
-  }
-}
-```
-
-**GitHub Copilot (VS Code)** — `.vscode/mcp.json`:
-```json
-{
-  "servers": {
-    "ide-expert-agents": {
-      "type": "http",
-      "url": "http://your-server:3000/mcp"
-    }
-  }
-}
-```
-
-> **After adding new agents:** rebuild the image and replace the container — agent files are baked in at build time.
-> ```bash
-> docker build --no-cache -t ide-expert-agents-mcp .
-> docker rm -f ide-expert-agents
-> docker run -d -p 3000:3000 --name ide-expert-agents ide-expert-agents-mcp
-> ```
->
-> **During local development** (skip rebuilds): mount the repo as a read-only volume so the server reads agent files live from disk:
-> ```bash
-> docker run -d -p 3000:3000 --name ide-expert-agents \
->   -e MCP_AGENTS_ROOT=/repo \
->   -v $(pwd):/repo:ro \
->   ide-expert-agents-mcp
-> ```
-
----
-
-### Option B — Local clone (personal use)
-
-**1. Build the MCP server:**
-
-```bash
-cd mcp-server
-npm install
-npm run build
-```
-
-**2. Add to your tool config:**
-
-```json
-{
-  "mcpServers": {
-    "ide-expert-agents": {
-      "command": "node",
-      "args": ["/absolute/path/to/ide-expert-agents/mcp-server/dist/index.js"]
-    }
-  }
-}
-```
-
-See [mcp-server/README.md](mcp-server/README.md) for the full per-tool config reference and the npm (`npx`) deployment option.
-
----
+Full setup instructions, per-tool config snippets, Docker development tips, and environment variables are in [mcp-server/README.md](mcp-server/README.md).
 
 ### Using an agent
 
