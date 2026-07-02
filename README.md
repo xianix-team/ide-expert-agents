@@ -105,7 +105,8 @@ In Cursor: type `/` and search for the agent name in agent mode.
 | [architect-agents-store](architect-agents-store/README.md) | 2 | Architecture review and cloud deployment inspection — deployment fitness assessment, agentic AI review |
 | [coding-agents-store](coding-agents-store/README.md) | 1 | Code quality and targeted improvements — error handling audit |
 | [qa-agents-store](qa-agents-store/README.md) | — | Testing and quality assurance *(coming soon)* |
-| [ux-agents-store](ux-agents-store/README.md) | 5 | UX research and design — personas, journey maps, service blueprints, competitive analysis, prototypes |
+| [ux-agents-store](ux-agents-store/README.md) | 9 | UX design and research — persona/journey/service-blueprint/competitive-analysis/prototype generation, design-consistency auditing, design-concept generation, interaction-design review, and design-rationale documentation |
+| [pre-sales-agents-store](pre-sales-agents-store/README.md) | 4 | Pre-sales pipeline — discovery interview, requirement elaboration, effort estimation, and proposal assembly |
 | [compliance-agents-store](compliance-agents-store/README.md) | 1 | AI compliance and governance — EU AI Act controls review with ISO 42001 and NIST AI RMF mapping |
 | [delivery-agents-store](delivery-agents-store/README.md) | — | Delivery management *(coming soon)* |
 
