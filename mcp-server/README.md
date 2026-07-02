@@ -15,11 +15,35 @@ The server exposes two entry points:
 
 ---
 
-## Option A — Central shared server (team deployment)
+## Option A — Docker (central team server, recommended)
 
-Run once, everyone on the team connects via URL. No local install or build step required per developer.
+Run once on a shared host; every team member connects via URL — no local install or build step per developer.
 
-### Build and run locally
+### Build and run
+
+From the **repository root**:
+
+```bash
+docker build -t ide-expert-agents-mcp .
+docker run -d -p 3000:3000 --name ide-expert-agents ide-expert-agents-mcp
+```
+
+> **After adding new agents:** agent files are baked into the image at build time — rebuild and replace the container.
+> ```bash
+> docker build --no-cache -t ide-expert-agents-mcp .
+> docker rm -f ide-expert-agents
+> docker run -d -p 3000:3000 --name ide-expert-agents ide-expert-agents-mcp
+> ```
+>
+> **During local development** (skip rebuilds): mount the repo as a read-only volume so the server picks up agent file changes live:
+> ```bash
+> docker run -d -p 3000:3000 --name ide-expert-agents \
+>   -e MCP_AGENTS_ROOT=/repo \
+>   -v $(pwd):/repo:ro \
+>   ide-expert-agents-mcp
+> ```
+
+### Without Docker (run directly)
 
 ```bash
 cd mcp-server
@@ -27,15 +51,6 @@ npm install
 npm run build
 npm run start:http        # default port 3000
 PORT=8080 npm run start:http
-```
-
-### Deploy with Docker
-
-Build and run from the **repository root**:
-
-```bash
-docker build -t ide-expert-agents-mcp .
-docker run -p 3000:3000 ide-expert-agents-mcp
 ```
 
 ### Team member config
@@ -78,9 +93,9 @@ Once deployed, each developer adds the server URL to their tool config — no `n
 
 ---
 
-## Option B — npm package (per-developer, no server required)
+## Option B — npx / npm package (per-developer, no server required)
 
-Publish once to npm (private registry or GitHub Packages). Each developer runs the server locally via `npx` — no clone or build step needed.
+Publish once to npm (private registry or GitHub Packages). Each developer runs the server locally via `npx` — no clone, no build step, no Docker needed.
 
 ### Publish
 
@@ -142,9 +157,9 @@ Set `MCP_AGENTS_ROOT` to the path of a local clone of this repository so the ser
 
 ---
 
-## Running from a local clone (no npm publish)
+## Option C — Local clone (contributors / full control)
 
-If you have the repo cloned and just want to connect directly without publishing to npm:
+If you have the repo cloned and want to connect directly without Docker or npm publish:
 
 ```bash
 cd mcp-server

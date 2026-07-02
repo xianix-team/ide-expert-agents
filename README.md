@@ -78,38 +78,17 @@ mcp-server/    ← reads all stores, serves agents as MCP prompts
 
 ## Quickstart
 
-**1. Build the MCP server**
+Three deployment options are available — choose what fits your team:
 
-```bash
-cd mcp-server
-npm install
-npm run build
-```
-
-**2. Connect to your tool**
-
-| Tool | Config file | Server key |
+| Option | Best for | How it works |
 |---|---|---|
-| Claude Code | `~/.claude/settings.json` | `mcpServers` |
-| Cursor | `~/.cursor/mcp.json` | `mcpServers` |
-| GitHub Copilot (VS Code) | `.vscode/mcp.json` | `servers` |
+| **A — Docker** | Shared team server (recommended) | Build once, run centrally; every developer connects via URL |
+| **B — npx** | Personal use, no clone required | Published npm package runs locally via `npx` |
+| **C — Local clone** | Contributors or personal use with full control | Clone the repo, build once, point your tool at the local binary |
 
-Add the server entry:
+Full setup instructions, per-tool config snippets, Docker development tips, and environment variables are in [mcp-server/README.md](mcp-server/README.md).
 
-```json
-{
-  "mcpServers": {
-    "ide-expert-agents": {
-      "command": "node",
-      "args": ["/absolute/path/to/ide-expert-agents/mcp-server/dist/index.js"]
-    }
-  }
-}
-```
-
-See [mcp-server/README.md](mcp-server/README.md) for tool-specific config snippets.
-
-**3. Use an agent**
+### Using an agent
 
 In Claude Code: `/mcp__ide-expert-agents__codebase-archaeology`
 
@@ -123,12 +102,12 @@ In Cursor: type `/` and search for the agent name in agent mode.
 |---|---|---|
 | [idf-agents-store](idf-agents-store/README.md) | 9 | Structured software delivery — design, risk, UAT, RCA, process health, and more |
 | [devops-agents-store](devops-agents-store/README.md) | 1 | Infrastructure provisioning and IaC generation |
-| [architect-agents-store](architect-agents-store/README.md) | 1 | Architecture review and deployment inspection — cloud deployment fitness assessment |
+| [architect-agents-store](architect-agents-store/README.md) | 2 | Architecture review and cloud deployment inspection — deployment fitness assessment, agentic AI review |
 | [coding-agents-store](coding-agents-store/README.md) | 1 | Code quality and targeted improvements — error handling audit |
 | [qa-agents-store](qa-agents-store/README.md) | — | Testing and quality assurance *(coming soon)* |
 | [ux-agents-store](ux-agents-store/README.md) | 9 | UX design and research — persona/journey/service-blueprint/competitive-analysis/prototype generation, design-consistency auditing, design-concept generation, interaction-design review, and design-rationale documentation |
 | [pre-sales-agents-store](pre-sales-agents-store/README.md) | 4 | Pre-sales pipeline — discovery interview, requirement elaboration, effort estimation, and proposal assembly |
-| [compliance-agents-store](compliance-agents-store/README.md) | — | Security and compliance *(coming soon)* |
+| [compliance-agents-store](compliance-agents-store/README.md) | 1 | AI compliance and governance — EU AI Act controls review with ISO 42001 and NIST AI RMF mapping |
 | [delivery-agents-store](delivery-agents-store/README.md) | — | Delivery management *(coming soon)* |
 
 ---
