@@ -11,6 +11,7 @@ All agents in this store are served via the repository's MCP server. See [mcp-se
 | Agent | Prompt name | When to use |
 |---|---|---|
 | **Error Handling Audit** | `error-handling-audit` | When you want to inspect code for incorrect, missing, or poorly structured error handling — covers empty catch blocks, swallowed exceptions, missing async guards, lost error context, and unsafe cleanup patterns. Finds issues and applies fixes after approval |
+| **Runtime Debugger** | `runtime-debugger` | When you have a real bug in hand — debug logs, crash logs/stack traces, requirement docs, and/or your own observation of expected vs. actual behavior — and want help going from symptom to root cause to an approved fix |
 
 ---
 
