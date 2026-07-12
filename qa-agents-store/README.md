@@ -11,6 +11,7 @@ All agents in this store are served via the repository's MCP server. See [mcp-se
 | Agent | Prompt name | When to use |
 |---|---|---|
 | **OWASP Security Scanner** | `owasp-security-scanner` | When you want a static code scan against OWASP Top 10 (2025) and/or OWASP Top 25 Parameters, with the latest standards fetched live from owasp.org. You choose which scan(s) to run; the agent reports severity-ranked findings with evidence — it does not edit code |
+| **Test Case Generator** | `test-case-generator` | When you want structured functional, edge, negative, and regression test cases generated from a feature spec, a git diff/PR, or both. Cases are grounded in the actual codebase and priority-ranked — it does not write or scaffold test code |
 
 ---
 
