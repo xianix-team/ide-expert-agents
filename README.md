@@ -109,7 +109,7 @@ In Cursor: type `/` and search for the agent name in agent mode.
 | [pre-sales-agents-store](pre-sales-agents-store/README.md) | 5 | Pre-sales pipeline — agentic AI opportunity mining, discovery interview, requirement elaboration, effort estimation, and proposal assembly |
 | [data-platform-agents-store](data-platform-agents-store/README.md) | 8 | Data-platform analysis and evolution — repo analysis, due diligence, architecture advisory, opportunity scouting, implementation, validation, regression monitoring, and cycle close-out |
 | [compliance-agents-store](compliance-agents-store/README.md) | 1 | AI compliance and governance — EU AI Act controls review with ISO 42001 and NIST AI RMF mapping |
-| [delivery-agents-store](delivery-agents-store/README.md) | — | Delivery management *(coming soon)* |
+| [delivery-agents-store](delivery-agents-store/README.md) | 1 | Delivery management — DORA-inspired commitment health reporting, adapted for AI-led development |
 
 ---
 
