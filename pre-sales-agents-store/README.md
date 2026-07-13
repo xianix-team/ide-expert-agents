@@ -10,12 +10,13 @@ All agents in this store are served via the repository's MCP server. See [mcp-se
 
 | Agent | Prompt name | When to use |
 |---|---|---|
+| **Explore Agentic AI Use Cases** | `explore-agentic-ai-usecases` | Mining an existing product codebase for agentic AI opportunities — minimal targeted questions, then a business-reader report (problem, value, solution, spec, man-day estimate) sorted with high-value / low-effort use cases first |
 | **Discovery Interview** | `discovery-interview` | Starting a new engagement or opportunity — a Socratic, one-question-at-a-time interview that resolves ambiguity before any scoping happens |
 | **Elaborate** | `elaborate` | Turning a loose request into a clear, codebase-grounded requirement and scope spec before any implementation plan is written |
 | **Estimate** | `estimate` | Building a 3-point (PERT) effort estimate from a requirement spec, with a client-ready estimation sheet |
 | **Proposal** | `proposal` | Assembling a client-facing proposal from whatever discovery, spec, and estimate material exists |
 
-This store forms a full pipeline: `discovery-interview` → `elaborate` → `estimate` → `proposal`.
+This store forms a full pipeline: `discovery-interview` → `elaborate` → `estimate` → `proposal`. For agentic AI opportunities, `explore-agentic-ai-usecases` runs up front — its prioritized use cases feed `elaborate` → `estimate` → `proposal` for the selected candidates.
 
 ---
 

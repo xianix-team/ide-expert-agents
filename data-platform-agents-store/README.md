@@ -11,12 +11,15 @@ All agents in this store are served via the repository's MCP server. See [mcp-se
 | Agent | Prompt name | When to use |
 |---|---|---|
 | **Repo Analyst** | `repo-analyst` | Onboarding into an unfamiliar data platform, or starting any analysis pipeline — builds a structured knowledge graph of schema, pipelines, and lineage, cross-referenced against documentation |
+| **Due Diligence** | `due-diligence` | Periodic health audit, or onboarding into an unfamiliar data platform — audits security & access, data quality & integrity, GDPR & compliance, pipeline reliability, and architecture consistency, producing evidence-backed findings with severity. Read-only |
+| **Architecture Advisor** | `architecture-advisor` | After a due-diligence audit surfaces architectural or structural problems — proposes formal Architecture Decision Records (ADRs) applying data-engineering best practices. Read-only, never implements |
+| **Opportunity Scout** | `opportunity-scout` | Scoping what to build next on a data platform, after due-diligence/architecture work — compares business/BI requirements against the current schema to identify missing views, fact tables, and dimensions, and turns gaps into a prioritised backlog. Read-only |
 | **Data Platform Developer** | `data-platform-developer` | Implementing one approved opportunity or ADR end to end — creates or changes schema and pipeline code with human checkpoints and mandatory idempotency |
 | **Data Platform Validator** | `data-platform-validator` | Independently reviewing a completed data-platform change against its approved opportunity or ADR before merge, with evidence-backed approve/reject findings |
 | **Regression Monitor** | `regression-monitor` | Periodically comparing current platform state against an established baseline to report schema drift, undocumented pipeline changes, and data-quality degradation |
 | **Context Keeper** | `context-keeper` | Closing out a completed data-platform work cycle with a plain-language summary of what changed, current state, open follow-ups, and recommended next steps |
 
-More agents (`due-diligence`, `architecture-advisor`, `opportunity-scout`) are planned for this store, forming a full analyze → audit → advise → scout → build → validate → monitor → close-out pipeline — see [ide-expert-agents#19](https://github.com/xianix-team/ide-expert-agents/issues/19), [#20](https://github.com/xianix-team/ide-expert-agents/issues/20), [#21](https://github.com/xianix-team/ide-expert-agents/issues/21).
+This store now covers the full analyze → audit → advise → scout → build → validate → monitor → close-out pipeline.
 
 ---
 
