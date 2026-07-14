@@ -15,8 +15,9 @@ All agents in this store are served via the repository's MCP server. See [mcp-se
 | **Elaborate** | `elaborate` | Turning a loose request into a clear, codebase-grounded requirement and scope spec before any implementation plan is written |
 | **Estimate** | `estimate` | Building a 3-point (PERT) effort estimate from a requirement spec, with a client-ready estimation sheet |
 | **Proposal** | `proposal` | Assembling a client-facing proposal from whatever discovery, spec, and estimate material exists |
+| **Case Study Drafter** | `casestudy-drafter` | Turning a delivered codebase (single repo or multi-repo estate) into industry-class customer case studies — analyses the domain and user journeys, proposes candidate angles (flagging which need customer metrics), narrows them down with minimal structured questions, and writes one Markdown case study per selection (synopsis, problem domain, solution with optional high-level technical approach, impact), named or anonymized per run, with a post-write revise step |
 
-This store forms a full pipeline: `discovery-interview` → `elaborate` → `estimate` → `proposal`. For agentic AI opportunities, `explore-agentic-ai-usecases` runs up front — its prioritized use cases feed `elaborate` → `estimate` → `proposal` for the selected candidates.
+This store forms a full pipeline: `discovery-interview` → `elaborate` → `estimate` → `proposal`. For agentic AI opportunities, `explore-agentic-ai-usecases` runs up front — its prioritized use cases feed `elaborate` → `estimate` → `proposal` for the selected candidates. After delivery, `casestudy-drafter` turns the shipped work into case-study collateral that feeds future `proposal` runs as proof of capability.
 
 ---
 

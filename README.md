@@ -106,7 +106,7 @@ In Cursor: type `/` and search for the agent name in agent mode.
 | [coding-agents-store](coding-agents-store/README.md) | 2 | Code quality and targeted improvements — error handling audit, runtime debugging from logs/crashes/requirements |
 | [qa-agents-store](qa-agents-store/README.md) | 2 | Testing and quality assurance — OWASP Top 10 / Top 25 Parameters static security scanning, and structured test case generation from specs/diffs |
 | [ux-agents-store](ux-agents-store/README.md) | 9 | UX design and research — persona/journey/service-blueprint/competitive-analysis/prototype generation, design-consistency auditing, design-concept generation, interaction-design review, and design-rationale documentation |
-| [pre-sales-agents-store](pre-sales-agents-store/README.md) | 5 | Pre-sales pipeline — agentic AI opportunity mining, discovery interview, requirement elaboration, effort estimation, and proposal assembly |
+| [pre-sales-agents-store](pre-sales-agents-store/README.md) | 6 | Pre-sales pipeline — agentic AI opportunity mining, discovery interview, requirement elaboration, effort estimation, proposal assembly, and case-study drafting from delivered codebases |
 | [data-platform-agents-store](data-platform-agents-store/README.md) | 8 | Data-platform analysis and evolution — repo analysis, due diligence, architecture advisory, opportunity scouting, implementation, validation, regression monitoring, and cycle close-out |
 | [compliance-agents-store](compliance-agents-store/README.md) | 1 | AI compliance and governance — EU AI Act controls review with ISO 42001 and NIST AI RMF mapping |
 | [delivery-agents-store](delivery-agents-store/README.md) | 1 | Delivery management — DORA-inspired commitment health reporting, adapted for AI-led development |
