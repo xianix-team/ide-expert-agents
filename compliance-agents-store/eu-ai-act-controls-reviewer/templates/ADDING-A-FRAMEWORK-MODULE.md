@@ -20,8 +20,9 @@ change to `agent.md`**.
 1. **Copy the template.** `cp templates/controls-TEMPLATE.md controls-A0-<your-id>.md`
    (pick the next free `NN` prefix — `00` is risk classification and must stay first).
 2. **Fill the header.** Set `Module ID`, a clear **Applies when** trigger, and the regime.
-3. **Write the controls.** One row each: `# | Requirement | EU AI Act | ISO/IEC 42001 |
-   NIST AI RMF | Severity | Automation | How to check`. Follow the authoring notes.
+3. **Write the controls.** One row each: `# | Requirement | EU AI Act | Applies from |
+   ISO/IEC 42001 | NIST AI RMF | Severity | Automation | How to check`. Set **Applies from**
+   from `enforcement-timeline.md` (the agent turns it into an urgency band). Follow the notes.
 4. **(Optional) List it** in `../README.md`.
 5. **Rebuild** the MCP server (`npm run build` in `mcp-server/`) and restart.
 
