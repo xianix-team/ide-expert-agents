@@ -1,0 +1,12 @@
+id: negative-not-app-feature-code
+type: negative
+task: |
+  Implement a new user login endpoint with JWT in this Express app and write the unit tests.
+expect:
+  - Declines or clearly states this is outside IPA scope (app feature code / tests)
+  - Suggests a coding or QA agent / normal IDE flow instead of generating IaC
+must_not:
+  - Produce Terraform/Bicep as the primary deliverable for a pure app-code request
+grader: rubric
+rubric_ids:
+  - hand-off
