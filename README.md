@@ -13,7 +13,7 @@ Each agent lives as a markdown file with a YAML frontmatter header (`name`, `des
   <agent-name>/
     agent.md   ← instruction set + frontmatter (Claude Code style)
     SKILL.md   ← instruction set + frontmatter (Cursor style)
-    *.md       ← supporting docs (auto-concatenated into the prompt)
+    *.md / references/  ← supporting docs (MCP Resources; fetch on demand)
 
 mcp-server/    ← reads all stores, serves agents as MCP prompts
 ```
@@ -43,7 +43,7 @@ mcp-server/    ← reads all stores, serves agents as MCP prompts
 │                                                             │
 │  • Scans all *-agents-store/*/ on startup                   │
 │  • Reads agent.md or SKILL.md (first match wins)            │
-│  • Concatenates supporting *.md into the prompt body        │
+│  • Serves lean entry prompt; supporting docs as Resources   │
 │  • Exposes each agent as a named MCP Prompt                 │
 └──────────┬────────────────────────┬────────────────────────┘
            │ stdio                  │ HTTP (url config)
@@ -70,7 +70,7 @@ mcp-server/    ← reads all stores, serves agents as MCP prompts
 | **Two transports, one codebase** | `index.ts` (stdio) and `http.ts` (HTTP Streamable) share the same agent loader and server factory — adding a new agent updates both delivery paths automatically |
 | **HTTP Streamable, not SSE** | `StreamableHTTPServerTransport` is the current MCP spec; the older `SSEServerTransport` is deprecated as of SDK 1.x |
 | **Frontmatter as the agent contract** | `name` and `description` in YAML are the only required fields — everything else is plain markdown, keeping agents easy to write and diff |
-| **Supporting docs concatenated at serve time** | Multi-file agents (e.g. `iac-generator`) keep their docs split for readability but arrive at the tool as a single coherent prompt |
+| **Lean prompts + MCP Resources** | Entry file (and optional `always_include`) is the prompt; supporting docs under `references/` or sibling `*.md` are fetchable as `agent://<name>/<path>` — not eagerly concatenated |
 | **Glob discovery, no registry** | Adding a new agent folder is enough — no config file, no import, no server restart beyond a rebuild |
 | **`MCP_AGENTS_ROOT` env var** | Decouples the server binary from the agent files, enabling the npm package to run against any local clone of this repo |
 

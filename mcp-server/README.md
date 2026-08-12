@@ -4,7 +4,7 @@ An MCP server that exposes every agent in this repository as an MCP **prompt**. 
 
 ## How it works
 
-On startup the server scans all `*-agents-store/*/` folders, reads each agent's entry file (`agent.md` or `SKILL.md`), and registers it as a named MCP prompt. Supporting docs in the same folder (e.g. `workflow.md`, `templates.md`) are concatenated into the prompt so the full context is always available.
+On startup the server scans all `*-agents-store/*/` folders, reads each agent's entry file (`agent.md` or `SKILL.md`), and registers it as a named MCP prompt. Only the entry file is served by default (plus optional frontmatter `always_include: […]`). Supporting docs under `references/` and other top-level `*.md` siblings are exposed as **MCP Resources** (`agent://<prompt-name>/<path>`) so hosts can fetch them on demand — they are not eagerly concatenated into the prompt.
 
 The server exposes two entry points:
 

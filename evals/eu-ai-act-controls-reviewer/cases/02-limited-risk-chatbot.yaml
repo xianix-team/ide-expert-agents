@@ -1,0 +1,17 @@
+id: limited-risk-chatbot
+type: positive
+task: |
+  This product is a customer-support chatbot that discloses it is AI.
+  Review for EU AI Act fitness with focus on transparency obligations.
+expect:
+  - Selects transparency-related modules when signals match
+  - Still runs risk classification first
+  - Flags deadlines/urgency on findings when required by the skill
+must_not:
+  - Skip risk classification entirely
+grader: rubric
+rubric_ids:
+  - risk-tier-first
+  - module-selectivity
+  - deadline-urgency
+  - read-only

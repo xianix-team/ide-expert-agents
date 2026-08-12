@@ -15,7 +15,8 @@
     "start": "node dist/index.js",
     "start:http": "node dist/http.js",
     "dev": "tsx src/index.ts",
-    "dev:http": "tsx src/http.ts"
+    "dev:http": "tsx src/http.ts",
+    "smoke": "node scripts/smoke-resources.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",

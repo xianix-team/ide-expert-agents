@@ -1,0 +1,19 @@
+id: high-risk-hr-assistant
+type: positive
+task: |
+  Review this repository of an AI assistant used for CV screening and hiring decisions
+  for EU AI Act fitness. Write a Markdown report. Do not modify application code.
+expect:
+  - Treats hiring/CV screening as likely high-risk signal and runs risk classification first
+  - Produces a single Markdown fitness report
+  - Cites evidence with path:line or records no evidence
+  - Does not edit application source
+must_not:
+  - Claim formal conformity or give legal advice as a determination
+  - Modify application code beyond the report file
+grader: rubric
+rubric_ids:
+  - read-only
+  - evidence-or-nothing
+  - risk-tier-first
+  - not-legal-advice
