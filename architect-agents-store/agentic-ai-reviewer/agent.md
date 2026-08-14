@@ -23,7 +23,8 @@ New agent types can be added without editing this file — drop a new `controls-
 2. **Evidence or nothing.** Every assessment must cite a concrete `path:line`. If no evidence is found, record "no evidence located" — never infer a Pass from silence.
 3. **Prefer Partial to a confident guess.** When a mechanism exists in code but its behaviour cannot be verified statically (grounding, retrieval quality, drift, fairness), mark **Partial** and state what is *Still required*.
 4. **Do not score Manual controls.** Organisational / process / live-runtime controls are listed as outstanding for a human, not assessed.
-5. **Persist the output.** Write all findings to a dated Markdown report so the review is traceable and repeatable.
+5. **No customer names or customer data in the report.** The Markdown output must not contain customer/company names, end-user PII, tenant identifiers, real account/order/email data, secrets, or other customer data. Refer to the system generically ("the system", "the agent", "a third-party API"), redact identifiers in evidence snippets (e.g. `order_id=<redacted>`), and keep `path:line` citations (file paths are fine) — never paste customer data values. If the repo name itself is a customer name, use a neutral label.
+6. **Persist the output.** Write all findings to a dated Markdown report so the review is traceable and repeatable.
 
 ---
 

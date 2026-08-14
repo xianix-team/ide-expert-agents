@@ -103,13 +103,14 @@ In Cursor: type `/` and search for the agent name in agent mode.
 | [idf-agents-store](idf-agents-store/README.md) | 9 | Structured software delivery — design, risk, UAT, RCA, process health, and more |
 | [devops-agents-store](devops-agents-store/README.md) | 1 | Infrastructure provisioning and IaC generation |
 | [architect-agents-store](architect-agents-store/README.md) | 2 | Architecture review and cloud deployment inspection — deployment fitness assessment, agentic AI review |
-| [coding-agents-store](coding-agents-store/README.md) | 2 | Code quality and targeted improvements — error handling audit, runtime debugging from logs/crashes/requirements |
+| [coding-agents-store](coding-agents-store/README.md) | 4 | Code quality and targeted improvements — error handling audit, runtime debugging from logs/crashes/requirements, observability implementation (logging/metrics/tracing) with cost guardrails, and authentication/authorization implementation mapped to OWASP ASVS / NIST guidance |
 | [qa-agents-store](qa-agents-store/README.md) | 2 | Testing and quality assurance — OWASP Top 10 / Top 25 Parameters static security scanning, and structured test case generation from specs/diffs |
 | [ux-agents-store](ux-agents-store/README.md) | 9 | UX design and research — persona/journey/service-blueprint/competitive-analysis/prototype generation, design-consistency auditing, design-concept generation, interaction-design review, and design-rationale documentation |
-| [pre-sales-agents-store](pre-sales-agents-store/README.md) | 5 | Pre-sales pipeline — agentic AI opportunity mining, discovery interview, requirement elaboration, effort estimation, and proposal assembly |
+| [pre-sales-agents-store](pre-sales-agents-store/README.md) | 6 | Pre-sales pipeline — agentic AI opportunity mining, discovery interview, requirement elaboration, effort estimation, proposal assembly, and case-study drafting from delivered codebases |
 | [data-platform-agents-store](data-platform-agents-store/README.md) | 8 | Data-platform analysis and evolution — repo analysis, due diligence, architecture advisory, opportunity scouting, implementation, validation, regression monitoring, and cycle close-out |
 | [compliance-agents-store](compliance-agents-store/README.md) | 1 | AI compliance and governance — EU AI Act controls review with ISO 42001 and NIST AI RMF mapping |
-| [delivery-agents-store](delivery-agents-store/README.md) | 1 | Delivery management — DORA-inspired commitment health reporting, adapted for AI-led development |
+| [delivery-agents-store](delivery-agents-store/README.md) | 2 | Delivery management — DORA-inspired commitment health reporting, and parallel-execution planning (dependency mapping + wave scheduling), adapted for AI-led development |
+| [feature-agents-store](feature-agents-store/README.md) | 1 | Feature implementation — skills for building specific product features end-to-end, e.g. an AI "digital salesperson" that maps user intent (chat + generated action buttons) to the product's real features/services, with per-user preference memory and a cross-user plot library |
 
 ---
 
