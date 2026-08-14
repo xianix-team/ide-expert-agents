@@ -98,7 +98,7 @@ For **each** bug, output this exact format. Keep it tight and concrete — a dev
 
 After presenting the report(s) in chat, save a Markdown file per bug:
 
-- **Folder:** `e2e/features/{TICKET_ID}/bugs/` when a ticket/epic key is supplied; otherwise `bug-reports/`.
+- **Folder (`{OUT}`):** resolve from the project you are in, never from a fixed layout — (1) if the repo already keeps QA/bug artifacts somewhere, mirror that location and its per-ticket grouping; (2) otherwise use `<test-root>/bug-reports/`, where `<test-root>` is whichever test directory the repo has (`e2e/`, `tests/`, `test/`, `spec/`), appending the ticket/epic key as a sub-folder when one was supplied; (3) if the repo has no test directory, use `./bug-reports/`. An explicit path from the user wins over all three. State the resolved folder before writing.
 - **Filename:** `bug-{short-slug}-{YYYY-MM-DD-HHMM}.md` (slug from the summary; use today's date from context, ask for the time if unknown rather than guessing).
 - **Contents:** the full formatted report above, plus a transcription of each screenshot's annotations under a `## Screenshot Annotations` heading so the audit record stands alone even if the images are lost.
 - If a file with a near-identical summary already exists in the target folder, update it instead of creating a duplicate.
@@ -142,3 +142,14 @@ Then **show the final payload** (summary, description, and each field value with
 - When the same bug appears across two environments/products, write one report and note both under Environment.
 - Don't pad. If a section has nothing real to say, omit the optional ones and keep the required ones crisp.
 - Never copy real credentials or secrets from a screenshot into the report or Jira issue.
+
+---
+
+## Guardrails
+
+- **Report what the screenshots show.** Repro steps, expected, and actual come from the annotations and visible context. Where a step is missing or an annotation is ambiguous, write `<unclear from screenshot — confirm: ...>` — never invent a step to make a report look complete.
+- **Filing in Jira is an outward-facing action.** Show the resolved payload and create only on explicit approval, with every project-required field genuinely resolved (asked for, not guessed). Never transition, close, or edit issues the user didn't ask you to touch.
+- **Secrets and PII stay out.** Never copy credentials, tokens, or session cookies from a screenshot into the report or the issue, and redact customer names, emails, and other personal data unless they *are* the defect. Tell the user when an attached screenshot itself exposes a secret.
+- **Don't reinterpret the tester.** Formalise their wording; don't rewrite their diagnosis into your own theory of the cause. The title describes symptom and trigger, not root cause.
+- **Grouping is a proposal.** State the screenshot→bug grouping up front and let the user correct it before anything is filed.
+- **Severity and priority are justified, not inflated.** Ground severity in the impact the evidence actually shows; default priority to `Medium` unless the context makes the urgency clear.

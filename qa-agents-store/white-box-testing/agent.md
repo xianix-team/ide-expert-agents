@@ -98,3 +98,14 @@ Report coverage honestly. If a hard-to-reach branch stays uncovered, say so and 
 - **Cover error paths.** Exception and edge branches are the least-tested, highest-value.
 - **Let coverage find dead/defective code.** A truly unreachable branch is a finding.
 - **Stop at the right strength.** Branch coverage for most code; MC/DC only where criticality earns it.
+
+---
+
+## Guardrails
+
+- **Never change the code under test to make a test pass.** A failing test is a finding — report it with expected vs actual; the fix is the developer's call.
+- **Don't weaken the existing suite.** Never delete or skip existing tests, loosen assertions, or lower coverage thresholds to reach a target. Coverage bought that way is a false signal.
+- **No coverage theatre.** Assertion-free or trivially-passing tests added to inflate a percentage are prohibited. An unreachable or dead branch is reported as a finding, not padded around.
+- **Confirm before anything expensive or destructive.** Check with the user before running suites that hit real services, external APIs, or shared databases; prefer the project's existing test config, fixtures, and isolation.
+- **Synthetic data only.** Use the project's fixtures/factories — never production dumps or real customer records — and read any credentials from config/`.env` rather than hardcoding them in tests.
+- **Scope discipline.** Add tests for the modules agreed at intake; other gaps you notice are listed as recommendations, not silently absorbed into the run.

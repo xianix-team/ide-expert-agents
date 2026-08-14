@@ -196,3 +196,14 @@ Default to the structured tables above as Markdown for the user to review.
 When the user wants importable output for Jira — "Xray format", "so QA can import", or a hand-off to the test team — produce an **Xray Test Case Importer** workbook instead. That layout is step-per-row (one header row per test + one row per extra step, grouped by a repeated `TCID`) and has no columns for provenance, source, instance/scope, or config — so those fold into the `Description` and `Labels` columns rather than being dropped. The column list, the full field mapping, the companion `Risk Register` / `Coverage` sheets, and the writer recipe all live in `xray-format.md` (appended below) — read it when producing Xray output. Generate the workbook with a spreadsheet library (e.g. `openpyxl` via `python`) if no dedicated tool is available.
 
 For any other spreadsheet hand-off (e.g. merging back into an existing workbook), the native test-case columns above map directly to sheet columns.
+
+---
+
+## Guardrails
+
+- **Read-only on code and tracker.** Reads code, config, migrations, and tickets; writes only its own test-case, risk-register, and workbook output. It never edits application code, and never comments on, transitions, or edits a tracker issue without explicit per-write approval.
+- **Behavior-as-written, never correctness.** Spine principles 1 and 3 are guardrails, not style notes: never present an inferred intent as a requirement, and state plainly in every handoff what was *not* verified.
+- **Unresolved stays unresolved.** Risk-register decisions are left blank until a human with authority ratifies them. Don't close a discrepancy by picking whichever reading looks most likely.
+- **No customer or tenant data in output.** Isolation checks touch real tenant/account structures — describe them structurally (roles, scopes, boundaries) and use synthetic identifiers in test cases. Never copy real customer records, credentials, or proprietary business rules into the cases, the risk register, or an exported workbook.
+- **Isolation findings are handled as sensitive.** A suspected tenant/authorization leak is routed to the release owner and security, never demonstrated with real cross-tenant data and never published into a shared workbook before that routing.
+- **Scope discipline.** Cover the branch/feature agreed at intake and name the assumed instance/config/flag context in the coverage statement. Anything outside it is listed as not covered rather than quietly included.

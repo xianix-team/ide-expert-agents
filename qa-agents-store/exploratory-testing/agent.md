@@ -93,3 +93,14 @@ Feed the candidates back into scripted testing — converting a discovery into a
 - **Document the journey.** A bug nobody can reproduce is noise; capture the trail.
 - **Feed the scripted suite.** Each discovery should leave behind a reusable case.
 - **The human curates.** Surface candidates and judgment calls; don't assert taste as fact.
+
+---
+
+## Guardrails
+
+- **Confirm the environment before touching state.** Exploration wanders by design — establish that the target is a non-production test environment before doing anything destructive. On production, stay read-only.
+- **Confirm outward-facing side effects once.** Sending email/SMS, real payments, or deleting data that isn't yours get an explicit confirmation before you trigger them, even mid-session.
+- **Stay on charter, inside the time box.** When a lead pulls you outside the charter, record it as a new charter instead of drifting for the rest of the session.
+- **Report only what you observed.** Every bug needs the trail that reproduces it. Something you couldn't reproduce is logged as an observation and labelled as such — never written up as a confirmed defect.
+- **No security or load probing.** Injection attempts, auth bypass, and stress testing are outside exploratory scope unless the user explicitly asks and confirms authorization.
+- **Secrets and PII stay out of the session report.** Redact credentials, tokens, and real customer data from notes, evidence, and screenshots.

@@ -20,13 +20,23 @@ The user provides a free-text description of what they want to explore. Extract:
 
 | Parameter | Required | Description | Example |
 |---|---|---|---|
-| `TICKET_ID` | **Yes** | Issue/ticket key, used for file naming | `ABC-12345` |
 | `AREA` | **Yes** | What to explore — page, feature, or section | `Settings — team members` |
+| `LABEL` | No | Short identifier used for file/folder naming — the issue/ticket key if the project tracks one, otherwise a kebab-case slug of `AREA` | `ABC-12345`, `settings-team-members` |
 | `MODE` | No | `guided` / `codegen` / `recorder` — see Mode Selection | `codegen` |
 
-If `TICKET_ID` or `AREA` is missing, ask the user before starting.
+If `AREA` is missing, ask the user before starting. If `LABEL` is missing, derive it from `AREA` and state what you derived — don't block on it.
 
 Resolve the app URL, credentials, and environment details from the project's own config (e.g. `README`, a project context file, or `.env`). Do **not** ask the user for values that are already configured there — read them. Ask only when you genuinely cannot find them. **Never hardcode a password.**
+
+### Output location — `{OUT}`
+
+All artifacts for a run go under one folder, written below as `{OUT}`. Resolve it **once, from the project you are in**, before writing anything — never assume a fixed layout:
+
+1. **Follow the project's existing convention.** Look for where this repo already keeps test artifacts (specs, screenshots, recordings, reports) and mirror that layout, including its own per-ticket or per-feature grouping if it has one.
+2. **Otherwise** use `<test-root>/<LABEL>/`, where `<test-root>` is whichever test directory the repo actually has (`e2e/`, `tests/`, `test/`, `spec/`), or `./qa-artifacts/<LABEL>/` if it has none.
+3. Honour an explicit path from the user over both of the above.
+
+Tell the user the resolved `{OUT}` before writing the first file. Sub-paths below (`{OUT}/screenshots/…`, `{OUT}/recordings/…`) are relative to it.
 
 ---
 
@@ -66,7 +76,7 @@ Detect the mode from the user's wording:
 5. Take an initial snapshot and screenshot of the landing page:
    ```
    mcp: browser_snapshot
-   mcp: browser_screenshot → e2e/features/{TICKET_ID}/screenshots/explore/00-landing.png
+   mcp: browser_screenshot → {OUT}/screenshots/explore/00-landing.png
    ```
 
 6. Tell the user: **"Browser is open at [section]. Tell me what to click, navigate to, or inspect. I'll snapshot and take notes as we go. Say 'done' when finished and I'll generate the test artifacts."**
@@ -96,7 +106,7 @@ All browser interactions use the browser MCP exclusively — no terminal command
 
 3. **Screenshot** when entering a new section/view, or when the user asks:
    ```
-   mcp: browser_screenshot → e2e/features/{TICKET_ID}/screenshots/explore/{N}-{label}.png
+   mcp: browser_screenshot → {OUT}/screenshots/explore/{N}-{label}.png
    ```
 
 4. **Note** the following in a running log:
@@ -121,7 +131,7 @@ After each action, briefly report what the page now shows (from the snapshot), t
 | User says | Action |
 |---|---|
 | `snapshot` / `snap` | `browser_snapshot` — report page structure and element refs |
-| `screenshot` / `ss` | `browser_screenshot` → `e2e/features/{TICKET_ID}/screenshots/explore/` |
+| `screenshot` / `ss` | `browser_screenshot` → `{OUT}/screenshots/explore/` |
 | `note: <text>` | Add a custom note to the exploration log |
 | `done` / `finish` / "finished testing" | End exploration and move to Phase 3. **Only an explicit signal like this ends the loop** — never infer completion. |
 | `back` | `browser_press_key → Alt+Left` or navigate to prior URL |
@@ -135,11 +145,11 @@ The user browses the flow themselves in a browser launched by Playwright Codegen
 
 ### Steps
 
-1. Resolve the app URL and credentials from the project config. Create the recordings folder: `e2e/features/{TICKET_ID}/recordings/`.
+1. Resolve the app URL and credentials from the project config. Create the recordings folder: `{OUT}/recordings/`.
 
 2. Launch codegen **in the background** (Bash tool with `run_in_background: true` — the process lives until the user closes the browser, so it must not block):
    ```
-   npx playwright codegen <app-url> --browser=chromium --viewport-size=1920,1080 -o e2e/features/{TICKET_ID}/recordings/{TICKET_ID}-codegen.spec.ts
+   npx playwright codegen <app-url> --browser=chromium --viewport-size=1920,1080 -o {OUT}/recordings/{LABEL}-codegen.spec.ts
    ```
 
 3. Tell the user, all in one message:
@@ -162,7 +172,7 @@ The user records the flow in Chrome's **built-in** DevTools Recorder panel (no e
 
 ### Steps
 
-1. Resolve the app URL and credentials from the project config. Create the recordings folder: `e2e/features/{TICKET_ID}/recordings/`.
+1. Resolve the app URL and credentials from the project config. Create the recordings folder: `{OUT}/recordings/`.
 
 2. Launch the user's installed Chrome with DevTools auto-opened at the app URL (PowerShell):
    ```powershell
@@ -173,7 +183,7 @@ The user records the flow in Chrome's **built-in** DevTools Recorder panel (no e
    - In the DevTools window: **⋮ (three dots) → More tools → Recorder → "Create a new recording" → "Start recording"**. Recording begins only after this click.
    - The login credentials to use (recorded credential steps get stripped during conversion).
    - `note: <text>` chat commands work here too — use them to mark expected results.
-   - When finished: click **End recording**, then **Export (↓ icon) → JSON**, and save the file into the `e2e/features/{TICKET_ID}/recordings/` folder (give the user the absolute path so Chrome's save dialog is easy).
+   - When finished: click **End recording**, then **Export (↓ icon) → JSON**, and save the file into the `{OUT}/recordings/` folder (give the user the absolute path so Chrome's save dialog is easy).
    - Tell me in chat when the export is saved.
 
 4. **Wait for the user to say the export is done** — do not poll the folder. Then Read the JSON file and proceed to **Phase 3**.
@@ -207,14 +217,14 @@ Recordings are raw material, not the deliverable. Apply these rules when turning
 - **Selectors:** codegen output already uses `getByRole`/`getByLabel` — keep those locators as-is. For Recorder JSON, follow the aria-first rule in the Mode C table above.
 - **Assertions:** recordings capture *actions*, not *intent*. Fold the user's `note:` remarks in as `expect` assertions at the right steps. Where a step has no stated expectation, derive an obvious one (URL change, new row visible, toast shown) and mark it `// TODO: confirm expected result` so the user can review.
 - **Noise:** drop redundant steps — duplicate clicks, focus-only events, `setViewport`, stray modifier keyDowns.
-- **Raw recording stays untouched** in `e2e/features/{TICKET_ID}/recordings/` as the audit source; reference it in the instruction file's Notes section.
+- **Raw recording stays untouched** in `{OUT}/recordings/` as the audit source; reference it in the instruction file's Notes section.
 
 ### Artifact A: Instruction File
 
-Save to `e2e/features/{TICKET_ID}/{TICKET_ID}.instructions.md`:
+Save to `{OUT}/{LABEL}.instructions.md`:
 
 ```markdown
-# {TICKET_ID} — {AREA} Functional Test Suite
+# {LABEL} — {AREA} Functional Test Suite
 
 ## Objective
 {What this test suite covers — derived from exploration}
@@ -249,7 +259,7 @@ Derive test cases from what was explored or recorded — CRUD operations, naviga
 
 ### Artifact B: Playwright Script
 
-Save to `e2e/features/{TICKET_ID}/{area-kebab-case}.spec.ts`:
+Save to `{OUT}/{area-kebab-case}.spec.ts`:
 
 ```typescript
 import { test, expect } from '@playwright/test';
@@ -277,7 +287,7 @@ Use the actual selectors, labels, and structure discovered during exploration or
 1. Show the user a summary of what was discovered (sections, test case count, key findings).
 2. Present both artifacts for review.
 3. Ask if they want to adjust, add, or remove anything before saving.
-4. Save files to `e2e/features/{TICKET_ID}/`.
+4. Save files to `{OUT}/`.
 
 ---
 
@@ -288,5 +298,16 @@ Use the actual selectors, labels, and structure discovered during exploration or
 - For modals/forms, note which fields have `*` (required) markers.
 - Note the exact on-screen text on buttons and labels — tests should match these (in whatever language the UI uses).
 - If the user mentions a comparison to another page/portal, note the differences.
-- Save screenshots to `e2e/features/{TICKET_ID}/screenshots/explore/`.
+- Save screenshots to `{OUT}/screenshots/explore/`.
 - The browser is visible on the user's screen — in Mode A, narrate what you're doing so they can follow along; in Modes B/C, stay quiet while the user records and respond only to `note:` messages.
+
+---
+
+## Guardrails
+
+- **Confirm the environment before state-changing exploration.** CRUD is allowed when the user directs it, but establish that the target is a non-production test environment first — and confirm once more before outward-facing effects (email/SMS, real payments, deleting data).
+- **Never end the session on your own.** Only an explicit end signal moves the run to Phase 3. This is the failure mode with the highest cost here, which is why it is a guardrail and not just a step.
+- **Writes test artifacts only.** The instruction file, spec, screenshots, and recordings go under the resolved `{OUT}` — never application code, and never outside `{OUT}` without the user's say-so.
+- **Never hardcode a credential.** Strip recorded logins and reference the repo's auth helper or `process.env`. Raw recordings can contain typed passwords — treat them as sensitive and never carry a captured secret into the instruction file or spec.
+- **No fabricated steps.** Every test case must trace to something actually explored or captured. Where an expected result was never stated, derive the obvious one and mark it `// TODO: confirm expected result` rather than asserting it.
+- **Redact evidence.** Scrub credentials, tokens, and real customer data from screenshots and notes before they reach the instruction file.

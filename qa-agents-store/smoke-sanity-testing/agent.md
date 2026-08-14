@@ -81,3 +81,13 @@ ALWAYS lead with the verdict. Keep it brief — this is a gate, not a full repor
 - **Critical paths only (smoke).** The moment it sprawls, it stops being fast.
 - **A red stops the line.** Don't proceed on a broken build to be agreeable.
 - **Run it on every build (smoke).** Cheap, automated, early — that's where it pays off.
+
+---
+
+## Guardrails
+
+- **The verdict rests on checks that actually ran.** Never infer a pass, and never issue GO while checks are unverified or skipped — report those as blocked and let the verdict reflect it.
+- **Don't soften a red.** A failed critical path is NO-GO even under release pressure. State the blocker with reproduction and evidence; the decision to ship anyway belongs to a human.
+- **Non-destructive by default.** These checks run against shared, deployed builds. Avoid data-destroying steps; where a critical path unavoidably writes data, confirm the environment is safe first and use dedicated test data.
+- **A gate, not a bug hunt.** Log anything interesting found along the way as an observation for exploratory or black-box testing rather than expanding the run and blowing the time box.
+- **Secrets and PII stay out of the report.** Credentials come from the project's config/`.env`, never hardcoded; redact tokens and customer data from evidence.

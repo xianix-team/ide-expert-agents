@@ -36,11 +36,21 @@ Both tracks share the same setup and produce a single combined report (Track A f
 The user provides one or more of:
 - A **URL** to audit.
 - A **page name** / area to locate.
-- A **ticket ID** to scope findings and the report folder.
+- A **label** (ticket/issue key, or the feature name) to scope findings and name the report folder.
 - For Track A: the **design spec** to compare against (a file path, a link, or a reference page). If none is supplied, ask for it — Track A needs a source of truth.
 - A **target WCAG level** (defaults to **AA**) for Track B.
 
 If no URL is given, ask which page to audit. For any public web app, Track B works without credentials.
+
+### Output location — `{OUT}`
+
+Screenshots and the report go under one run folder, written below as `{OUT}`. Resolve it **once, from the project you are in**, before writing anything — never assume a fixed layout:
+
+1. **Follow the project's existing convention.** If the repo already keeps test artifacts or QA reports somewhere, mirror that location and its per-ticket/per-feature grouping.
+2. **Otherwise** use `<test-root>/<LABEL>/`, where `<test-root>` is whichever test directory the repo actually has (`e2e/`, `tests/`, `test/`, `spec/`) and `<LABEL>` is the ticket key or a kebab-case slug of the page/area; use `./qa-artifacts/<LABEL>/` if the repo has no test directory.
+3. Honour an explicit path from the user over both of the above.
+
+State the resolved `{OUT}` before writing the first file.
 
 ## Prerequisites (shared setup)
 
@@ -65,7 +75,7 @@ For each page:
 
 1. **Screenshot** the page:
    ```bash
-   playwright-cli screenshot --filename=e2e/features/{TICKET_ID}/screenshots/ui-ux/{page-name}.png
+   playwright-cli screenshot --filename={OUT}/screenshots/ui-ux/{page-name}.png
    ```
 2. **Extract computed styles** from key elements using `playwright-cli eval` — then compare against the design spec's values.
 
@@ -291,8 +301,7 @@ For **Track A** deviations use these types; for **Track B** use the accessibilit
 
 Create a **single self-contained HTML report**: inline CSS, all screenshots embedded as base64 (then delete the temporary image files), local timestamps. (If the user asks for "just the findings" / a quick summary rather than the audit deliverable, a Markdown findings table in the same structure is fine — skip the HTML.)
 
-**Filename:** `e2e/features/{TICKET_ID}/ui-ux-a11y-audit-{YYYY-MM-DD-HHMM}.html`
-If no ticket ID is in scope, use `e2e/features/ui-ux-a11y-audit/`.
+**Filename:** `{OUT}/ui-ux-a11y-audit-{YYYY-MM-DD-HHMM}.html` — see **Output location** above for how `{OUT}` is resolved.
 
 ### Report Structure
 
@@ -339,7 +348,7 @@ UI/UX & Accessibility Audit Complete
   Total findings: X (P1: Y, P2: Z, P3: W)
     UI/UX (Track A): N    Accessibility (Track B): M
   Lighthouse a11y: NN/100 (if run)
-  Report: e2e/features/{TICKET_ID}/ui-ux-a11y-audit-{date}.html
+  Report: {OUT}/ui-ux-a11y-audit-{date}.html
 
   Top findings:
   1. [Most critical]
@@ -364,3 +373,14 @@ UI/UX & Accessibility Audit Complete
 | New in 2.2 (AA) | 2.4.11, 2.5.7, 2.5.8, 3.3.8 (+ 3.2.6 / 3.3.7 at A) |
 | Removed in 2.2 | 4.1.1 Parsing (don't test) |
 | Full detail | `accessibility.md` (appended below) |
+
+---
+
+## Guardrails
+
+- **Read-only on the product.** This agent audits and reports — it never edits application code, styles, or markup to fix what it finds.
+- **Non-destructive browsing.** Navigate, inspect, and screenshot only. Don't submit forms or trigger writes to reach a state; ask the user to set that state up instead.
+- **Automated ≠ conformant.** A clean axe run or a Lighthouse 100 is never reported as WCAG conformance, and `incomplete` results are never counted as passes. Manual passes that weren't actually performed are listed as "not tested", not as passes.
+- **Every finding carries evidence.** Cite the failing selector, the extracted value, the WCAG SC, or the screenshot. A finding that rests on an assumption about the design spec is raised as an open question, not asserted as a deviation.
+- **Redact before embedding.** Screenshots are embedded base64 in the report — scrub credentials, tokens, real customer names, emails, and other PII first, and delete the temporary image files afterwards.
+- **Confirm the environment.** Audit staging/test targets by default; audit production only when the user confirms it, and stay strictly read-only there.
