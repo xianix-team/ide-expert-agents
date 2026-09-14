@@ -111,6 +111,7 @@ In Cursor: type `/` and search for the agent name in agent mode.
 | [compliance-agents-store](compliance-agents-store/README.md) | 1 | AI compliance and governance — EU AI Act controls review with ISO 42001 and NIST AI RMF mapping |
 | [delivery-agents-store](delivery-agents-store/README.md) | 2 | Delivery management — DORA-inspired commitment health reporting, and parallel-execution planning (dependency mapping + wave scheduling), adapted for AI-led development |
 | [feature-agents-store](feature-agents-store/README.md) | 1 | Feature implementation — skills for building specific product features end-to-end, e.g. an AI "digital salesperson" that maps user intent (chat + generated action buttons) to the product's real features/services, with per-user preference memory and a cross-user plot library |
+| [analyst-agents-store](analyst-agents-store/README.md) | 1 | Business/systems analysis — critically evaluating requirements against the Paul-Elder Critical Thinking Framework before they're scoped or built |
 
 ---
 
