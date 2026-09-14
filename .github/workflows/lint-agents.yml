@@ -1,0 +1,36 @@
+name: Lint agents
+
+on:
+  pull_request:
+    paths:
+      - "*-agents-store/**"
+      - "README.md"
+      - "mcp-server/scripts/lint-agents.mjs"
+      - "mcp-server/package.json"
+  push:
+    branches:
+      - main
+    paths:
+      - "*-agents-store/**"
+      - "README.md"
+      - "mcp-server/scripts/lint-agents.mjs"
+      - "mcp-server/package.json"
+  workflow_dispatch:
+
+jobs:
+  lint-agents:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install mcp-server dependencies
+        working-directory: mcp-server
+        run: npm ci
+
+      - name: Lint agent stores
+        working-directory: mcp-server
+        run: npm run lint:agents

@@ -15,7 +15,8 @@
     "start": "node dist/index.js",
     "start:http": "node dist/http.js",
     "dev": "tsx src/index.ts",
-    "dev:http": "tsx src/http.ts"
+    "dev:http": "tsx src/http.ts",
+    "lint:agents": "node scripts/lint-agents.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
