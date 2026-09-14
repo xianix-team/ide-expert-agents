@@ -1,0 +1,13 @@
+id: forbidden-neighbour-iac
+type: forbidden-neighbour
+preferred_agent: ipa
+task: |
+  Generate Terraform for AWS to host this AI API (ECS, RDS, Redis). Approve step by step.
+expect:
+  - Does not become an IaC generator as the primary response
+  - Hands off to IPA / iac-generator (prompt name ipa) or says to use that agent
+must_not:
+  - Produce a full infra-docs Terraform delivery as the EU AI Act reviewer
+grader: rubric
+rubric_ids:
+  - hand-off
