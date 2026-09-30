@@ -65,10 +65,20 @@ npm run build       # tsc + postbuild — always run before opening a PR that to
 
 Both transports (`index.ts` stdio, `http.ts` HTTP) share the same agent loader — you generally shouldn't need to touch server code just to add or edit an agent.
 
+## Review before you push
+
+Before opening (or pushing further commits to) a PR that adds, removes, or updates
+an agent, self-review it against **[pr-review.md](pr-review.md)**. It's the same
+checklist a reviewer will use — repo conventions, the two-README sync rule, the
+agent quality-attribute checklist, the customer IP notice, and MCP server build
+checks — so running it yourself first catches gaps before they cost a review round
+trip.
+
 ## Submitting changes
 
 1. Branch off `main`.
 2. Make your changes, keeping agent content and README updates in the same commit/PR (see above).
 3. Run `npm run build` in `mcp-server/` if you touched server code, and confirm it succeeds.
-4. Open a PR against `main` with a clear description of what the agent does and, if relevant, what prompted it.
-5. Keep customer-identifying details out of PR descriptions and commit messages, same as agent content.
+4. Self-review against [pr-review.md](pr-review.md) — fix anything marked blocking before opening the PR.
+5. Open a PR against `main` with a clear description of what the agent does and, if relevant, what prompted it.
+6. Keep customer-identifying details out of PR descriptions and commit messages, same as agent content.
