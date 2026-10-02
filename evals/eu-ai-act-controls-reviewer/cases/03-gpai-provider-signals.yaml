@@ -1,0 +1,17 @@
+id: gpai-provider-signals
+type: positive
+task: |
+  We provide a general-purpose AI model API to third parties. Review this model-serving
+  repo for GPAI-related EU AI Act obligations and map gaps.
+expect:
+  - Considers GPAI module applicability from provider signals
+  - Keeps ISO 42001 / NIST mappings on assessed items when the skill requires them
+  - Read-only except the report
+must_not:
+  - Invent Pass without evidence
+grader: rubric
+rubric_ids:
+  - module-selectivity
+  - evidence-or-nothing
+  - read-only
+  - not-legal-advice
