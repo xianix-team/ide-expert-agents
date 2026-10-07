@@ -73,7 +73,7 @@
       }
     },
     "coding-agents-store": {
-      "description": "Code quality and targeted improvements — error handling audit, runtime debugging from logs/crashes/requirements, observability implementation (logging/metrics/tracing) with cost guardrails, and authentication/authorization implementation mapped to OWASP ASVS / NIST guidance",
+      "description": "Code quality and targeted improvements — error handling audit, runtime debugging from logs/crashes/requirements, observability implementation (logging/metrics/tracing) with cost guardrails, authentication/authorization implementation mapped to OWASP ASVS / NIST guidance, and behavior-preserving code cleanup for vibe-coded / overgrown codebases",
       "agents": {
         "error-handling-audit": {
           "title": "Error Handling Audit",
@@ -90,6 +90,10 @@
         "auth-implementer": {
           "title": "Auth Implementer",
           "whenToUse": "When you want to implement authentication (login/logout, SSO/OIDC/SAML, MFA, passwordless) and authorization (RBAC/ABAC, centralized access checks, IDOR prevention) with security as a first-class constraint. Designs and implements credential hashing, session/token strategy, account-abuse protection, and threat mitigations mapped to live-fetched OWASP ASVS / NIST 800-63B guidance and any named compliance framework (GDPR, HIPAA, PCI-DSS, SOC2) — while being explicit about what code alone can and can't guarantee, and recommending a follow-up scan (e.g. `owasp-security-scanner`) and audit for regulated contexts"
+        },
+        "code-cleanup": {
+          "title": "Code Cleanup",
+          "whenToUse": "When you want to clean up an existing codebase—especially AI/vibe-coded ones—by removing waste, simplifying bulky code, and fixing evidenced quality, performance, or security issues while preserving required behavior. Default CLEAN finds one worthwhile cleanup at a time, proposes it, waits for approval, fixes, verifies, then continues; Analyze and Review only when explicitly requested"
         }
       }
     },
