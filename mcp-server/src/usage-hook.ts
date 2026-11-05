@@ -1,10 +1,9 @@
 import fs from "fs";
 import os from "os";
 import path from "path";
-import { estimateCostUsd, type Usage } from "./model-prices.js";
 import { isConfigured, pushEvent, RUN_MARKER_PATTERN, type Dimensions } from "./telemetry.js";
 
-// Claude Code Stop hook: adds token, model, and cost data to agent runs. It reads
+// Claude Code Stop hook: adds token and model data to agent runs. It reads
 // what the session log has gained since the last Stop, attributes usage to the
 // most recent agent run, and pushes it under that run's correlation id. A run
 // stays open until the next agent is invoked, so later work in the session counts
@@ -19,6 +18,12 @@ interface State {
   offsets: Record<string, number>;
   run?: Run;
   recentMessageIds: string[];
+}
+
+interface Usage {
+  input_tokens?: number;
+  output_tokens?: number;
+  cache_creation_input_tokens?: number;
 }
 
 interface LogEntry {
@@ -78,28 +83,20 @@ function subagentLogs(transcript: string): string[] {
 
 function summarize(messages: Iterable<MessageUsage>): Dimensions {
   let tokens = 0;
-  let costUsd: number | undefined = 0;
   const tokensByModel = new Map<string, number>();
 
   for (const { model, usage } of messages) {
-    // Cache reads stay out of `tokens` but still count towards cost.
+    // Cache reads are left out: they would dwarf the real work in long sessions.
     const billed =
       (usage.input_tokens ?? 0) +
       (usage.output_tokens ?? 0) +
       (usage.cache_creation_input_tokens ?? 0);
     tokens += billed;
     tokensByModel.set(model, (tokensByModel.get(model) ?? 0) + billed);
-
-    const cost = estimateCostUsd(model, usage);
-    costUsd = cost === undefined || costUsd === undefined ? undefined : costUsd + cost;
   }
 
   const model = [...tokensByModel].sort((a, b) => b[1] - a[1])[0][0];
-  return {
-    tokens,
-    model,
-    ...(costUsd === undefined ? {} : { costUsd: Number(costUsd.toFixed(6)) }),
-  };
+  return { tokens, model };
 }
 
 async function report(transcript: string, sessionId: string): Promise<void> {

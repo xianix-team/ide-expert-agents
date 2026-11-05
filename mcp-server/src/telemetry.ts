@@ -15,7 +15,6 @@ const TIMEOUT_MS = 5000;
 export interface Dimensions {
   tokens: number;
   model: string;
-  costUsd?: number;
 }
 
 interface HubConfig {

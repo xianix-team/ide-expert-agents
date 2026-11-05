@@ -247,7 +247,7 @@ Restart the MCP connection after changing any of these values.
 
 Invoke any agent, then open the workflow's event list in AI Hub. The agent name appears as the activity. If nothing arrives, check the MCP server log for an `AI Hub push skipped` line. No line at all usually means the variables did not reach the server process.
 
-### Add token, model, and cost data (Claude Code only)
+### Add token and model data (Claude Code only)
 
 The server never sees token usage, so invocation events carry no dimensions. In Claude Code, an optional hook adds them. Cursor and Copilot keep sending invocation events without dimensions.
 
@@ -281,9 +281,8 @@ When metrics are on, the server adds a short HTML comment with a run id to each 
 |---|---|---|
 | `tokens` | Input, output, and cache-write tokens. Cache reads are left out because they would dwarf the real work in long sessions | Exact per message |
 | `model` | The model that used the most tokens in that push | Exact |
-| `costUsd` | Tokens × the rates in [src/model-prices.ts](src/model-prices.ts), including cache reads | Estimate at API list prices, including for subscription users. Omitted for models not in the table |
 
-A run stays open until the next agent is invoked, so other work later in the same session counts towards it. Each turn sends its own usage, so one run can produce several events with the same `correlationId`. Update `src/model-prices.ts` when prices change, then publish a new version.
+A run stays open until the next agent is invoked, so other work later in the same session counts towards it. Each turn sends its own usage, so one run can produce several events with the same `correlationId`. `costUsd` is not sent.
 
 ---
 
