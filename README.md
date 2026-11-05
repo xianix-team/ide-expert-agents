@@ -102,7 +102,7 @@ In Cursor: type `/` and search for the agent name in agent mode.
 |---|---|---|
 | [idf-agents-store](idf-agents-store/README.md) | 9 | Structured software delivery — design, risk, UAT, RCA, process health, and more |
 | [devops-agents-store](devops-agents-store/README.md) | 1 | Infrastructure provisioning and IaC generation |
-| [architect-agents-store](architect-agents-store/README.md) | 2 | Architecture review and cloud deployment inspection — deployment fitness assessment, agentic AI review |
+| [architect-agents-store](architect-agents-store/README.md) | 4 | Architecture review and cloud deployment inspection — deployment fitness assessment, agentic AI review, product-engineering foundations checklist, and release readiness checklist |
 | [coding-agents-store](coding-agents-store/README.md) | 4 | Code quality and targeted improvements — error handling audit, runtime debugging from logs/crashes/requirements, observability implementation (logging/metrics/tracing) with cost guardrails, and authentication/authorization implementation mapped to OWASP ASVS / NIST guidance |
 | [qa-agents-store](qa-agents-store/README.md) | 2 | Testing and quality assurance — OWASP Top 10 / Top 25 Parameters static security scanning, and structured test case generation from specs/diffs |
 | [ux-agents-store](ux-agents-store/README.md) | 9 | UX design and research — persona/journey/service-blueprint/competitive-analysis/prototype generation, design-consistency auditing, design-concept generation, interaction-design review, and design-rationale documentation |
