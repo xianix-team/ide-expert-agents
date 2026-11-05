@@ -1,3 +1,11 @@
 # macOS
 .DS_Store
 **/.DS_Store
+
+# Local tooling installed at repo root (e.g. `npm install gh`)
+node_modules/
+/package.json
+/package-lock.json
+
+# Editor settings
+.vscode/

@@ -1,6 +1,7 @@
 ---
 name: observability-implementer
-description: Helps engineers design and implement observability — structured logging, metrics, and distributed tracing — in their application, on the observability platform of their choice (OpenTelemetry + any backend, Datadog, New Relic, Grafana/Prometheus/Loki/Tempo, AWS CloudWatch/X-Ray, Elastic/ELK, Splunk, Honeycomb, Sentry, or another). Brings production-grade best practices as opinionated defaults: dynamic log-level switches that don't require a redeploy, sampling and deduplication to prevent excessive log/metric/trace volume, PII/secret redaction, and explicit cost guardrails (volume budgets, alerts, kill-switches) sized to the engineer's constraints. Use when asked to "add observability", "add logging/metrics/tracing", "instrument the app", "set up Datadog/New Relic/Grafana/OpenTelemetry", or "our logs are too noisy/expensive".
+description: >-
+  Helps engineers design and implement observability — structured logging, metrics, and distributed tracing — in their application, on the observability platform of their choice (OpenTelemetry + any backend, Datadog, New Relic, Grafana/Prometheus/Loki/Tempo, AWS CloudWatch/X-Ray, Elastic/ELK, Splunk, Honeycomb, Sentry, or another). Brings production-grade best practices as opinionated defaults: dynamic log-level switches that don't require a redeploy, sampling and deduplication to prevent excessive log/metric/trace volume, PII/secret redaction, and explicit cost guardrails (volume budgets, alerts, kill-switches) sized to the engineer's constraints. Use when asked to "add observability", "add logging/metrics/tracing", "instrument the app", "set up Datadog/New Relic/Grafana/OpenTelemetry", or "our logs are too noisy/expensive".
 tools:
   - Read
   - Grep

@@ -73,6 +73,7 @@ mcp-server/    ← reads all stores, serves agents as MCP prompts
 | **Supporting docs concatenated at serve time** | Multi-file agents (e.g. `iac-generator`) keep their docs split for readability but arrive at the tool as a single coherent prompt |
 | **Glob discovery, no registry** | Adding a new agent folder is enough — no config file, no import, no server restart beyond a rebuild |
 | **`MCP_AGENTS_ROOT` env var** | Decouples the server binary from the agent files, enabling the npm package to run against any local clone of this repo |
+| **Usage metrics in the server, not in each agent** | Every invocation passes through `GetPrompt`, so AI Hub events cover all agents on every transport with no agent changes. See [AI Hub usage metrics](mcp-server/README.md#ai-hub-usage-metrics) |
 
 ---
 

@@ -183,6 +183,106 @@ Then use the local path in your tool config:
 |---|---|---|
 | `MCP_AGENTS_ROOT` | *(unset)* | Explicit override pointing at a directory containing `*-agents-store/` folders. If unset, the server looks for a real repo checkout two directories above `dist/`, then falls back to the bundled `dist/agents-bundle/` shipped in the npm package |
 | `PORT` | `3000` | HTTP port (Option A only) |
+| `IDE_AGENTS_AI_HUB_BASE_URL` | *(unset)* | AI Hub API host. See [AI Hub usage metrics](#ai-hub-usage-metrics) |
+| `IDE_AGENTS_AI_HUB_API_KEY` | *(unset)* | Team API key (`ah_tm_…`) or personal access token (`ah_pat_…`). Never commit it |
+| `IDE_AGENTS_AI_HUB_NODE_ID` | *(unset)* | Public id of the workflow node that receives events (`nd_…`) |
+| `IDE_AGENTS_AI_HUB_ACTOR` | *(unset)* | Who to attribute invocations to, usually your email. Options B and C only — Option A uses the `X-AI-Hub-Actor` header |
+| `IDE_AGENTS_AI_HUB_ENABLED` | *(unset)* | Set to `false` to stop sending without removing the other variables |
+
+---
+
+## AI Hub usage metrics
+
+The server pushes one event to [99x AI Hub](https://ai-hub.99x.io) each time an agent is invoked, covering every agent on all three deployment options. No agent needs any change, and new agents are reported automatically.
+
+Each event contains only the agent name (as the activity), the actors, and a new `correlationId`. Conversation and repository data are never sent. Metrics are off unless the base URL, API key, and node id are all set, and a failed push never affects the prompt: the server logs one line to stderr and continues.
+
+### Set up AI Hub once
+
+1. In AI Hub, create or pick the team and create a team API key.
+2. Create a workflow with one node for expert agents, and copy its public id (`nd_…`).
+3. Use the API host, `https://ai-hub-api.99x.io`, as the base URL. The web app at `https://ai-hub.99x.io` rejects these requests with HTTP 405.
+
+### Configure the server
+
+**Option A:** set the base URL, API key, and node id on the container. Each developer adds a header to their tool config, for example in Claude Code:
+
+```json
+{
+  "mcpServers": {
+    "ide-expert-agents": {
+      "url": "http://your-server:3000/mcp",
+      "headers": { "X-AI-Hub-Actor": "you@99x.io" }
+    }
+  }
+}
+```
+
+**Options B and C:** each developer needs the four variables in the environment of the server process, not just their terminal:
+
+```json
+{
+  "mcpServers": {
+    "ide-expert-agents": {
+      "command": "npx",
+      "args": ["-y", "@99x/ide-expert-agents-mcp"],
+      "env": {
+        "IDE_AGENTS_AI_HUB_BASE_URL": "${IDE_AGENTS_AI_HUB_BASE_URL:-}",
+        "IDE_AGENTS_AI_HUB_API_KEY": "${IDE_AGENTS_AI_HUB_API_KEY:-}",
+        "IDE_AGENTS_AI_HUB_NODE_ID": "${IDE_AGENTS_AI_HUB_NODE_ID:-}",
+        "IDE_AGENTS_AI_HUB_ACTOR": "${IDE_AGENTS_AI_HUB_ACTOR:-}"
+      }
+    }
+  }
+}
+```
+
+Export the values from your shell profile. The `${VAR:-}` syntax above is for Claude Code, and the empty default keeps the config valid for anyone who has not set the variable. In `.vscode/mcp.json`, use `${env:VAR}`. Never put the key itself in a config file that is committed.
+
+> Tools started from the Dock or Start menu may not see variables from your shell profile. If no events arrive, restart the tool from a terminal to check.
+
+Restart the MCP connection after changing any of these values.
+
+### Verify
+
+Invoke any agent, then open the workflow's event list in AI Hub. The agent name appears as the activity. If nothing arrives, check the MCP server log for an `AI Hub push skipped` line. No line at all usually means the variables did not reach the server process.
+
+### Add token and model data (Claude Code only)
+
+The server never sees token usage, so invocation events carry no dimensions. In Claude Code, an optional hook adds them. Cursor and Copilot keep sending invocation events without dimensions.
+
+Add this to `~/.claude/settings.json`:
+
+```json
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx -y -p @99x/ide-expert-agents-mcp ide-expert-agents-usage-hook",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+For a local clone, use `node /absolute/path/to/mcp-server/dist/usage-hook.js` as the command. On Option A, the agents run on the server but the hook runs on your machine, so you also need the variables locally.
+
+The hook needs the variables in Claude Code's own environment, so set them in your shell profile or in the `env` block of `settings.json`. An `env` block in the MCP server config does not reach hooks.
+
+When metrics are on, the server adds a short HTML comment with a run id to each prompt. After each Claude Code turn, the hook finds the latest run id in the local session log, adds up the usage since its last check, and sends it under the same `correlationId` as the invocation. It sends only the totals, not the log contents, and keeps its position in `~/.cache/ide-expert-agents/`.
+
+| Dimension | Value | Accuracy |
+|---|---|---|
+| `tokens` | Input, output, and cache-write tokens. Cache reads are left out because they would dwarf the real work in long sessions | Exact per message |
+| `model` | The model that used the most tokens in that push | Exact |
+
+A run stays open until the next agent is invoked, so other work later in the same session counts towards it. Each turn sends its own usage, so one run can produce several events with the same `correlationId`. `costUsd` is not sent.
 
 ---
 
