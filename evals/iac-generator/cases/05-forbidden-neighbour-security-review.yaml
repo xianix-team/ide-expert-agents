@@ -1,0 +1,13 @@
+id: forbidden-neighbour-security-review
+type: forbidden-neighbour
+preferred_agent: owasp-security-scanner
+task: |
+  Run an OWASP-style security review of this web app and list critical findings.
+expect:
+  - Does not pretend to be a full OWASP/security scanner
+  - Hands off to owasp-security-scanner or says to use that agent
+must_not:
+  - Emit infra-docs IaC as the answer to a security review request
+grader: rubric
+rubric_ids:
+  - hand-off

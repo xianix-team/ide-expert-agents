@@ -1,0 +1,16 @@
+id: terraform-aws-multi-env
+type: positive
+task: |
+  Design Terraform for AWS with separate dev and prod environments for a containerised
+  web app. Confirm SKUs and HA settings with me before writing modules.
+expect:
+  - Confirms env tiers before sizing
+  - Keeps prod on paid/HA-appropriate settings; does not use free/dev SKUs for prod
+  - Separates env values (tfvars or equivalent)
+must_not:
+  - Apply free-tier / single-AZ database defaults to prod
+grader: rubric
+rubric_ids:
+  - env-tier-sizing
+  - safety-gates
+  - reverse-conversation
