@@ -325,7 +325,7 @@ A run stays open until the next agent is invoked, so other work later in the sam
 ## Adding a new agent
 
 1. Create a folder in the appropriate `*-agents-store/` directory.
-2. Add an `agent.md` (or `SKILL.md`) with YAML frontmatter containing `name` and `description`. To send its events to a specific AI Hub node, add it to your [node map](#send-agents-to-different-nodes).
+2. Add an `agent.md` (or `SKILL.md`) with YAML frontmatter containing `name` and `description`. To send its events to a specific AI Hub node, add it to your [node map](#create-the-env-file).
 3. Rebuild: `npm run build`.
 4. For Option A: redeploy (rebuild the image — new stores are picked up automatically, no Dockerfile edit needed). For Option B: publish a new version. For local clone: restart the MCP connection.
 

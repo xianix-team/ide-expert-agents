@@ -134,18 +134,19 @@ async function report(transcript: string, sessionId: string): Promise<void> {
     }
   }
 
+  const save = (next: State) => fs.writeFileSync(stateFile, JSON.stringify(next));
+  const recentIds = () => [...seen].slice(-RECENT_ID_LIMIT);
+
+  // Offsets advance only after every push succeeds, so a failure retries on the
+  // next Stop. Each successful push records its message ids straight away, so
+  // that retry re-reads the same lines but skips runs already sent.
   for (const group of pending.values()) {
     await pushEvent(group.run, undefined, summarize(group.messages.values()));
     for (const id of group.messages.keys()) seen.add(id);
+    save({ ...state, recentMessageIds: recentIds() });
   }
 
-  // Saved only after every push succeeds, so a failure retries on the next Stop.
-  const next: State = {
-    offsets,
-    run,
-    recentMessageIds: [...seen].slice(-RECENT_ID_LIMIT),
-  };
-  fs.writeFileSync(stateFile, JSON.stringify(next));
+  save({ offsets, run, recentMessageIds: recentIds() });
 }
 
 // Stop hooks can overlap; a later Stop picks up anything a skipped one left.
