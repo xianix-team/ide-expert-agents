@@ -8,7 +8,8 @@
     "README.md"
   ],
   "bin": {
-    "ide-expert-agents-mcp": "dist/index.js"
+    "ide-expert-agents-mcp": "dist/index.js",
+    "ide-expert-agents-usage-hook": "dist/usage-hook.js"
   },
   "scripts": {
     "build": "tsc && node scripts/postbuild.mjs",

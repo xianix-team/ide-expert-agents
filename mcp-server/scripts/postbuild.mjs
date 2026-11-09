@@ -8,13 +8,15 @@ const distDir = path.resolve(__dirname, "../dist");
 const repoRoot = path.resolve(__dirname, "../..");
 
 const SHEBANG = "#!/usr/bin/env node\n";
-const indexPath = path.join(distDir, "index.js");
 
-const content = fs.readFileSync(indexPath, "utf-8");
-if (!content.startsWith("#!")) {
-  fs.writeFileSync(indexPath, SHEBANG + content);
+for (const bin of ["index.js", "usage-hook.js"]) {
+  const binPath = path.join(distDir, bin);
+  const content = fs.readFileSync(binPath, "utf-8");
+  if (!content.startsWith("#!")) {
+    fs.writeFileSync(binPath, SHEBANG + content);
+  }
+  fs.chmodSync(binPath, 0o755);
 }
-fs.chmodSync(indexPath, 0o755);
 
 // Bundle a copy of every *-agents-store/ into dist/agents-bundle/ so the
 // published npm package is self-contained — `npx @99x/ide-expert-agents-mcp`
