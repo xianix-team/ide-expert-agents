@@ -24,13 +24,11 @@ export function createServer(): Server {
 
     // Only HTTP requests carry headers; stdio relies on IDE_AGENTS_AI_HUB_ACTOR.
     const actorHeader = extra.requestInfo?.headers["x-ai-hub-actor"];
-    const correlationId = reportInvocation(
+    const run = reportInvocation(
       agent.name,
       Array.isArray(actorHeader) ? actorHeader[0] : actorHeader
     );
-    const text = correlationId
-      ? `${agent.content}\n\n${runMarker(correlationId, agent.name)}`
-      : agent.content;
+    const text = run ? `${agent.content}\n\n${runMarker(run)}` : agent.content;
 
     return {
       description: agent.description,

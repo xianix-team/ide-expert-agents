@@ -1,18 +1,19 @@
 import fs from "fs";
 import os from "os";
 import path from "path";
-import { isConfigured, pushEvent, RUN_MARKER_PATTERN, type Dimensions } from "./telemetry.js";
+import {
+  isConfigured,
+  pushEvent,
+  RUN_MARKER_PATTERN,
+  type Dimensions,
+  type Run,
+} from "./telemetry.js";
 
 // Claude Code Stop hook: adds token and model data to agent runs. It reads
 // what the session log has gained since the last Stop, attributes usage to the
 // most recent agent run, and pushes it under that run's correlation id. A run
 // stays open until the next agent is invoked, so later work in the session counts
 // towards it. Always exits 0: metrics must never interrupt a session.
-
-interface Run {
-  correlationId: string;
-  agentName: string;
-}
 
 interface State {
   offsets: Record<string, number>;
@@ -134,12 +135,7 @@ async function report(transcript: string, sessionId: string): Promise<void> {
   }
 
   for (const group of pending.values()) {
-    await pushEvent(
-      group.run.correlationId,
-      group.run.agentName,
-      undefined,
-      summarize(group.messages.values())
-    );
+    await pushEvent(group.run, undefined, summarize(group.messages.values()));
     for (const id of group.messages.keys()) seen.add(id);
   }
 
