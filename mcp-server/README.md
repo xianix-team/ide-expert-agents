@@ -97,15 +97,18 @@ claude mcp add --transport http -s user ide-expert-agents http://your-server:300
 
 ## Option B — npx / npm package (per-developer, no server required)
 
-Publish once to npm (private registry or GitHub Packages). Each developer runs the server locally via `npx` — **no clone, no build step, no Docker, and no local agent files needed.** `npm run build` bakes a copy of every `*-agents-store/` into `dist/agents-bundle/` (see `scripts/postbuild.mjs`), so the published package is fully self-contained.
+The server is published as a public npm package, [`@99x-ai-dlc/ide-expert-agents-mcp`](https://www.npmjs.com/package/@99x-ai-dlc/ide-expert-agents-mcp), under the [`99x-ai-dlc`](https://www.npmjs.com/org/99x-ai-dlc) npm organization. Each developer runs it locally via `npx -y @99x-ai-dlc/ide-expert-agents-mcp` — **no clone, no build step, no Docker, no npm login, and no local agent files needed.** `npm run build` bakes a copy of every `*-agents-store/` into `dist/agents-bundle/` (see `scripts/postbuild.mjs`), so the published package is fully self-contained.
 
 ### Publish
 
+Publishing is automated by [`.github/workflows/publish-npm.yml`](https://github.com/xianix-team/ide-expert-agents/blob/main/.github/workflows/publish-npm.yml). On every push to `main` that touches `mcp-server/` or any `*-agents-store/`, CI builds the package and publishes it with npm provenance — **but only if the version in `mcp-server/package.json` is not already on npm**. To release, bump the version in your PR:
+
 ```bash
 cd mcp-server
-npm run build     # also bundles the agent stores into dist/agents-bundle/
-npm publish --access restricted   # private registry
+npm version patch --no-git-tag-version   # or minor / major
 ```
+
+CI authenticates with the `NPM_TOKEN` repository secret (a granular npm access token with read/write on the `@99x-ai-dlc` scope). To publish manually instead, log in as a member of the `99x-ai-dlc` org and run `npm publish` from `mcp-server/`.
 
 ### Developer config
 
@@ -145,7 +148,7 @@ claude mcp add -s user ide-expert-agents -- npx -y @99x-ai-dlc/ide-expert-agents
 
 > **Using a fork or private agent set instead of the bundled agents?** Set `MCP_AGENTS_ROOT` to a local clone's path in the `env` block above — it always takes priority over the bundled copy. This is also how to pick up agent changes without waiting for a new npm publish.
 >
-> **Keeping the published package in sync:** the bundle is a snapshot taken at `npm run build` time — republish (`npm version` + `npm publish`) whenever agents change, the same as any other npm package.
+> **Keeping the published package in sync:** the bundle is a snapshot taken at `npm run build` time — bump the version whenever agents change so CI publishes a new release (see [Publish](#publish)).
 
 ---
 

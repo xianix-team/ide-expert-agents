@@ -84,7 +84,7 @@ Three deployment options are available — choose what fits your team:
 | Option | Best for | How it works |
 |---|---|---|
 | **A — Docker** | Shared team server (recommended) | Build once, run centrally; every developer connects via URL |
-| **B — npx** | Personal use, no clone required | Published npm package runs locally via `npx` |
+| **B — npx** | Personal use, no clone required | Public npm package [`@99x-ai-dlc/ide-expert-agents-mcp`](https://www.npmjs.com/package/@99x-ai-dlc/ide-expert-agents-mcp) (in the [`99x-ai-dlc`](https://www.npmjs.com/org/99x-ai-dlc) npm org) runs locally via `npx` |
 | **C — Local clone** | Contributors or personal use with full control | Clone the repo, build once, point your tool at the local binary |
 
 Full setup instructions, per-tool config snippets, Docker development tips, and environment variables are in [mcp-server/README.md](mcp-server/README.md).
