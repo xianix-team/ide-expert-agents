@@ -117,7 +117,7 @@ cd mcp-server
 npm version patch --no-git-tag-version   # or minor / major
 ```
 
-CI authenticates with the `NPM_TOKEN` repository secret (a granular npm access token with read/write on the `@99x-ai-dlc` scope). To publish manually instead, log in as a member of the `99x-ai-dlc` org and run `npm publish` from `mcp-server/`.
+CI authenticates with [npm trusted publishing](https://docs.npmjs.com/trusted-publishers) (GitHub OIDC), so no npm token is stored in the repo. The trust is configured on npmjs.com under the package's **Settings → Trusted publishing** (GitHub Actions, `xianix-team` / `ide-expert-agents` / `publish-npm.yml`, with **npm publish** allowed). If you rename the workflow file, update that configuration too. To publish manually instead, log in as a member of the `99x-ai-dlc` org and run `npm publish` from `mcp-server/`.
 
 ### Developer config
 
