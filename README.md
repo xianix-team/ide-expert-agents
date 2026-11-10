@@ -177,7 +177,7 @@ claude mcp add ide-expert-agents -s user \
 
 Use the `env` setting as shown, not the `envFile` option that some tools offer. `envFile` loads the file as plain environment variables, and the agent-to-node lines would then be ignored.
 
-**Team server (Option A):** you need no env file. The admin mounts it on the server. Add your identity as a header instead. In Claude Code:
+**Team server (Option A):** you need no env file. The admin mounts it into the container (see [the Docker command](mcp-server/README.md#point-the-server-at-the-file)). Add your identity as a header instead. In Claude Code:
 
 ```bash
 claude mcp add --transport http -s user ide-expert-agents http://your-server:3000/mcp \

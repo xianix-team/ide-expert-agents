@@ -28,6 +28,14 @@ docker build -t ide-expert-agents-mcp .
 docker run -d -p 3000:3000 --name ide-expert-agents ide-expert-agents-mcp
 ```
 
+To report usage to AI Hub, keep the env file on the host, outside the repo, and mount it read-only. It is never baked into the image (see [AI Hub usage metrics](#ai-hub-usage-metrics)):
+
+```bash
+docker run -d -p 3000:3000 --name ide-expert-agents \
+  -v /srv/ide-expert-agents/ai-hub.env:/app/mcp-server/.env:ro \
+  ide-expert-agents-mcp
+```
+
 > **After adding new agents:** agent files are baked into the image at build time — rebuild and replace the container.
 > ```bash
 > docker build --no-cache -t ide-expert-agents-mcp .
@@ -253,7 +261,26 @@ In Cursor (`~/.cursor/mcp.json`), and in GitHub Copilot (`.vscode/mcp.json`, und
 }
 ```
 
-**Option A (Docker):** mount the file at `/app/mcp-server/.env`, for example `docker run -v "$PWD/ai-hub.env:/app/mcp-server/.env:ro" ...`. Leave out `IDE_AGENTS_AI_HUB_ACTOR`; each developer adds a header to their tool config instead. In Claude Code:
+**Option A (Docker):** keep the file on the host, outside the repo, and mount it read-only at `/app/mcp-server/.env`:
+
+```bash
+docker run -d -p 3000:3000 --name ide-expert-agents \
+  -v /srv/ide-expert-agents/ai-hub.env:/app/mcp-server/.env:ro \
+  ide-expert-agents-mcp
+```
+
+To mount it somewhere else, point the server at it with `IDE_AGENTS_AI_HUB_ENV_FILE`:
+
+```bash
+docker run -d -p 3000:3000 --name ide-expert-agents \
+  -v /srv/ide-expert-agents:/config:ro \
+  -e IDE_AGENTS_AI_HUB_ENV_FILE=/config/ai-hub.env \
+  ide-expert-agents-mcp
+```
+
+The file is read on every call, so edits on the host apply without restarting the container. If you edit it with a tool that replaces the file (most editors do), a single-file mount keeps showing the old copy. Mount the directory, as in the second command, or restart the container.
+
+Leave out `IDE_AGENTS_AI_HUB_ACTOR`; each developer adds a header to their tool config instead. In Claude Code:
 
 ```bash
 claude mcp add --transport http -s user ide-expert-agents http://your-server:3000/mcp \
