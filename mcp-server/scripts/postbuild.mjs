@@ -9,7 +9,7 @@ const repoRoot = path.resolve(__dirname, "../..");
 
 const SHEBANG = "#!/usr/bin/env node\n";
 
-for (const bin of ["index.js", "usage-hook.js"]) {
+for (const bin of ["index.js", "http.js", "usage-hook.js"]) {
   const binPath = path.join(distDir, bin);
   const content = fs.readFileSync(binPath, "utf-8");
   if (!content.startsWith("#!")) {
