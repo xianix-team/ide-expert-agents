@@ -1,8 +1,17 @@
 {
-  "name": "@99x/ide-expert-agents-mcp",
-  "version": "1.0.0",
+  "name": "@99x-ai-dlc/ide-expert-agents-mcp",
+  "version": "1.0.2",
   "description": "MCP server that exposes all IDE expert agents as prompts — works with Claude Code, Cursor, and GitHub Copilot",
   "type": "module",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xianix-team/ide-expert-agents.git",
+    "directory": "mcp-server"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "dist/",
     "README.md"
@@ -13,6 +22,7 @@
   },
   "scripts": {
     "build": "tsc && node scripts/postbuild.mjs",
+    "prepublishOnly": "npm run build",
     "start": "node dist/index.js",
     "start:http": "node dist/http.js",
     "dev": "tsx src/index.ts",

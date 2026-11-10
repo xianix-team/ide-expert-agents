@@ -28,6 +28,14 @@ docker build -t ide-expert-agents-mcp .
 docker run -d -p 3000:3000 --name ide-expert-agents ide-expert-agents-mcp
 ```
 
+To report usage to AI Hub, keep the env file on the host, outside the repo, and mount it read-only. It is never baked into the image (see [AI Hub usage metrics](#ai-hub-usage-metrics)):
+
+```bash
+docker run -d -p 3000:3000 --name ide-expert-agents \
+  -v /srv/ide-expert-agents/ai-hub.env:/app/mcp-server/.env:ro \
+  ide-expert-agents-mcp
+```
+
 > **After adding new agents:** agent files are baked into the image at build time — rebuild and replace the container.
 > ```bash
 > docker build --no-cache -t ide-expert-agents-mcp .
@@ -89,15 +97,18 @@ claude mcp add --transport http -s user ide-expert-agents http://your-server:300
 
 ## Option B — npx / npm package (per-developer, no server required)
 
-Publish once to npm (private registry or GitHub Packages). Each developer runs the server locally via `npx` — **no clone, no build step, no Docker, and no local agent files needed.** `npm run build` bakes a copy of every `*-agents-store/` into `dist/agents-bundle/` (see `scripts/postbuild.mjs`), so the published package is fully self-contained.
+The server is published as a public npm package, [`@99x-ai-dlc/ide-expert-agents-mcp`](https://www.npmjs.com/package/@99x-ai-dlc/ide-expert-agents-mcp), under the [`99x-ai-dlc`](https://www.npmjs.com/org/99x-ai-dlc) npm organization. Each developer runs it locally via `npx -y @99x-ai-dlc/ide-expert-agents-mcp` — **no clone, no build step, no Docker, no npm login, and no local agent files needed.** `npm run build` bakes a copy of every `*-agents-store/` into `dist/agents-bundle/` (see `scripts/postbuild.mjs`), so the published package is fully self-contained.
 
 ### Publish
 
+Publishing is automated by [`.github/workflows/publish-npm.yml`](https://github.com/xianix-team/ide-expert-agents/blob/main/.github/workflows/publish-npm.yml). On every push to `main` that touches `mcp-server/` or any `*-agents-store/`, CI builds the package and publishes it with npm provenance — **but only if the version in `mcp-server/package.json` is not already on npm**. To release, bump the version in your PR:
+
 ```bash
 cd mcp-server
-npm run build     # also bundles the agent stores into dist/agents-bundle/
-npm publish --access restricted   # private registry
+npm version patch --no-git-tag-version   # or minor / major
 ```
+
+CI authenticates with the `NPM_TOKEN` repository secret (a granular npm access token with read/write on the `@99x-ai-dlc` scope). To publish manually instead, log in as a member of the `99x-ai-dlc` org and run `npm publish` from `mcp-server/`.
 
 ### Developer config
 
@@ -107,7 +118,7 @@ In Claude Code, `-s user` adds the server for all your projects (it is stored in
 
 **Claude Code** (CLI and VS Code extension):
 ```bash
-claude mcp add -s user ide-expert-agents -- npx -y @99x/ide-expert-agents-mcp
+claude mcp add -s user ide-expert-agents -- npx -y @99x-ai-dlc/ide-expert-agents-mcp
 ```
 
 **Cursor** — `~/.cursor/mcp.json`:
@@ -116,7 +127,7 @@ claude mcp add -s user ide-expert-agents -- npx -y @99x/ide-expert-agents-mcp
   "mcpServers": {
     "ide-expert-agents": {
       "command": "npx",
-      "args": ["-y", "@99x/ide-expert-agents-mcp"]
+      "args": ["-y", "@99x-ai-dlc/ide-expert-agents-mcp"]
     }
   }
 }
@@ -129,7 +140,7 @@ claude mcp add -s user ide-expert-agents -- npx -y @99x/ide-expert-agents-mcp
     "ide-expert-agents": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "@99x/ide-expert-agents-mcp"]
+      "args": ["-y", "@99x-ai-dlc/ide-expert-agents-mcp"]
     }
   }
 }
@@ -137,7 +148,7 @@ claude mcp add -s user ide-expert-agents -- npx -y @99x/ide-expert-agents-mcp
 
 > **Using a fork or private agent set instead of the bundled agents?** Set `MCP_AGENTS_ROOT` to a local clone's path in the `env` block above — it always takes priority over the bundled copy. This is also how to pick up agent changes without waiting for a new npm publish.
 >
-> **Keeping the published package in sync:** the bundle is a snapshot taken at `npm run build` time — republish (`npm version` + `npm publish`) whenever agents change, the same as any other npm package.
+> **Keeping the published package in sync:** the bundle is a snapshot taken at `npm run build` time — bump the version whenever agents change so CI publishes a new release (see [Publish](#publish)).
 
 ---
 
@@ -234,7 +245,7 @@ On each invocation, the server looks up the agent's name and posts to that node.
 ```bash
 claude mcp add -s user ide-expert-agents \
   -e IDE_AGENTS_AI_HUB_ENV_FILE=/Users/you/.config/ide-expert-agents/.env \
-  -- npx -y @99x/ide-expert-agents-mcp
+  -- npx -y @99x-ai-dlc/ide-expert-agents-mcp
 ```
 
 In Cursor (`~/.cursor/mcp.json`), and in GitHub Copilot (`.vscode/mcp.json`, under `servers` with `"type": "stdio"`):
@@ -244,7 +255,7 @@ In Cursor (`~/.cursor/mcp.json`), and in GitHub Copilot (`.vscode/mcp.json`, und
   "mcpServers": {
     "ide-expert-agents": {
       "command": "npx",
-      "args": ["-y", "@99x/ide-expert-agents-mcp"],
+      "args": ["-y", "@99x-ai-dlc/ide-expert-agents-mcp"],
       "env": {
         "IDE_AGENTS_AI_HUB_ENV_FILE": "/Users/you/.config/ide-expert-agents/.env"
       }
@@ -253,7 +264,26 @@ In Cursor (`~/.cursor/mcp.json`), and in GitHub Copilot (`.vscode/mcp.json`, und
 }
 ```
 
-**Option A (Docker):** mount the file at `/app/mcp-server/.env`, for example `docker run -v "$PWD/ai-hub.env:/app/mcp-server/.env:ro" ...`. Leave out `IDE_AGENTS_AI_HUB_ACTOR`; each developer adds a header to their tool config instead. In Claude Code:
+**Option A (Docker):** keep the file on the host, outside the repo, and mount it read-only at `/app/mcp-server/.env`:
+
+```bash
+docker run -d -p 3000:3000 --name ide-expert-agents \
+  -v /srv/ide-expert-agents/ai-hub.env:/app/mcp-server/.env:ro \
+  ide-expert-agents-mcp
+```
+
+To mount it somewhere else, point the server at it with `IDE_AGENTS_AI_HUB_ENV_FILE`:
+
+```bash
+docker run -d -p 3000:3000 --name ide-expert-agents \
+  -v /srv/ide-expert-agents:/config:ro \
+  -e IDE_AGENTS_AI_HUB_ENV_FILE=/config/ai-hub.env \
+  ide-expert-agents-mcp
+```
+
+The file is read on every call, so edits on the host apply without restarting the container. If you edit it with a tool that replaces the file (most editors do), a single-file mount keeps showing the old copy. Mount the directory, as in the second command, or restart the container.
+
+Leave out `IDE_AGENTS_AI_HUB_ACTOR`; each developer adds a header to their tool config instead. In Claude Code:
 
 ```bash
 claude mcp add --transport http -s user ide-expert-agents http://your-server:3000/mcp \
@@ -293,7 +323,7 @@ Add this to `~/.claude/settings.json`:
         "hooks": [
           {
             "type": "command",
-            "command": "npx -y -p @99x/ide-expert-agents-mcp ide-expert-agents-usage-hook",
+            "command": "npx -y -p @99x-ai-dlc/ide-expert-agents-mcp ide-expert-agents-usage-hook",
             "timeout": 15
           }
         ]

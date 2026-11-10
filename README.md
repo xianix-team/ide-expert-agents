@@ -84,7 +84,7 @@ Three deployment options are available — choose what fits your team:
 | Option | Best for | How it works |
 |---|---|---|
 | **A — Docker** | Shared team server (recommended) | Build once, run centrally; every developer connects via URL |
-| **B — npx** | Personal use, no clone required | Published npm package runs locally via `npx` |
+| **B — npx** | Personal use, no clone required | Public npm package [`@99x-ai-dlc/ide-expert-agents-mcp`](https://www.npmjs.com/package/@99x-ai-dlc/ide-expert-agents-mcp) (in the [`99x-ai-dlc`](https://www.npmjs.com/org/99x-ai-dlc) npm org) runs locally via `npx` |
 | **C — Local clone** | Contributors or personal use with full control | Clone the repo, build once, point your tool at the local binary |
 
 Full setup instructions, per-tool config snippets, Docker development tips, and environment variables are in [mcp-server/README.md](mcp-server/README.md).
@@ -143,7 +143,7 @@ Your tool starts the MCP server, so the server only sees the settings your tool 
 ```bash
 claude mcp add ide-expert-agents -s user \
   -e IDE_AGENTS_AI_HUB_ENV_FILE=/Users/you/.config/ide-expert-agents/.env \
-  -- npx -y @99x/ide-expert-agents-mcp
+  -- npx -y @99x-ai-dlc/ide-expert-agents-mcp
 ```
 
 **Cursor** (`~/.cursor/mcp.json`):
@@ -153,7 +153,7 @@ claude mcp add ide-expert-agents -s user \
   "mcpServers": {
     "ide-expert-agents": {
       "command": "npx",
-      "args": ["-y", "@99x/ide-expert-agents-mcp"],
+      "args": ["-y", "@99x-ai-dlc/ide-expert-agents-mcp"],
       "env": { "IDE_AGENTS_AI_HUB_ENV_FILE": "/Users/you/.config/ide-expert-agents/.env" }
     }
   }
@@ -168,7 +168,7 @@ claude mcp add ide-expert-agents -s user \
     "ide-expert-agents": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "@99x/ide-expert-agents-mcp"],
+      "args": ["-y", "@99x-ai-dlc/ide-expert-agents-mcp"],
       "env": { "IDE_AGENTS_AI_HUB_ENV_FILE": "/Users/you/.config/ide-expert-agents/.env" }
     }
   }
@@ -177,7 +177,7 @@ claude mcp add ide-expert-agents -s user \
 
 Use the `env` setting as shown, not the `envFile` option that some tools offer. `envFile` loads the file as plain environment variables, and the agent-to-node lines would then be ignored.
 
-**Team server (Option A):** you need no env file. The admin mounts it on the server. Add your identity as a header instead. In Claude Code:
+**Team server (Option A):** you need no env file. The admin mounts it into the container (see [the Docker command](mcp-server/README.md#point-the-server-at-the-file)). Add your identity as a header instead. In Claude Code:
 
 ```bash
 claude mcp add --transport http -s user ide-expert-agents http://your-server:3000/mcp \
@@ -212,7 +212,7 @@ A Claude Code hook can add the tokens used and the model to each event. Add this
         "hooks": [
           {
             "type": "command",
-            "command": "npx -y -p @99x/ide-expert-agents-mcp ide-expert-agents-usage-hook",
+            "command": "npx -y -p @99x-ai-dlc/ide-expert-agents-mcp ide-expert-agents-usage-hook",
             "timeout": 15
           }
         ]
