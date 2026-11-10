@@ -16,7 +16,7 @@ A checked item means "investigated with evidence," not "must change."
 1. Understand repo + baseline.
 2. Scan for the next high-value, fixable item (waste → simplify → quality →
    unnecessary work → security).
-3. Fixability Gate (see `SKILL.md`) before bothering the human.
+3. Fixability Gate (CLEAN workflow step 5) before bothering the human.
 4. Park other candidates internally; do not build F1–F30 first.
 
 ---
@@ -44,7 +44,7 @@ config loading, plugins, serialization, CLI, public contracts, tests, runtime.
 - [ ] Every layer owns a real responsibility (not preference)
 - [ ] Simple requirement was not expanded into provider/factory/registry stacks
 
-See `SKILL.md` (Vibe-code expansion) and [vibe-code-smells.md](vibe-code-smells.md).
+See **Vibe-code expansion** in the CLEAN workflow and **Vibe-Code Smells**.
 
 ---
 
@@ -82,16 +82,8 @@ Prefer simpler existing code — not a new "cleaner" architecture.
 
 ## Necessity / used-but-unnecessary (Analyze detail)
 
-Lightweight questions live in `SKILL.md`. Use this section for deeper
-Analyze work or Show-why detail.
-
-Quick ask:
-
-1. What does it do?
-2. Why does the app need it?
-3. What breaks if removed/simplified?
-4. Is that capability required today?
-5. Can existing repo code do it more simply?
+Start with the five quick questions in CLEAN workflow step 4 ("Understand
+why it exists"). Use this section for deeper Analyze work or Show-why detail.
 
 Capability justification (when proposing simplification):
 
@@ -126,8 +118,8 @@ Checklist:
 - [ ] Existing patterns express required behavior more simply?
 - [ ] Would change reduce conceptual machinery?
 
-When uncertain → leave alone / Report-only. Optional tools:
-[tooling-hints.md](tooling-hints.md).
+When uncertain → leave alone / Report-only. Optional tools: see
+**Tooling hints**.
 
 ---
 
@@ -242,7 +234,7 @@ defect.
 
 ## Fixability / change gates (before CLEAN edit)
 
-- [ ] Fixability Gate passed (`SKILL.md`)
+- [ ] Fixability Gate passed (CLEAN workflow step 5)
 - [ ] Change budget recorded
 - [ ] Workspace baseline captured (user pre-existing files untouched)
 - [ ] Creation/dependency guards if adding files/deps
