@@ -5,12 +5,17 @@ import {
 } from "@modelcontextprotocol/sdk/types.js";
 import { loadAgents } from "./agents.js";
 import { reportInvocation, runMarker } from "./telemetry.js";
+import { createRequire } from "module";
+
+// package.json sits one level above both src/ (tsx dev) and dist/ (build,
+// npm package, Docker), so this resolves in every run mode.
+const { version } = createRequire(import.meta.url)("../package.json") as { version: string };
 
 const agents = loadAgents();
 
 export function createServer(): Server {
   const server = new Server(
-    { name: "ide-expert-agents", version: "1.0.0" },
+    { name: "ide-expert-agents", version },
     { capabilities: { prompts: {} } }
   );
 

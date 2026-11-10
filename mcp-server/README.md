@@ -51,7 +51,16 @@ docker run -d -p 3000:3000 --name ide-expert-agents \
 >   ide-expert-agents-mcp
 > ```
 
-### Without Docker (run directly)
+### Without Docker (from the published npm package)
+
+No clone or build needed. Requires Node 18+.
+
+```bash
+npx -y -p @99x-ai-dlc/ide-expert-agents-mcp ide-expert-agents-mcp-http             # default port 3000
+PORT=8080 npx -y -p @99x-ai-dlc/ide-expert-agents-mcp ide-expert-agents-mcp-http
+```
+
+### Without Docker (from a local clone)
 
 ```bash
 cd mcp-server
