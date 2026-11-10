@@ -9,8 +9,8 @@ clearly installable without unrelated dependency upgrades. If a tool is absent
 and installing it would widen scope, rely on repository search instead and keep
 confidence accordingly.
 
-Evidence from these tools still feeds the existing confidence / priority /
-classification model. A tool report is not automatic permission to delete.
+Evidence from these tools still feeds the confidence / priority /
+classification model in **Cleanup Checklist → Analyze classification**. A tool report is not automatic permission to delete.
 
 ---
 
@@ -42,10 +42,3 @@ classification model. A tool report is not automatic permission to delete.
 |---------|------------------|-------|
 | Unused code | IDE inspections, Error Prone, etc. | Reflection / SPI / Spring can hide use |
 | Unused dependencies | Maven/Gradle dependency plugins | Check annotation processors |
-
-## Optional Jev
-
-If Jev is available, it may only evaluate structured safety evidence
-(budget exceeded, unexpected files, scope, complexity increase) as
-`ALLOW` / `STOP` / `HUMAN_REVIEW`. It is not required and must not replace
-agent reasoning or code edits. See `SKILL.md`.

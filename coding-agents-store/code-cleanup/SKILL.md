@@ -7,7 +7,17 @@ description: >-
   simplify/improve code quality, remove vibe code or unnecessary complexity, or
   run code-cleanup. Default CLEAN: find → propose → human approves → fix →
   verify → continue (one cleanup at a time). Analyze and Review only when
-  explicitly requested. Not an audit-report generator.
+  explicitly requested. Not an audit-report generator. For a dedicated
+  error-handling audit use error-handling-audit; for a full OWASP security scan
+  use owasp-security-scanner — this skill only fixes evidenced issues it meets
+  while cleaning.
+tools:
+  - Read
+  - Grep
+  - Glob
+  - Edit
+  - Write
+  - Bash
 ---
 
 # Code Cleanup
@@ -52,11 +62,36 @@ before introducing anything new.
 
 **Used does not mean necessary. Working does not mean justified.**
 
-## References (read when needed)
+## References (later sections of this prompt)
 
-- [cleanup-checklist.md](cleanup-checklist.md) — checklist + Analyze classification detail
-- [vibe-code-smells.md](vibe-code-smells.md) — AI/vibe-code smells
-- [tooling-hints.md](tooling-hints.md) — optional mechanical evidence tools
+- **Cleanup Checklist** — checklist, necessity detail, Analyze classification
+- **Tooling hints** — optional mechanical evidence tools
+- **Vibe-Code Smells** — AI/vibe-code smell catalogue
+
+## Related agents
+
+- Error handling is the main concern → `error-handling-audit`
+- Full security scan / OWASP report → `owasp-security-scanner`
+- Something is failing at runtime → `runtime-debugger`
+
+## Intake (before starting)
+
+If the user has not said **which area** and **which mode**, and the repo is
+large (multiple apps/packages or many modules), ask one question first:
+
+```text
+This repo has several areas: <a>, <b>, <c>.
+
+Where should I start cleaning?
+
+1. <a>
+2. <b>
+3. <c>
+4. Whole repo, one module at a time
+```
+
+Then STOP. Mode defaults to CLEAN unless the user asked for Analyze or Review.
+For a small repo or an explicit scope, skip intake.
 
 ## Operating modes
 
@@ -130,7 +165,7 @@ continue. Park other discoveries in a small **internal queue**.
 - Read README / AGENTS.md / CONTRIBUTING / rules
 - Structure, entry points, conventions, dependencies
 - Build / test / lint / typecheck commands
-- Prefer [tooling-hints.md](tooling-hints.md) when present
+- Prefer the tools in **Tooling hints** when already present in the repo
 - Scope to a user-specified module when asked; large repos → one module at a time
 - Do not infer architecture from a single file
 
@@ -141,12 +176,20 @@ continue. Park other discoveries in a small **internal queue**.
 - Never weaken checks to get green
 
 No automated coverage for the area? Require a short **manual smoke-check**
-before claiming verified. If no smoke-check is feasible, leave alone / keep
-confidence capped — do not treat "build passed" alone as enough.
+before claiming verified:
+
+- **Agent runs it** when it can exercise the behavior itself (start the app or
+  script, call the endpoint, run the CLI command) and report what it observed.
+- **Otherwise ask the user** to run it: give 2–4 concrete steps and the
+  expected result, then STOP and wait for their answer.
+
+If no smoke-check is feasible, leave alone / keep confidence capped — do not
+treat "build passed" alone as enough.
 
 ### 3. Find next worthwhile cleanup
 
-Actively look for waste and unjustified machinery (see checklist + vibe smells).
+Actively look for waste and unjustified machinery (see **Cleanup Checklist**
+and **Vibe-Code Smells**).
 
 **Remove waste examples:** dead code, unused files/exports/deps/config,
 abandoned dual implementations, AI leftovers, commented-out code, speculative
@@ -217,7 +260,7 @@ Preserve intentional boundaries (public contracts, established DI, real test
 seams, security, plugins, framework conventions). One implementation ≠ delete.
 
 Detailed necessity / capability justification for Analyze: see
-[cleanup-checklist.md](cleanup-checklist.md).
+**Cleanup Checklist → Necessity / used-but-unnecessary**.
 
 ### 5. Fixability Gate
 
@@ -476,7 +519,7 @@ Hunk labels (map to existing types; don't invent a parallel system):
 - **Speculative addition** — new capability without demonstrated need
 
 Only touched paths are in remediation scope. Cross-ref
-[vibe-code-smells.md](vibe-code-smells.md) item 14.
+**Vibe-Code Smells → 14. Unexpected diff expansion**.
 
 Per-hunk revert only after HITL. No auto-revert.
 
@@ -486,32 +529,13 @@ Per-hunk revert only after HITL. No auto-revert.
 
 Discover → Baseline → Audit → Classify → Decide → Plan → Report.
 No source edits. Full findings / confidence / priority / plan allowed here.
-Use [cleanup-checklist.md](cleanup-checklist.md) for classification
+Use **Cleanup Checklist → Analyze classification** for classification
 detail. Still prefer evidence; a smell is not automatically a defect.
 
----
-
-## Optional Jev decision gates
-
-Jev may be used as an **optional** bounded safety layer. **Not** the cleaning
-engine. The coding agent still understands code, proposes fixes, edits, and
-verifies.
-
-Jev may evaluate **structured evidence already gathered**, e.g.:
-
-- Did actual change exceed approved budget?
-- Unexpected files appear?
-- Diff outside approved scope?
-- Conceptual complexity increased?
-- Human review required?
-- STOP because a safety condition failed?
-
-Example outputs: `ALLOW` | `STOP` | `HUMAN_REVIEW`
-
-Do **not** ask Jev to redesign architecture, refactor large services, decide
-from raw source whether an abstraction is necessary, or generate the fix.
-
-The skill must work fully **without** Jev. No mandatory Jev dependency.
+**Output location:** deliver the report in chat by default. Write it to a file
+only if the user asks; use the path they give, or propose
+`code-cleanup-report.md` at the repo root and confirm before writing. The
+report file is the only file ANALYZE may create.
 
 ---
 

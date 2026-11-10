@@ -6,8 +6,9 @@ Investigation guide for AI / "vibe coding" repositories. Use with
 A smell is a signal to investigate — **not** automatically a defect.
 When uncertain, leave alone / report; do not change the code.
 
-For necessity, Fixability Gate, and approval rules: see `SKILL.md`.
-For checklists: see [cleanup-checklist.md](cleanup-checklist.md).
+For necessity, Fixability Gate, and approval rules: see the **CLEAN
+workflow** section at the top of this prompt. For checklists: see
+**Cleanup Checklist**.
 
 **Feature flow:** when complexity spans a feature, reconstruct
 Requirement → flow → machinery before judging individual files.
@@ -344,7 +345,7 @@ Requirement → flow → machinery before judging individual files.
 **What to investigate**
 - Root cause: tooling auto-format, wrong scope, cascading renames
 - Whether each file change maps to the stated plan item
-- Prefer **REVIEW** mode (`SKILL.md`) for a formal diff-scoped audit after
+- Prefer **REVIEW mode** for a formal diff-scoped audit after
   agent sessions
 
 **When it is safe to clean**
@@ -386,10 +387,11 @@ Requirement → flow → machinery before judging individual files.
 
 ## 16–23. Used-but-unnecessary / speculative complexity (smell index)
 
-Full necessity rules live in **Necessity analysis** in `SKILL.md`. Use that
-section for capability justification, weak justifications, hierarchy,
-boundaries, and classification safety. Also use the **Vibe-code expansion
-detector** in `SKILL.md` (Requirement → actual implementation).
+Full necessity rules live in **Cleanup Checklist → Necessity /
+used-but-unnecessary**. Use that section for capability justification, weak
+justifications, hierarchy, boundaries, and classification safety. Also use
+**Vibe-code expansion** in the CLEAN workflow (Requirement → actual
+implementation).
 
 Below: smell-specific **symptoms** only.
 
@@ -449,6 +451,7 @@ Below: smell-specific **symptoms** only.
 - Enums/status machines with unused values still threaded everywhere
 - Defensive branches for impossible or already-protected states
 
-For items 16–23: investigate and decide using `SKILL.md` Necessity analysis.
-When safe to clean / when not: same gates as SKILL (evidence, HITL APPROVE,
-Report-only when uncertain, preserve intentional boundaries).
+For items 16–23: investigate and decide using **Cleanup Checklist →
+Necessity / used-but-unnecessary**. When safe to clean / when not: same gates
+as the CLEAN workflow (evidence, HITL APPROVE, Report-only when uncertain,
+preserve intentional boundaries).
