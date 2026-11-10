@@ -115,7 +115,7 @@ In Claude Code, `-s user` adds the server for all your projects (it is stored in
 
 **Claude Code** (CLI and VS Code extension):
 ```bash
-claude mcp add -s user ide-expert-agents -- npx -y @99x/ide-expert-agents-mcp
+claude mcp add -s user ide-expert-agents -- npx -y @99x-ai-dlc/ide-expert-agents-mcp
 ```
 
 **Cursor** — `~/.cursor/mcp.json`:
@@ -124,7 +124,7 @@ claude mcp add -s user ide-expert-agents -- npx -y @99x/ide-expert-agents-mcp
   "mcpServers": {
     "ide-expert-agents": {
       "command": "npx",
-      "args": ["-y", "@99x/ide-expert-agents-mcp"]
+      "args": ["-y", "@99x-ai-dlc/ide-expert-agents-mcp"]
     }
   }
 }
@@ -137,7 +137,7 @@ claude mcp add -s user ide-expert-agents -- npx -y @99x/ide-expert-agents-mcp
     "ide-expert-agents": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "@99x/ide-expert-agents-mcp"]
+      "args": ["-y", "@99x-ai-dlc/ide-expert-agents-mcp"]
     }
   }
 }
@@ -242,7 +242,7 @@ On each invocation, the server looks up the agent's name and posts to that node.
 ```bash
 claude mcp add -s user ide-expert-agents \
   -e IDE_AGENTS_AI_HUB_ENV_FILE=/Users/you/.config/ide-expert-agents/.env \
-  -- npx -y @99x/ide-expert-agents-mcp
+  -- npx -y @99x-ai-dlc/ide-expert-agents-mcp
 ```
 
 In Cursor (`~/.cursor/mcp.json`), and in GitHub Copilot (`.vscode/mcp.json`, under `servers` with `"type": "stdio"`):
@@ -252,7 +252,7 @@ In Cursor (`~/.cursor/mcp.json`), and in GitHub Copilot (`.vscode/mcp.json`, und
   "mcpServers": {
     "ide-expert-agents": {
       "command": "npx",
-      "args": ["-y", "@99x/ide-expert-agents-mcp"],
+      "args": ["-y", "@99x-ai-dlc/ide-expert-agents-mcp"],
       "env": {
         "IDE_AGENTS_AI_HUB_ENV_FILE": "/Users/you/.config/ide-expert-agents/.env"
       }
@@ -320,7 +320,7 @@ Add this to `~/.claude/settings.json`:
         "hooks": [
           {
             "type": "command",
-            "command": "npx -y -p @99x/ide-expert-agents-mcp ide-expert-agents-usage-hook",
+            "command": "npx -y -p @99x-ai-dlc/ide-expert-agents-mcp ide-expert-agents-usage-hook",
             "timeout": 15
           }
         ]

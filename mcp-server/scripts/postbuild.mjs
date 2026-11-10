@@ -19,7 +19,7 @@ for (const bin of ["index.js", "usage-hook.js"]) {
 }
 
 // Bundle a copy of every *-agents-store/ into dist/agents-bundle/ so the
-// published npm package is self-contained — `npx @99x/ide-expert-agents-mcp`
+// published npm package is self-contained — `npx @99x-ai-dlc/ide-expert-agents-mcp`
 // works with no local clone and no MCP_AGENTS_ROOT override needed.
 // Skipped (not an error) when run outside the full repo, e.g. in a Docker
 // build stage that only has mcp-server/ checked out — Docker sets

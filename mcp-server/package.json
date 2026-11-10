@@ -1,5 +1,5 @@
 {
-  "name": "@99x/ide-expert-agents-mcp",
+  "name": "@99x-ai-dlc/ide-expert-agents-mcp",
   "version": "1.0.0",
   "description": "MCP server that exposes all IDE expert agents as prompts — works with Claude Code, Cursor, and GitHub Copilot",
   "type": "module",

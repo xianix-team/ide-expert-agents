@@ -143,7 +143,7 @@ Your tool starts the MCP server, so the server only sees the settings your tool 
 ```bash
 claude mcp add ide-expert-agents -s user \
   -e IDE_AGENTS_AI_HUB_ENV_FILE=/Users/you/.config/ide-expert-agents/.env \
-  -- npx -y @99x/ide-expert-agents-mcp
+  -- npx -y @99x-ai-dlc/ide-expert-agents-mcp
 ```
 
 **Cursor** (`~/.cursor/mcp.json`):
@@ -153,7 +153,7 @@ claude mcp add ide-expert-agents -s user \
   "mcpServers": {
     "ide-expert-agents": {
       "command": "npx",
-      "args": ["-y", "@99x/ide-expert-agents-mcp"],
+      "args": ["-y", "@99x-ai-dlc/ide-expert-agents-mcp"],
       "env": { "IDE_AGENTS_AI_HUB_ENV_FILE": "/Users/you/.config/ide-expert-agents/.env" }
     }
   }
@@ -168,7 +168,7 @@ claude mcp add ide-expert-agents -s user \
     "ide-expert-agents": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "@99x/ide-expert-agents-mcp"],
+      "args": ["-y", "@99x-ai-dlc/ide-expert-agents-mcp"],
       "env": { "IDE_AGENTS_AI_HUB_ENV_FILE": "/Users/you/.config/ide-expert-agents/.env" }
     }
   }
@@ -212,7 +212,7 @@ A Claude Code hook can add the tokens used and the model to each event. Add this
         "hooks": [
           {
             "type": "command",
-            "command": "npx -y -p @99x/ide-expert-agents-mcp ide-expert-agents-usage-hook",
+            "command": "npx -y -p @99x-ai-dlc/ide-expert-agents-mcp ide-expert-agents-usage-hook",
             "timeout": 15
           }
         ]
