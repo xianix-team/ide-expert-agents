@@ -369,10 +369,15 @@ Before each cleanup, capture: tracked mods, staged mods, untracked files,
 deleted files. Pre-existing changes belong to the user — never
 modify/delete/revert them automatically.
 
+For every file the cleanup will touch, also record whether it already had
+pre-existing changes (e.g. its `git diff` output or a content hash). This
+snapshot is what makes a safe Revert possible.
+
 After edits and after mutating commands, re-check workspace. Unexpected
 changes → **STOP**.
 
-Never routinely use `git clean -fd` or `git reset --hard`.
+Never use `git clean -fd` or `git reset --hard`. They destroy uncommitted user
+work.
 
 #### Creation / dependency guards
 
@@ -437,7 +442,8 @@ Then **STOP**.
 
 - **Accept** → mark resolved; find next (or end). Commits optional (below).
 - **Revise** → keep active; re-approve if scope expands.
-- **Revert** → undo only that cleanup (see Git). Verify revert.
+- **Revert** → undo only that cleanup (see "Commits are optional" below).
+  Verify revert.
 
 ### Commits are optional
 
@@ -445,8 +451,15 @@ Important loop: one cleanup → one approval → isolated change → verify → 
 
 Do **not** require one git commit per finding. This is not a Git workflow
 manager. Commit after Accept only if the user asks (or session convention).
-If a commit exists, Revert = `git revert <sha>`; else undo only that cleanup's
-files. Never touch unrelated user changes.
+If a commit exists, Revert = `git revert <sha>`. Otherwise, revert by removing
+only the hunks this cleanup added, using the workspace-safety snapshot:
+
+- File had **no** pre-existing changes → restore it to its pre-cleanup state.
+- File **had** pre-existing user changes → **STOP** and ask the user before
+  reverting; show which hunks belong to the cleanup.
+
+Never use `git checkout --`, `git restore`, `git reset --hard`, or `git clean`
+on a file that holds user changes. Never touch unrelated user changes.
 
 ### End condition
 
@@ -507,7 +520,8 @@ Then STOP. Do not ask several requirement questions in one message.
 
 Diff scope:
 
-1. Default `git diff <parent>...HEAD` (three-dot / merge-base)
+1. Default `git diff <base-branch>...HEAD` (three-dot / merge-base; base
+   usually `main`)
 2. Else worktree `git status` / `git diff`
 3. User may override the ref
 
