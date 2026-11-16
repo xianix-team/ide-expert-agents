@@ -78,7 +78,7 @@ trip.
 
 1. Branch off `main`.
 2. Make your changes, keeping agent content and README updates in the same commit/PR (see above).
-3. Run `npm run build` in `mcp-server/` if you touched server code, and confirm it succeeds.
+3. Run `npm run check` in `mcp-server/` (Node 20+) and confirm it passes. It validates agent frontmatter and both README agent tables, builds the server, and smoke-tests that every agent is served. CI runs the same check on every PR.
 4. Self-review against [pr-review.md](pr-review.md) — fix anything marked blocking before opening the PR.
 5. Open a PR against `main` with a clear description of what the agent does and, if relevant, what prompted it.
 6. Keep customer-identifying details out of PR descriptions and commit messages, same as agent content.

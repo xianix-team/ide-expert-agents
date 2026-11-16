@@ -10,7 +10,7 @@ All agents in this store are served via the repository's MCP server. See [mcp-se
 
 | Agent | Prompt name | When to use |
 |---|---|---|
-| **IPA — Infrastructure Provisioning Agent** | `ipa` | When you want to provision cloud infrastructure, generate Terraform / Bicep / Pulumi / CDK, design a target cloud architecture, or stand up environments for an existing repo — IPA scans the codebase, asks targeted questions, and generates IaC with a step-by-step approval flow |
+| **IPA — Infrastructure Provisioning Agent** | `iac-generator` | When you want to provision cloud infrastructure, generate Terraform / Bicep / Pulumi / CDK, design a target cloud architecture, or stand up environments for an existing repo — IPA scans the codebase, asks targeted questions, and generates IaC with a step-by-step approval flow |
 
 ---
 

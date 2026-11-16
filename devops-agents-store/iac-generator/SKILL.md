@@ -1,5 +1,5 @@
 ---
-name: ipa
+name: iac-generator
 description: >-
   IPA is the Infrastructure Provisioning Agent for DevOps engineers. It scans a
   codebase to discover the resources an app needs (services, datastores, caches,
