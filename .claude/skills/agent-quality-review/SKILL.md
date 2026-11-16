@@ -15,6 +15,8 @@ Checks a single agent definition (`agent.md` or `SKILL.md` under `*-agents-store
 
 Read the target file plus any supporting `*.md` files in the same folder (they're concatenated into the served prompt, so they're part of what's being reviewed).
 
+`templates/AGENT_TEMPLATE.md` shows the structure that meets this checklist (S0 scope agreement, read-only grounding, checkpoint before writing, output skeleton, handoff, guardrails). When a gap is structural, point the author at the matching template section in your fix list.
+
 ## Checklist
 
 Walk every item below. For each, note ✅ (meets it), ⚠️ (partial / unclear), or ❌ (missing), with a one-line reason pointing at the specific line or section. Skip an item only if it's genuinely not applicable (e.g. "output location" for an agent that never writes files) — say so explicitly rather than omitting it silently.

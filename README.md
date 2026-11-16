@@ -299,15 +299,13 @@ In Claude Code: `/mcp__ide-expert-agents__presales-pipeline`
 > **⚠️ Customer IP notice:** Agents and skills in this repository are shared publicly across teams. Contributors must ensure content is **generic and reusable** — do not include any customer-specific data, proprietary business logic, confidential architecture details, credentials, or other protected intellectual property belonging to a 99x customer. If an agent was inspired by client work, generalize it (naming, examples, domain specifics) before contributing it here. When in doubt, leave it out and check with your engagement lead.
 
 1. Create a folder in the appropriate `*-agents-store/`. The folder name must match the agent's `name`.
-2. Add an `agent.md` (or `SKILL.md`) with at minimum:
+2. Copy [templates/AGENT_TEMPLATE.md](templates/AGENT_TEMPLATE.md) to `<agent-name>/agent.md`, fill in the placeholders, and delete the `<!-- GUIDE: … -->` comments. At minimum an agent needs this frontmatter:
 
    ```yaml
    ---
    name: my-agent
    description: One sentence describing when to invoke this agent.
    ---
-
-   # Agent instructions here...
    ```
 
 3. Add the agent to [catalog.json](catalog.json) under its store, with a display `title` and `whenToUse` text.

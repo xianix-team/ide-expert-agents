@@ -8,6 +8,7 @@
 //   - missing `name` or `description` frontmatter (the MCP server silently skips these)
 //   - a `name` that is not lowercase-with-hyphens (install-skills.sh skips these)
 //   - a `name` that differs from its folder name
+//   - a leftover `<!-- GUIDE: … -->` comment from templates/AGENT_TEMPLATE.md
 //   Runbooks
 //   - missing `name`, `title`, `description`, or `agents` frontmatter
 //   - an `agents` entry that is not a real agent, or that the body never mentions
@@ -93,6 +94,13 @@ for (const store of stores) {
     if (!KEBAB.test(name)) err(entryRel, `name '${name}' is not lowercase-with-hyphens`);
     if (name !== folder) err(entryRel, `name '${name}' differs from folder name '${folder}'`);
     claim(name, rel);
+
+    // Leftover guidance from templates/AGENT_TEMPLATE.md would be served as part of the prompt.
+    for (const md of glob.sync("*.md", { cwd: path.join(root, rel) })) {
+      if (fs.readFileSync(path.join(root, rel, md), "utf-8").includes("<!-- GUIDE:")) {
+        err(`${rel}/${md}`, "still contains a <!-- GUIDE: … --> comment from the agent template; delete it");
+      }
+    }
     names.push(name);
   }
 }

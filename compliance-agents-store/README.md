@@ -18,7 +18,7 @@ All agents in this store are served via the repository's MCP server. See [mcp-se
 
 ## Adding an agent
 
-1. Create a folder here with an `agent.md` file containing `name` and `description` in YAML frontmatter.
+1. Create a folder here with an `agent.md` file, starting from [templates/AGENT_TEMPLATE.md](../templates/AGENT_TEMPLATE.md). It needs `name` (equal to the folder name) and `description` in YAML frontmatter.
 2. (Optional) Split the control set into modular `controls-NN-<id>.md` files in the agent folder — they are auto-concatenated into the prompt, so new obligation areas or frameworks are drop-in. Keep authoring templates in a `templates/` subfolder (not concatenated).
 3. Rebuild the MCP server (`npm run build` in `mcp-server/`).
 4. Add the agent to [catalog.json](../catalog.json) under this store, with a display `title` and `whenToUse` text, then run `npm run docs` in `mcp-server/` to regenerate the table above. Don't edit the table by hand.

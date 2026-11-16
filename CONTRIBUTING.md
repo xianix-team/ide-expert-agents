@@ -20,16 +20,13 @@ The MCP server in `mcp-server/` discovers agents by globbing these folders at st
 
 1. Pick the store that matches the agent's domain (see the "Agent stores" table in the root [README.md](README.md)), or propose a new store if none fits.
 2. Create a folder: `*-agents-store/<agent-name>/`.
-3. Add `agent.md` (or `SKILL.md`) with at minimum:
+3. Start from the template: copy [templates/AGENT_TEMPLATE.md](templates/AGENT_TEMPLATE.md) to `<agent-name>/agent.md`. It sets out the structure the [quality checklist](.claude/skills/agent-quality-review/SKILL.md) expects:
+   - frontmatter with trigger phrases and only the tools the agent needs;
+   - a boundary statement and a "done when";
+   - S0 scope agreement, read-only grounding, the work stages, a checkpoint that stops for confirmation, and a write step with an output skeleton;
+   - a handoff that names the next agent, and guardrails.
 
-   ```yaml
-   ---
-   name: my-agent
-   description: One sentence describing when to invoke this agent.
-   ---
-
-   # Agent instructions here...
-   ```
+   Replace the placeholders and delete every `<!-- GUIDE: … -->` comment; `npm run check` fails while any are left. The only fields the server requires are `name` (equal to the folder name) and `description`.
 
 4. Split long instruction sets into supporting `.md` files in the same folder if it improves readability — they're concatenated into the prompt at serve time.
 5. Rebuild and sanity-check the server: `npm run build` in `mcp-server/`, then restart your MCP client connection and confirm the agent appears.
