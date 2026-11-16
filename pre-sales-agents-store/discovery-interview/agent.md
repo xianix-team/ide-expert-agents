@@ -86,7 +86,7 @@ _Interviewed <date>._
 
 ## S4 — Report and Handoff
 
-State the output file path and a one-line summary of the decision reached. Recommend the natural next step: an `elaborate`-style agent, if available, to turn this discovery into a formal requirement and scope spec.
+State the output file path and a one-line summary of the decision reached. Recommend the natural next step: the `elaborate` agent, to turn this discovery into a formal requirement and scope spec.
 
 ---
 

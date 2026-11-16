@@ -116,7 +116,7 @@ _Generated <date>. Platform: <detected/stated>. Status: Complete | Partial (expl
 
 ## S8 — Report
 
-State the output file path, whether the analysis is complete or partial (and what's missing if partial), and recommend the natural next step: a `due-diligence` agent, if available, to audit the platform for health/security/compliance issues found along the way.
+State the output file path, whether the analysis is complete or partial (and what's missing if partial), and recommend the natural next step: the `due-diligence` agent, to audit the platform for health/security/compliance issues found along the way.
 
 ---
 
