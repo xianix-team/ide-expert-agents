@@ -1,13 +1,20 @@
 #!/usr/bin/env bash
 #
-# install-skills.sh — copy agents from this repo into a project as native
+# install-skills.sh — install IDE Expert Agents into a project as native
 # skills for Claude Code, GitHub Copilot, or Cursor, so they can be run as
 # /<skill-name> slash commands without the MCP server.
 #
-# Usage:  ./scripts/install-skills.sh
+# This script is standalone. Download it and run it; you don't need a clone:
+#
+#   curl -fsSL https://raw.githubusercontent.com/xianix-team/ide-expert-agents/main/scripts/install-skills.sh -o install-skills.sh
+#   bash install-skills.sh
+#
+#   # or in one step:
+#   curl -fsSL https://raw.githubusercontent.com/xianix-team/ide-expert-agents/main/scripts/install-skills.sh | bash
 #
 # What it does:
-#   1. Pulls the latest `main` from origin (fast-forward only).
+#   1. Clones the latest `main` of the agents repo into a temp folder
+#      (deleted when the script exits).
 #   2. Asks for the target project folder.
 #   3. Asks which tool(s) the project uses.
 #   4. Lists every agent and asks which ones to install.
@@ -19,10 +26,29 @@
 #
 # Requires bash 3.2+ (the macOS default) and git. On Windows, run it from
 # Git Bash or WSL.
+#
+# Environment overrides (optional):
+#   IDE_AGENTS_REPO    git URL to clone   (default: the xianix-team repo)
+#   IDE_AGENTS_BRANCH  branch to install  (default: main)
+
+REPO_URL="${IDE_AGENTS_REPO:-https://github.com/xianix-team/ide-expert-agents.git}"
+REPO_BRANCH="${IDE_AGENTS_BRANCH:-main}"
+WORK_DIR=""
+
+# When run as `curl … | bash`, stdin is the script itself, so read the
+# answers from the terminal instead.
+if [ -z "${BASH_SOURCE[0]:-}" ] && [ ! -t 0 ]; then
+  if (exec < /dev/tty) 2>/dev/null; then
+    exec < /dev/tty
+  else
+    echo "No terminal available. Download the script and run it with: bash install-skills.sh" >&2
+    exit 1
+  fi
+fi
 
 # Everything is inside main(), which is called on the last line. bash reads
-# the whole function before running it, so `git pull` can safely update this
-# file while it runs.
+# the whole function before running it, so a partly downloaded script
+# (`curl | bash` cut off mid-way) can never run half of its steps.
 main() {
   set -euo pipefail
   export LC_COLLATE=C   # sort files the same way the MCP server does
@@ -46,34 +72,21 @@ main() {
     case "$ans" in [Yy]*) return 0 ;; *) return 1 ;; esac
   }
 
-  local REPO_ROOT
-  REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-  cd "$REPO_ROOT"
-
   printf '\n%s\n\n' "${B}IDE Expert Agents — skill installer${RST}"
 
-  # ── 1. Pull the latest main ───────────────────────────────────────────────
-  command -v git >/dev/null 2>&1 || die "git is not installed."
-  git rev-parse --is-inside-work-tree >/dev/null 2>&1 \
-    || die "$REPO_ROOT is not a git repository."
+  # ── 1. Check out the latest main into a temp folder ──────────────────────
+  command -v git >/dev/null 2>&1 || die "git is not installed. Install git and run again."
 
-  if [ -n "$(git status --porcelain --untracked-files=no)" ]; then
-    die "This repo has uncommitted changes. Commit or stash them first, then run again."
-  fi
+  WORK_DIR="$(mktemp -d "${TMPDIR:-/tmp}/ide-expert-agents.XXXXXX")" \
+    || die "Could not create a temp folder."
+  trap '[ -n "$WORK_DIR" ] && rm -rf "$WORK_DIR"' EXIT
+  trap 'exit 130' INT TERM
 
-  local branch
-  branch="$(git rev-parse --abbrev-ref HEAD)"
-  if [ "$branch" != "main" ]; then
-    warn "This repo is on branch '$branch', not 'main'."
-    confirm "Switch to 'main' to install the latest skills?" y \
-      || die "Cancelled. Skills are only installed from 'main'."
-    git checkout main
-  fi
-
-  info "Pulling the latest 'main' from origin…"
-  git pull --ff-only origin main \
-    || die "Could not pull 'main'. Check your network or access, or fix a diverged local 'main'."
-  ok "Up to date with origin/main ($(git rev-parse --short HEAD))."
+  local REPO_ROOT="$WORK_DIR/repo"
+  info "Downloading the latest '$REPO_BRANCH' from $REPO_URL…"
+  git clone --quiet --depth 1 --branch "$REPO_BRANCH" "$REPO_URL" "$REPO_ROOT" \
+    || die "Could not clone $REPO_URL ($REPO_BRANCH). Check your network and GitHub access."
+  ok "Got $REPO_BRANCH @ $(git -C "$REPO_ROOT" rev-parse --short HEAD)."
   echo
 
   # ── 2. Target project ─────────────────────────────────────────────────────
@@ -88,10 +101,6 @@ main() {
     fi
     warn "Not a folder: $project"
   done
-  if [ "$project" = "$REPO_ROOT" ]; then
-    warn "That is this agents repo, not your project."
-    confirm "Install into it anyway?" n || die "Cancelled."
-  fi
   ok "Project: $project"
   echo
 
@@ -164,7 +173,7 @@ main() {
     STORES+=("${store%-agents-store}"); DESCS+=("$desc")
   done
   local count="${#NAMES[@]}"
-  [ "$count" -gt 0 ] || die "No agents found under $REPO_ROOT/*-agents-store/."
+  [ "$count" -gt 0 ] || die "No agents found in $REPO_URL ($REPO_BRANCH)."
 
   # ── 5. Choose skills ──────────────────────────────────────────────────────
   local cols width last_store=""
@@ -298,7 +307,8 @@ main() {
       cursor)  echo "  • Cursor: in the Agent chat, type / and pick the skill." ;;
     esac
   done
-  echo "  • Commit the skills folder so your team gets them too. Run this script again to update them."
+  echo "  • Commit the skills folder so your team gets them too."
+  echo "  • To update them later, run this script again. It always installs the latest '$REPO_BRANCH'."
 }
 
 main "$@"; exit

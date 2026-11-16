@@ -97,13 +97,17 @@ In Cursor: type `/` and search for the agent name in agent mode.
 
 ### Install agents as native skills (no MCP server)
 
-To copy selected agents straight into a project as native skills, run this from a clone of this repo:
+To copy selected agents straight into a project as native skills, download the installer and run it. You don't need a clone of this repo:
 
 ```bash
-./scripts/install-skills.sh
+curl -fsSL https://raw.githubusercontent.com/xianix-team/ide-expert-agents/main/scripts/install-skills.sh -o install-skills.sh
+bash install-skills.sh
+
+# or in one step
+curl -fsSL https://raw.githubusercontent.com/xianix-team/ide-expert-agents/main/scripts/install-skills.sh | bash
 ```
 
-The script pulls the latest `main`. Then it asks for your project folder, your tool, and the skills you want. It writes each skill to the folder your tool reads:
+The script clones the latest `main` of this repo into a temp folder, which it deletes when it finishes. Then it asks for your project folder, your tool, and the skills you want. It writes each skill to the folder your tool reads:
 
 | Tool | Installed to | Run with |
 |---|---|---|
