@@ -4,7 +4,7 @@ An MCP server that exposes every agent in this repository as an MCP **prompt**. 
 
 ## How it works
 
-On startup the server scans all `*-agents-store/*/` folders, reads each agent's entry file (`agent.md` or `SKILL.md`), and registers it as a named MCP prompt. Supporting docs in the same folder (e.g. `workflow.md`, `templates.md`) are concatenated into the prompt so the full context is always available.
+On startup the server scans all `*-agents-store/*/` folders, reads each agent's entry file (`agent.md` or `SKILL.md`), and registers it as a named MCP prompt. Supporting docs in the same folder (e.g. `workflow.md`, `templates.md`) are concatenated into the prompt so the full context is always available. It also registers each runbook in `runbooks/*.md` (multi-agent coordinators — see [runbooks/README.md](../runbooks/README.md)) as a prompt.
 
 The server exposes two entry points:
 
@@ -365,7 +365,7 @@ A run stays open until the next agent is invoked, so other work later in the sam
 
 1. Create a folder in the appropriate `*-agents-store/` directory.
 2. Add an `agent.md` (or `SKILL.md`) with YAML frontmatter containing `name` and `description`. To send its events to a specific AI Hub node, add it to your [node map](#create-the-env-file).
-3. Rebuild: `npm run build`.
+3. Add it to [catalog.json](../catalog.json), then run `npm run docs` to regenerate the README tables and `npm run check` to validate, build, and smoke-test.
 4. For Option A: redeploy (rebuild the image — new stores are picked up automatically, no Dockerfile edit needed). For Option B: publish a new version. For local clone: restart the MCP connection.
 
 ---

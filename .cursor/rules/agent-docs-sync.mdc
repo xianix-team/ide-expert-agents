@@ -1,23 +1,27 @@
 ---
-description: Keep store and root README docs in sync whenever an agent is added, removed, or updated
+description: Keep catalog.json and the generated README tables in sync whenever an agent is added, removed, or updated
 globs:
   - "*-agents-store/**/agent.md"
   - "*-agents-store/**/SKILL.md"
   - "*-agents-store/*/README.md"
   - "README.md"
+  - "catalog.json"
+  - "runbooks/*.md"
 alwaysApply: false
 ---
 
 This repo hosts agent definitions under `*-agents-store/<agent-name>/agent.md` (or `SKILL.md`), served via the MCP server in `mcp-server/`. See the root `README.md` for the full architecture.
 
-## Rule: keep README docs in sync with agent changes
+## Rule: keep the catalog and README docs in sync with agent changes
 
-Whenever an agent is **added**, **removed**, or **updated** (name, prompt name, description, or "when to use" changes) under any `*-agents-store/<agent-name>/` folder, update both of the following in the **same change**:
+The agent tables in the READMEs are **generated** — never edit them by hand. Their source of truth is [`catalog.json`](catalog.json) (store descriptions, plus each agent's display title and "When to use" text) and the frontmatter of `runbooks/*.md`.
 
-1. **That store's own `README.md`** (`*-agents-store/README.md`)
-   - Add/remove/edit the row in the "Available Agents" table: Agent name, Prompt name, When to use.
-2. **The root `README.md`**
-   - Update the agent count for that store in the "Agent stores" table.
-   - Update the store's one-line description if the change alters what the store covers.
+Whenever an agent is **added**, **removed**, or **updated** (name, prompt name, description, or "when to use" changes) under any `*-agents-store/<agent-name>/` folder, in the **same change**:
 
-Never leave these docs stale — a change that adds/removes/updates an agent but doesn't touch both READMEs is incomplete. If unsure whether a change is significant enough to warrant a description update, err on the side of updating it.
+1. **Update `catalog.json`**
+   - Add/remove/edit the agent's entry under its store: key = the frontmatter `name` (which must match the folder name), `title`, `whenToUse`.
+   - Update the store's `description` if the change alters what the store covers. If unsure, update it.
+2. **Update any runbook** in `runbooks/` that lists the agent under `agents` (renamed or removed agents).
+3. **Regenerate and check** — in `mcp-server/`: `npm run docs`, then `npm run check`. This rewrites the store README and root README tables (including the agent counts) and fails on any mismatch between disk, `catalog.json`, runbooks, and the READMEs. CI runs the same check on every PR.
+
+A change that adds/removes/updates an agent without updating `catalog.json` and the regenerated READMEs is incomplete.

@@ -57,11 +57,12 @@ Walk every item below. For each, note ✅ (meets it), ⚠️ (partial / unclear)
 ## Repo-convention checks (not quality attributes, but required by this repo)
 
 - Frontmatter has both `name` and `description`; `name` matches the folder name
-- If this is a **new**, **removed**, or **materially changed** agent (name, prompt name, description, or "when to use" changed), the change must land alongside updates to **both**:
-  1. That store's own `README.md` (row in the "Available Agents" table)
-  2. The root `README.md` (agent count and one-line description for that store)
+- If this is a **new**, **removed**, or **materially changed** agent (name, prompt name, description, or "when to use" changed), the change must land alongside:
+  1. An updated entry in `catalog.json` under its store (`title`, `whenToUse`, and the store `description` if coverage changed)
+  2. Regenerated README tables (`npm run docs` in `mcp-server/`) — the store and root READMEs are generated from `catalog.json`, never hand-edited
+  3. Updates to any `runbooks/*.md` that list this agent under `agents`, if its name, inputs, or outputs changed
 
-  If those README updates aren't part of the same change, flag it as a blocking gap — this is a hard rule in this repo's `CLAUDE.md` and `CONTRIBUTING.md`, not a suggestion.
+  If these aren't part of the same change, flag it as a blocking gap — this is a hard rule in this repo's `CLAUDE.md` and `CONTRIBUTING.md`, not a suggestion. `npm run check` in `mcp-server/` verifies the mechanical parts.
 
 ## Output
 

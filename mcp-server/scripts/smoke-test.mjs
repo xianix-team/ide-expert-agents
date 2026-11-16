@@ -1,5 +1,5 @@
 // Starts the built stdio server (dist/index.js) and checks, over real MCP:
-//   - ListPrompts returns exactly the agents that have a name + description on disk
+//   - ListPrompts returns exactly the agents and runbooks that have a name + description on disk
 //   - GetPrompt returns non-empty text for every one of them
 //
 // AI Hub telemetry is forced off, so running this on a machine with an AI Hub
@@ -31,6 +31,13 @@ for (const dir of glob.sync("*-agents-store/*/", { cwd: root })) {
   const file = ["agent.md", "SKILL.md"].map(f => path.join(root, dir, f)).find(f => fs.existsSync(f));
   if (!file) continue;
   const { data } = matter(fs.readFileSync(file, "utf-8"));
+  if (typeof data.name === "string" && data.name.trim() && String(data.description ?? "").trim()) {
+    expected.add(data.name.trim());
+  }
+}
+for (const file of glob.sync("runbooks/*.md", { cwd: root })) {
+  if (path.basename(file) === "README.md") continue;
+  const { data } = matter(fs.readFileSync(path.join(root, file), "utf-8"));
   if (typeof data.name === "string" && data.name.trim() && String(data.description ?? "").trim()) {
     expected.add(data.name.trim());
   }

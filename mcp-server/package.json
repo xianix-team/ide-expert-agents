@@ -30,7 +30,9 @@
     "dev:http": "tsx src/http.ts",
     "validate": "node scripts/validate-agents.mjs",
     "smoke": "node scripts/smoke-test.mjs",
-    "check": "npm run validate && npm run build && npm run smoke"
+    "docs": "node scripts/generate-docs.mjs",
+    "docs:check": "node scripts/generate-docs.mjs --check",
+    "check": "npm run validate && npm run docs:check && npm run build && npm run smoke"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",

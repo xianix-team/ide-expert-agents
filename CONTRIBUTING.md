@@ -36,12 +36,15 @@ The MCP server in `mcp-server/` discovers agents by globbing these folders at st
 
 ## Keep the docs in sync — required, not optional
 
-Whenever an agent is **added**, **removed**, or **updated** (name, prompt name, description, or "when to use" changes), update **both** of the following in the same PR:
+The agent tables in the store READMEs and the root README are **generated** from [`catalog.json`](catalog.json) and the runbook frontmatter. Don't edit them by hand.
 
-1. **That store's own `README.md`** — add/remove/edit the row in the "Available Agents" table (agent name, prompt name, when to use).
-2. **The root `README.md`** — update the agent count and one-line description for that store in the "Agent stores" table.
+Whenever an agent is **added**, **removed**, or **updated** (name, prompt name, description, or "when to use" changes), in the same PR:
 
-A PR that changes an agent without touching both READMEs is incomplete. If you're unsure whether a change is significant enough to warrant a description update, update it anyway.
+1. **`catalog.json`** — add/remove/edit the agent's entry under its store (`title`, `whenToUse`), and update the store's `description` if the change alters what the store covers.
+2. **Runbooks** — if a runbook in [`runbooks/`](runbooks/README.md) lists the agent under `agents`, update it.
+3. **Regenerate** — run `npm run docs` in `mcp-server/` and commit the README changes it makes.
+
+`npm run check` (and CI) fails if `catalog.json` disagrees with the agents on disk, a runbook names an agent that doesn't exist, or the READMEs weren't regenerated. If you're unsure whether a change is significant enough to warrant a description update, update it anyway.
 
 ## Customer IP notice
 

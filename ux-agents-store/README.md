@@ -8,6 +8,7 @@ All agents in this store are served via the repository's MCP server. See [mcp-se
 
 ## Available Agents
 
+<!-- generated:agents:start — edit catalog.json or runbooks/*.md, then run `npm run docs` in mcp-server/ -->
 | Agent | Prompt name | When to use |
 |---|---|---|
 | **Persona Builder** | `persona-builder` | Starting discovery on a client/product — generates evidence-grounded personas (or clearly-labelled proto-personas) from whatever research inputs exist |
@@ -19,6 +20,7 @@ All agents in this store are served via the repository's MCP server. See [mcp-se
 | **Design Concept Lab** | `design-concept-lab` | Need a few design directions for a screen or flow — generates distinct rendered mockup variants against the project's own tokens and stops for the engineer to pick one |
 | **IxD Review** | `ixd-review` | Heuristic interaction-design review of a product, flow, or prototype from screenshots, files, or a live URL — evidence-backed, prioritised recommendations |
 | **Design Rationale** | `design-rationale` | After design-consistency-audit findings are resolved — turns them into a factual, customer-facing Design Decision Record |
+<!-- generated:agents:end -->
 
 ---
 
@@ -26,7 +28,7 @@ All agents in this store are served via the repository's MCP server. See [mcp-se
 
 1. Create a folder here with an `agent.md` file containing `name` and `description` in YAML frontmatter.
 2. Rebuild the MCP server (`npm run build` in `mcp-server/`).
-3. The agent appears automatically on the next server restart — no other changes needed.
-4. Add a row to the table above so this README stays accurate.
+3. Add the agent to [catalog.json](../catalog.json) under this store, with a display `title` and `whenToUse` text, then run `npm run docs` in `mcp-server/` to regenerate the table above. Don't edit the table by hand.
+4. The agent appears automatically on the next server restart.
 
 These agents are fully standalone — no external database, no ticket refs, no engagement slugs. Each one asks for the inputs it needs (target project, output path, design tokens, etc.) and writes its output as a plain file in your own repo.

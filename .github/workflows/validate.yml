@@ -27,9 +27,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Frontmatter, unique names, and the store + root README agent tables
-      - name: Validate agents and README tables
+      # Frontmatter, unique names, runbook rosters, and catalog.json vs disk
+      - name: Validate agents, runbooks, and catalog
         run: npm run validate
+
+      # README tables must match what `npm run docs` generates from catalog.json
+      - name: Check generated README tables
+        run: npm run docs:check
 
       - name: Build
         run: npm run build
