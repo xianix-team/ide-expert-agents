@@ -8,16 +8,18 @@ const distDir = path.resolve(__dirname, "../dist");
 const repoRoot = path.resolve(__dirname, "../..");
 
 const SHEBANG = "#!/usr/bin/env node\n";
-const indexPath = path.join(distDir, "index.js");
 
-const content = fs.readFileSync(indexPath, "utf-8");
-if (!content.startsWith("#!")) {
-  fs.writeFileSync(indexPath, SHEBANG + content);
+for (const bin of ["index.js", "http.js", "usage-hook.js"]) {
+  const binPath = path.join(distDir, bin);
+  const content = fs.readFileSync(binPath, "utf-8");
+  if (!content.startsWith("#!")) {
+    fs.writeFileSync(binPath, SHEBANG + content);
+  }
+  fs.chmodSync(binPath, 0o755);
 }
-fs.chmodSync(indexPath, 0o755);
 
 // Bundle a copy of every *-agents-store/ into dist/agents-bundle/ so the
-// published npm package is self-contained — `npx @99x/ide-expert-agents-mcp`
+// published npm package is self-contained — `npx @99x-ai-dlc/ide-expert-agents-mcp`
 // works with no local clone and no MCP_AGENTS_ROOT override needed.
 // Skipped (not an error) when run outside the full repo, e.g. in a Docker
 // build stage that only has mcp-server/ checked out — Docker sets

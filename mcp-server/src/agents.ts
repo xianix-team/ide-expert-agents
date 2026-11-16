@@ -10,7 +10,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // 1. MCP_AGENTS_ROOT — explicit override (team clone, Docker image root, custom agent set).
 // 2. A real repo checkout two directories above dist/ (local clone / Option A / Option C).
 // 3. dist/agents-bundle/ — a copy of every *-agents-store/ baked in at publish time
-//    (see scripts/postbuild.mjs), making `npx @99x/ide-expert-agents-mcp` self-contained
+//    (see scripts/postbuild.mjs), making `npx @99x-ai-dlc/ide-expert-agents-mcp` self-contained
 //    with no local clone required (Option B).
 export function getAgentsRoot(): string {
   if (process.env.MCP_AGENTS_ROOT) return process.env.MCP_AGENTS_ROOT;
