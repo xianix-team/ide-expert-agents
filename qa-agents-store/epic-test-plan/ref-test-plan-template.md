@@ -125,4 +125,4 @@ Scenario counts are not repeated here — they live in `test-cases.md`.
 
 Keep the plan concise — one to two pages. Every testing type listed must be justified by the requirement; remove non-applicable types rather than writing placeholder content.
 
-`test-plan.html` is generated on request only — spec in `references/html-specs.md`.
+`test-plan.html` is generated on request only — spec in `ref-html-specs.md`.

@@ -1,6 +1,6 @@
 # `qa-estimate.md` — detailed estimate spec (Step 4c)
 
-The detailed estimate behind test-plan Section 11, built with the same method (five components + optional automation line, hours, no caps, risk-weighted — the method and component definitions are stated in full in `references/test-plan-template.md`, Section 11). This is the **Tier 1 internal estimate** — the real number and the negotiation floor; audience: QA lead, tech lead, PO. Markdown by default (`qa-estimate.html` is on request only — spec in `references/html-specs.md`).
+The detailed estimate behind test-plan Section 11, built with the same method (five components + optional automation line, hours, no caps, risk-weighted — the method and component definitions are stated in full in `ref-test-plan-template.md`, Section 11). This is the **Tier 1 internal estimate** — the real number and the negotiation floor; audience: QA lead, tech lead, PO. Markdown by default (`qa-estimate.html` is on request only — spec in `ref-html-specs.md`).
 
 **Ground before writing numbers.** If a design doc exists it is the single source of truth, including its latest amendments/decision log — scope changes late, and an estimate justified against stale scope gets shredded in review. Cross-check every scope claim against it, reconcile the story list against Jira, and flag (to the user, not in the doc) any items the design moved out of scope.
 

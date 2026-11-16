@@ -60,9 +60,9 @@ Table `# | Signal | Finding (Yes/No/Unknown) | Evidence (AC / subtask / quoted s
 |---|---|
 | T-1 | DB schema or data-migration change |
 | T-2 | API contract change (new/modified endpoints, payload changes) |
-| T-3 | UI change — name which portals (Admin / Owner / Customer) |
+| T-3 | UI change — name which apps or portals (e.g. admin, customer-facing) |
 | T-4 | Pricing / billing / invoicing / revenue-recognition logic |
-| T-5 | Integration touched (camera, PCP, Microlog, EV, payment) |
+| T-5 | Integration touched (third-party APIs, hardware or device integrations, payment providers, messaging, identity providers) — name each one |
 | T-6 | PII / compliance-sensitive data (GDPR, financial, accessibility) |
 | T-7 | Cross-module or cross-portal impact |
 | T-8 | Performance-sensitive / high-traffic path |
@@ -111,4 +111,4 @@ Keep it short and plain:
 
 ---
 
-`qa-level-assessment.html` is generated on request only — spec in `references/html-specs.md`.
+`qa-level-assessment.html` is generated on request only — spec in `ref-html-specs.md`.

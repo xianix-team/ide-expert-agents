@@ -46,8 +46,8 @@ Each test case is a table row with these columns:
 Column definitions:
 
 - **TC ID** — `<Epic-ID>-TC-001`, sequential across the whole file
-- **Test Case Title** — a short, specific title for the case. **Prefix happy-path cases with `⭐ HP`** (see "Happy-path identification" below); when the case is a consolidated parent and only some variants are the happy path, name them — e.g. `⭐ HP(a,c) Zone start → reserve → close`.
-- **Req Ref** — the requirement or story this case covers (e.g. `PAR-XXXXX`)
+- **Test Case Title** — a short, specific title for the case. **Prefix happy-path cases with `⭐ HP`** (see "Happy-path identification" below); when the case is a consolidated parent and only some variants are the happy path, name them — e.g. `⭐ HP(a,c) Create order → pay → confirm`.
+- **Req Ref** — the requirement or story this case covers (e.g. `ABC-123`)
 - **AC Ref** — the specific acceptance criterion number (e.g. `AC-3`)
 - **Module / Feature** — the UI section or API area being tested
 - **User Role** — the role executing the test
@@ -73,11 +73,11 @@ Column definitions:
 
 Happy paths are automated first, per your team's QA strategy. This step makes them explicit and hands them to automation.
 
-**What is a happy path:** the **primary success scenario** of a feature/flow — valid data, an authorised role, no errors — one per feature area, per role and per lot-type/branch where behaviour genuinely differs. Negative, edge, boundary, and error variants are **never** marked as happy paths.
+**What is a happy path:** the **primary success scenario** of a feature/flow — valid data, an authorised role, no errors — one per feature area, per role and per product variant or branch where behaviour genuinely differs. Negative, edge, boundary, and error variants are **never** marked as happy paths.
 
 **Mark them inline:** prefix the happy-path case's **Test Case Title** with `⭐ HP`. With per-variant precision — when a consolidated parent bundles the happy path with negative/edge variants, name only the happy variant letters, e.g. `⭐ HP(a) …`. The marker flags the row; the flows section (below) carries the automatable detail.
 
-**Emit a `## Happy-Path Automation Candidates` section** (placed just before the Requirement Traceability Matrix). It lists each happy path as a **self-contained, ordered end-to-end flow** that can be handed directly to the `playwright-cli` skill. One row per flow, with these columns:
+**Emit a `## Happy-Path Automation Candidates` section** (placed just before the Requirement Traceability Matrix). It lists each happy path as a **self-contained, ordered end-to-end flow** that can be handed directly to a browser-automation tool (e.g. Playwright) or an automation engineer without extra context. One row per flow, with these columns:
 
 | Column | Content |
 |---|---|
@@ -93,7 +93,7 @@ Happy paths are automated first, per your team's QA strategy. This step makes th
 
 Rules:
 - Every `⭐ HP` case must be covered by at least one flow, and every flow's **Covers** must reference real `TC-###`/variant letters (bidirectional bridge — no dangling refs).
-- Match the repo's automation conventions exactly: `[PAR-XXXXX]:` describe prefix + `@tag` arrays selected via `--grep` in the Azure pipelines. Reuse existing Page Objects/helpers rather than proposing new code when a flow is later automated.
+- Match the target automation repo’s conventions exactly (describe-title format, tag taxonomy, how CI selects tagged tests). If it has none, default to a `[<Epic-ID>]:` describe prefix with `@tag` arrays that CI can select via `--grep`. Reuse existing Page Objects/helpers rather than proposing new code when a flow is later automated.
 - Flows are the **automation backlog** — ordered and independent enough that each becomes one `test.describe.serial` spec.
 
 ## UI coverage (mandatory)
@@ -149,9 +149,9 @@ Before finalizing `test-cases.md`, review the whole set and remove redundant cas
 
 Rules:
 
-- Two cases that test the *same rule / same boundary / same class* are one case — keep the clearest, delete the rest. (E.g. "duration = exactly max → accepted" written twice is one case; "plate = 2 chars → blocked" written twice is one case.)
+- Two cases that test the *same rule / same boundary / same class* are one case — keep the clearest, delete the rest. (E.g. "duration = exactly max → accepted" written twice is one case; "name = 1 char → blocked" written twice is one case.)
 - Distinct boundaries are **not** duplicates: just-below, on, and just-above an edge are three separate legitimate cases — do not collapse them.
-- Different roles, lot types, or payment states with genuinely different expected behaviour are **not** duplicates.
+- Different roles, product variants, or payment states with genuinely different expected behaviour are **not** duplicates.
 - Prefer merging into the case with the more precise steps/data. After merging, renumber so `TC` IDs stay sequential with no gaps.
 - Redundancy is judged by *behaviour and technique*, not wording — two cases phrased differently that assert the same class+outcome are still duplicates.
 
@@ -166,10 +166,10 @@ At the end of `test-cases.md`, add a traceability section:
 
 | Req / AC Reference | Acceptance Criterion Summary | Test Case IDs | Coverage Status |
 |---|---|---|---|
-| PAR-xxxxx AC-1 | <AC text summary> | TC-001, TC-002 | Covered |
-| PAR-xxxxx AC-2 | <AC text summary> | — | ⚠ Not covered |
+| ABC-123 AC-1 | <AC text summary> | TC-001, TC-002 | Covered |
+| ABC-123 AC-2 | <AC text summary> | — | ⚠ Not covered |
 ```
 
 Every AC from `requirements.md` must appear in this table. Flag any with no test case as `⚠ Not covered` and note why (out of scope, requires clarification, etc.).
 
-`test-cases.html` is generated on request only — spec in `references/html-specs.md`.
+`test-cases.html` is generated on request only — spec in `ref-html-specs.md`.

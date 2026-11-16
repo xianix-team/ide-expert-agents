@@ -1,6 +1,6 @@
 # Client-facing estimate justification — rules (Step 4d, Tier 2)
 
-The client document is `qa-estimate.md` (Tier 1) compressed into a small set of categories a non-technical client can follow, in the approved format **Never invent a single number for the client directly** — the client document is always derived from a Tier 1 that exists first.
+The client document is `qa-estimate.md` (Tier 1) compressed into a small set of categories a non-technical client can follow, in the approved format below. **Never invent a single number for the client directly** — the client document is always derived from a Tier 1 that exists first.
 
 ## Compression
 
@@ -10,9 +10,9 @@ The client document is `qa-estimate.md` (Tier 1) compressed into a small set of 
 - Requirement study, test design, environment setup, sign-off evidence, and the buffer are **spread inside the category rows**, never shown as their own lines — they still happen; the client just doesn't see them itemized.
 - Sanity-check the ratio: QA above dev-effort is normal here (dev effort is review-of-AI-code; QA effort is runtime and data verification, which doesn't compress).
 
-## Format (match the exemplar — the final approved shape)
+## Format (the approved shape)
 
-- Markdown. Title `Testing Estimate Justification — PAR-#### (N hours)`. The total lives in the title only.
+- Markdown. Title `Testing Estimate Justification — ABC-123 (N hours)`. The total lives in the title only.
 - **Tables only. No prose.** No author line, no intro paragraphs per category, no roll-up section, no closing notes. The document is the title plus one table per category, ending at the last subtotal.
 - Column headers: `Epic | Coverage | Hours` for Features, `What we test | Coverage | Hours` for the rest. No Stories/counts column — story counts invite line-item haggling.
 - Bold subtotal row per table. **Few rows per table** — fold internal activities into broader rows and spread their hours.
@@ -21,7 +21,7 @@ The client document is `qa-estimate.md` (Tier 1) compressed into a small set of 
 ## Language rules (all learned from review — follow exactly)
 
 - **Plain language.** Any non-technical reader must understand every row. No table/column names, no FK or schema jargon, no internal class names. "Compare money totals before and after the move", not "reconcile un-FK'd order links". Translate even mid-level phrasing: "pro-rated space changes" → "adding and removing spaces mid-period with correct pricing"; "PCI boundary" → "card details are never stored by us".
-- **Domain shorthand the client uses daily is fine as row labels** — B2C, B2B, Barriers. Plain language means no *internal* jargon, not avoiding the client's own vocabulary.
+- **Domain shorthand the client uses daily is fine as row labels** (e.g. their own product-line or module names). Plain language means no *internal* jargon, not avoiding the client's own vocabulary.
 - **Confident, settled tone.** No open questions, no ⚠ markers, no caveats, no "already cut from X hours", no compliance hedging (drop GDPR name-drops — say "divisions are fully separated" instead), no mentions of pending requirement clarifications. If something is genuinely unresolved, it's a conversation with the PO, not a line in the client doc.
 - **Reads as human-written.** No em-dash chains, no parallel triads ("must not X, must never Y, must stop Z"), no storytelling, no cutesy column headers. Short, slightly uneven sentences. It should read like a QA lead getting a table out the door.
 - **Precedent incidents** are your strongest justification — but in the tables-only format they belong in the covering email or the meeting, not in the document.

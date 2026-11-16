@@ -35,7 +35,7 @@ A horizontal row of gate chips with arrows between them (flex cards: `.gates` co
 4. **QA Execution** — Pending
 5. **Release / Production Sanity** — Pending
 
-Gate status colours: Passed green / Warnings amber / Failed red. Gate names match the lifecycle diagram at `docs/QA-strategy/qa-lifecycle-quality-gates.html`.
+Gate status colours: Passed green / Warnings amber / Failed red. These five gates are the default QA lifecycle. If the team has its own lifecycle or quality-gate document, use its gate names and order instead.
 
 ---
 
