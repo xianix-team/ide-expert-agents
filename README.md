@@ -95,6 +95,24 @@ In Claude Code: `/mcp__ide-expert-agents__codebase-archaeology`
 
 In Cursor: type `/` and search for the agent name in agent mode.
 
+### Install agents as native skills (no MCP server)
+
+To copy selected agents straight into a project as native skills, run this from a clone of this repo:
+
+```bash
+./scripts/install-skills.sh
+```
+
+The script pulls the latest `main`. Then it asks for your project folder, your tool, and the skills you want. It writes each skill to the folder your tool reads:
+
+| Tool | Installed to | Run with |
+|---|---|---|
+| Claude Code | `<project>/.claude/skills/<name>/SKILL.md` | `/<name>` |
+| GitHub Copilot (VS Code) | `<project>/.github/skills/<name>/SKILL.md` | `/<name>` in Copilot Chat (agent mode) |
+| Cursor | `<project>/.cursor/skills/<name>/SKILL.md` | `/<name>` in Agent chat |
+
+Each `SKILL.md` holds the same content the MCP server serves: the agent's other `*.md` files are added to the end, and subfolders such as `templates/` are copied along with it. To update skills you installed earlier, run the script again.
+
 ---
 
 ## Track usage in AI Hub (optional)
