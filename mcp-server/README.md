@@ -6,6 +6,15 @@ An MCP server that exposes every agent in this repository as an MCP **prompt**. 
 
 On startup the server scans all `*-agents-store/*/` folders, reads each agent's entry file (`agent.md` or `SKILL.md`), and registers it as a named MCP prompt. Supporting docs in the same folder (e.g. `workflow.md`, `templates.md`) are concatenated into the prompt so the full context is always available. It also registers each runbook in `runbooks/*.md` (multi-agent coordinators — see [runbooks/README.md](../runbooks/README.md)) as a prompt.
 
+Every agent and runbook is also reachable through two **tools**, for clients and agent modes that only use tools:
+
+| Tool | What it does |
+|---|---|
+| `list_agents` | Lists every agent and runbook with its "when to use" description |
+| `get_agent` | Returns one agent's full instructions by name; the model then follows them |
+
+So in GitHub Copilot Chat (VS Code) you can either run an agent directly as `/mcp.ide-expert-agents.<agent-name>`, or ask in agent mode — e.g. *"use the estimate agent on docs/specs/x-spec.md"* — and Copilot calls the tools itself.
+
 The server exposes two entry points:
 
 | Entry point | Transport | Use when |

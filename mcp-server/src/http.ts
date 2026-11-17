@@ -1,6 +1,7 @@
 import express from "express";
 import { createMcpExpressApp } from "@modelcontextprotocol/sdk/server/express.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
+import { isInitializeRequest } from "@modelcontextprotocol/sdk/types.js";
 import { randomUUID } from "crypto";
 import { createServer } from "./server.js";
 
@@ -24,6 +25,23 @@ app.post("/mcp", async (req, res) => {
 
   if (sessionId && sessions.has(sessionId)) {
     transport = sessions.get(sessionId)!;
+  } else if (sessionId) {
+    // Unknown session — typically the server restarted. The spec requires 404
+    // here: it is the client's signal to re-initialize. A 400 leaves clients
+    // (e.g. VS Code) stuck on the dead session with an empty prompt list.
+    res.status(404).json({
+      jsonrpc: "2.0",
+      error: { code: -32001, message: "Session not found" },
+      id: null,
+    });
+    return;
+  } else if (!isInitializeRequest(req.body)) {
+    res.status(400).json({
+      jsonrpc: "2.0",
+      error: { code: -32000, message: "Bad Request: no session ID; send initialize first" },
+      id: null,
+    });
+    return;
   } else {
     transport = new StreamableHTTPServerTransport({
       sessionIdGenerator: () => randomUUID(),
