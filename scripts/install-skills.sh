@@ -83,7 +83,9 @@ main() {
   trap 'exit 130' INT TERM
 
   local REPO_ROOT="$WORK_DIR/repo"
-  info "Downloading the latest '$REPO_BRANCH' from $REPO_URL…"
+  # Braces matter: bash 3.2 (macOS) reads the first byte of "…" as part of
+  # an unbraced variable name, which fails under `set -u`.
+  info "Downloading the latest '${REPO_BRANCH}' from ${REPO_URL}…"
   git clone --quiet --depth 1 --branch "$REPO_BRANCH" "$REPO_URL" "$REPO_ROOT" \
     || die "Could not clone $REPO_URL ($REPO_BRANCH). Check your network and GitHub access."
   ok "Got $REPO_BRANCH @ $(git -C "$REPO_ROOT" rev-parse --short HEAD)."
