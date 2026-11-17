@@ -423,3 +423,7 @@ claude mcp add -s user atlassian \
 | `root-cause-analysis` | Creates improvement/incident tickets | Publishes RCA page |
 | `dependency-audit` | Creates a remediation ticket per finding | — |
 | `progress-digest` | — | Updates the intent's progress page |
+
+## License
+
+Copyright 99x. All rights reserved; contact [sachithp@99x.io](mailto:sachithp@99x.io) for permission to use.

@@ -292,6 +292,8 @@ In Claude Code: `/mcp__ide-expert-agents__presales-pipeline`
 | [**Pre-Sales Pipeline**](runbooks/presales-pipeline.md) | `presales-pipeline` | `discovery-interview`, `explore-agentic-ai-usecases`, `elaborate`, `estimate`, `proposal`, `casestudy-drafter` | Coordinates the pre-sales agents from first conversation to client proposal — discovery-interview → elaborate → estimate → proposal, with an optional agentic-AI entry point (explore-agentic-ai-usecases) and post-delivery case studies (casestudy-drafter). Checks which stage outputs already exist, then tells you which agent to run next and exactly what to answer its opening questions with. Read-only. Use when starting or resuming a pre-sales engagement, or when asked "what's next in pre-sales" or "run the pre-sales pipeline". |
 <!-- generated:runbooks:end -->
 
+For a worked example, see the [pre-sales pipeline walkthrough](examples/presales-pipeline-walkthrough.md) in [examples/](examples/README.md).
+
 ---
 
 ## Adding a new agent
@@ -313,3 +315,11 @@ In Claude Code: `/mcp__ide-expert-agents__presales-pipeline`
 5. Restart the MCP server connection in your tool — the agent appears automatically.
 
 No changes to the MCP server code are needed. Don't edit the generated tables by hand: `npm run check` (and CI) fails when they don't match `catalog.json`.
+
+## Security
+
+Please report vulnerabilities privately — see [SECURITY.md](SECURITY.md).
+
+## License
+
+Copyright 99x. All rights reserved; contact [sachithp@99x.io](mailto:sachithp@99x.io) for permission to use.

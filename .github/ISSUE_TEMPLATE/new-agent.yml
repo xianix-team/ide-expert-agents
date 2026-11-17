@@ -1,0 +1,61 @@
+name: New agent or runbook request
+description: Propose an agent (or a runbook that chains existing agents) for a task the catalog doesn't cover yet.
+title: "[agent request]: "
+labels: ["agent-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Check the agent tables in the [README](../blob/main/README.md) first — an existing agent may already cover this.
+        Keep the request generic: no client names, codenames, or confidential details.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What task should it handle?
+      description: The job to be done, and who would run it (role, stage of delivery).
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: What should it produce?
+      description: The artifact or decision that means "done" — e.g. a report at a path, a spec, edited code.
+    validations:
+      required: true
+  - type: dropdown
+    id: store
+    attributes:
+      label: Which store does it belong in?
+      options:
+        - analyst-agents-store
+        - architect-agents-store
+        - coding-agents-store
+        - compliance-agents-store
+        - data-platform-agents-store
+        - delivery-agents-store
+        - devops-agents-store
+        - feature-agents-store
+        - idf-agents-store
+        - pre-sales-agents-store
+        - qa-agents-store
+        - ux-agents-store
+        - A runbook (chains existing agents)
+        - A new store / not sure
+    validations:
+      required: true
+  - type: textarea
+    id: boundary
+    attributes:
+      label: What should it NOT do?
+      description: Adjacent work it must stay out of, and whether it should be read-only.
+  - type: textarea
+    id: neighbours
+    attributes:
+      label: Related agents
+      description: Agents it would hand off to or receive input from, and how it differs from the closest existing one.
+  - type: checkboxes
+    id: contribute
+    attributes:
+      label: Contribution
+      options:
+        - label: I'm willing to write this agent (starting from templates/AGENT_TEMPLATE.md)
