@@ -1,0 +1,15 @@
+## Framework module: Privacy By Design And By Default
+
+- **Module ID:** privacy-by-design-and-default
+- **Applies when:** The system processes any personal data. The LLM, agent-memory, and RAG rows apply when module 00 or A1 found an AI provider, agent memory, or retrieval over personal data.
+- **Primary regime:** EU GDPR (mapped to ISO/IEC 27701 and NIST Privacy Framework)
+- **Controls:** 6 (5 Automatable, 1 Partial, 0 Manual)
+
+| # | Requirement (control question) | GDPR | Fine tier | Role | ISO/IEC 27701 | NIST PF | Severity | Automation | How to check |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 | Personal data is pseudonymised or redacted before it leaves the trust boundary where full identity isn't needed — prompts to LLM providers, tool calls, analytics, error reporting. | Art 25(1); 32(1)(a) | Lower (83(4)) | Both | 7.4.1; 7.4.9 | CT.DP-P | High | Automatable | Look for a redaction or masking layer (PII detectors, tokenisation, hashing) on outbound LLM and SaaS calls. If there is none, raw user content is sent as-is. |
+| 2 | Privacy-protective defaults: optional processing is off until enabled (analytics, marketing, chat history or memory, use of data for training, public profiles). | Art 25(2) | Lower (83(4)) | Controller | 7.4.1; 7.4.2 | CT.DM-P | High | Automatable | Inspect default values of settings, feature flags, and config for these options. |
+| 3 | Personal data and raw prompts or conversations are not written to logs, traces, error reports, or temp files beyond necessity. | Art 25(1); 5(1)(c) | Lower (83(4)) | Both | 7.4.6; 6.9.4.1 | CT.DP-P; PR.DS-P | High | Automatable | Check log and trace statements that emit user objects, emails, prompts, or completions. Check `sendDefaultPii`-style settings, OpenTelemetry attributes carrying prompt content, and LLM-observability tools that capture full transcripts. |
+| 4 | Development, test, and eval environments use synthetic or masked data — no real personal data in fixtures, seeds, notebooks, or eval sets. | Art 25(1); 32(1) | Lower (83(4)) | Both | 6.11.3.1 | PR.DS-P | High | Automatable | Look for realistic emails, phones, names, or IDs in fixtures, seeds, `*.ipynb`, and eval or golden datasets, and for production-dump scripts. Never copy values into the report. |
+| 5 | Privacy requirements are designed in: privacy threats are analysed (e.g. LINDDUN or a DPIA-informed threat model) and traced to controls. | Art 25(1); 35(7)(d) | Lower (83(4)) | Controller | 7.2.5; 6.11.2.5 | ID.RA-P | Medium | Partial | Look for privacy threat models, ADRs, or security docs that cover personal data. Whether the analysis is good enough is judgment. |
+| 6 | Agent memory, RAG retrieval, and caches are scoped per person or tenant, so one person's data cannot surface in another's session. | Art 5(1)(f); 25(1); 32(1)(b) | Upper (83(5)) | Both | 7.4.2; 6.6.2.2 | PR.AC-P; CT.DM-P | Critical | Automatable | Inspect vector-query filters (user or tenant metadata), memory and cache keys, shared system prompts that include user data, and cross-session leakage tests. |
