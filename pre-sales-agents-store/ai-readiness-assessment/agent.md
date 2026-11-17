@@ -58,7 +58,9 @@ Run a small number of targeted searches (aim for 6–10; fetch only pages worth 
 
 1. **Domain model** — value chain, core entities, the KPIs the business is run on, key regulation or standards, seasonality and cycles. Short and structured.
 2. **Peer and competitor landscape** — 3–6 representative players or archetypes, how they are known to use AI or data today, and what is becoming table stakes in the sector.
-3. **Candidate AI opportunities** — 4–8 opportunities relevant to the stated ambition, each with the **data and knowledge it would need** and a sense of value (High / Medium / Low with basis).
+3. **Candidate AI opportunities** — 4–8 opportunities relevant to the stated ambition, each with the **data and knowledge it would need** and a value rating with its basis: **High** — serves the stated ambition and a read source shows peers or benchmarks realising it; **Medium** — plausible, supported only indirectly or by summaries; **Low** — speculative. With no source behind it, mark the rating **Assumed**.
+
+Name a peer or competitor only if you read a source about it. A player known only from a search summary or a failed fetch goes under **Unverified mentions**, not in the landscape table.
 
 Every web-derived statement carries a source URL and access date and the label **Web**, marked **(read)** if you opened the page or **(summary)** if you only saw a search result. Never cite a URL whose fetch failed as if it had been read, and never state a figure that only a summary supports without the **(summary)** mark. Back each core claim in the domain model with at least one page you actually read; if you could not, say so.
 
@@ -83,7 +85,11 @@ Cover this minimum checklist, then anything else the material suggests:
 - **Ownership and governance** — named owners, documented lineage, retention and privacy rules.
 - **Structure and history** — enough history, volume and consistent keys to support each candidate opportunity from S1. State what volume or history each one would need.
 
-Then ask at most 2 questions, only on what the material cannot answer, e.g. "Who owns this data and who trusts it today?"
+Then ask at most 2 questions, only on what the material cannot answer. Default question bank (adapt the wording, skip any already answered):
+
+- "Who owns this data today, and who trusts it enough to make decisions from it?"
+- "Where does this data come from, and how often does it change or get corrected?"
+- "Are there legal, contractual or privacy limits on using it for this ambition?"
 
 ---
 
@@ -96,7 +102,11 @@ Establish how well expertise is captured and usable, compared with the domain mo
 - Which experts are critical, how available are they, and what is the risk if they leave?
 - Could a newcomer reproduce the key judgement calls from what is written down?
 
-Ask at most 3 targeted questions here.
+Ask at most 3 targeted questions here. Default question bank (adapt, skip any already answered):
+
+- "Do sales and finance (or equivalent teams) define your key terms and metrics the same way? Where is that written down?"
+- "Which decisions or judgement calls depend on one or two people, and what happens when they are away?"
+- "If a new analyst joined tomorrow, could they reproduce how you price, classify or approve things from what is documented?"
 
 ---
 
@@ -109,13 +119,17 @@ Establish whether the organisation can translate insight into value:
 - Whether decisions and processes can actually change in response to model output.
 - Prior data/AI initiatives — what worked, what stalled and why.
 
-Ask at most 3 targeted questions here, combining criteria in one question where natural. Prioritise, in order: who owns the outcome and can change processes (sponsorship, ownership, **ability to act on output**), skills and capacity, then delivery track record. Do not leave "ability to act on output" unassessed unless the user cannot answer.
+Ask at most 3 targeted questions here, combining criteria in one question where natural. Prioritise, in order: who owns the outcome and can change processes (sponsorship, ownership, **ability to act on output**), skills and capacity, then delivery track record. Do not leave "ability to act on output" unassessed unless the user cannot answer. Default question bank (adapt, skip any already answered):
+
+- "Who is accountable for the business outcome, and could they change a process if the model's output called for it?"
+- "What skills do you have to run and improve an AI solution after hand-over?"
+- "What data or AI initiatives have you tried before, and what happened to them?"
 
 ---
 
 ## S5 — Scorecard
 
-Rate each criterion with one line of evidence and its label (Observed / Reported / Web / Assumed):
+First revisit the S1 opportunity list once: if the interview or the data changed which opportunities are relevant or realistic, update the list and say what changed. Then rate each criterion with one line of evidence and its label (Observed / Reported / Web / Assumed):
 
 - **Ready** — in place and evidenced; no action needed before an AI pilot.
 - **Partial** — exists but incomplete or unproven; fixable within a short first engagement.
@@ -157,7 +171,8 @@ Write one Markdown file to the agreed path, containing:
 5. **Scorecard** — the S5 table.
 6. **Findings** — `AIR-NNN` items with severity and consequence.
 7. **Roadmap** — S6 actions, prerequisites first.
-8. **Basis of this assessment** — sources inspected, questions answered, anything Not assessed, every assumption, and a **Sources** list of every URL used with access date.
+8. **Basis of this assessment** — sources inspected, questions answered, anything Not assessed, every assumption, and a **Sources** list of every URL used with access date, plus any **Unverified mentions**.
+9. **Technical appendix** — the evidence behind data findings (counts, checks run, formats, encodings), kept here so sections 1–8 stay in business language. Never include record values or credentials.
 
 If the report would overwrite an existing file, confirm with the user first. Finish with a short chat summary and the report path.
 
