@@ -95,6 +95,8 @@ In Claude Code: `/mcp__ide-expert-agents__codebase-archaeology`
 
 In Cursor: type `/` and search for the agent name in agent mode.
 
+In GitHub Copilot Chat (VS Code): `/mcp.ide-expert-agents.codebase-archaeology`, or ask in agent mode ("use the codebase-archaeology agent") — the server also exposes `list_agents` and `get_agent` tools for clients that work through tools.
+
 ### Install agents as native skills (no MCP server)
 
 To copy selected agents straight into a project as native skills, download the installer and run it. You don't need a clone of this repo:
