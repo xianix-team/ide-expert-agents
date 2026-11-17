@@ -29,7 +29,13 @@ The MCP server in `mcp-server/` discovers agents by globbing these folders at st
    Replace the placeholders and delete every `<!-- GUIDE: … -->` comment; `npm run check` fails while any are left. The only fields the server requires are `name` (equal to the folder name) and `description`.
 
 4. Split long instruction sets into supporting `.md` files in the same folder if it improves readability — they're concatenated into the prompt at serve time.
-5. Rebuild and sanity-check the server: `npm run build` in `mcp-server/`, then restart your MCP client connection and confirm the agent appears.
+5. Add the agent to [catalog.json](catalog.json) under its store, with a display `title` and `whenToUse` text (see [Keep the docs in sync](#keep-the-docs-in-sync--required-not-optional)).
+6. In `mcp-server/`, run `npm run docs` to regenerate the README tables, then `npm run check` to validate, build, and smoke-test.
+7. Restart your MCP client connection and confirm the agent appears.
+
+> **⚠️ Customer IP notice:** keep the agent generic and reusable — see [Customer IP notice](#customer-ip-notice) before you start.
+
+No changes to the MCP server code are needed. Don't edit the generated README tables by hand: `npm run check` (and CI) fails when they don't match `catalog.json`. Agent changes reach `npx` users with the next npm release (see [Releasing the npm package](#releasing-the-npm-package)).
 
 ## Keep the docs in sync — required, not optional
 
@@ -63,7 +69,19 @@ npm run dev:http    # HTTP Streamable transport
 npm run build       # tsc + postbuild — always run before opening a PR that touches server code
 ```
 
-Both transports (`index.ts` stdio, `http.ts` HTTP) share the same agent loader — you generally shouldn't need to touch server code just to add or edit an agent.
+Both transports (`index.ts` stdio, `http.ts` HTTP) share the same agent loader — you generally shouldn't need to touch server code just to add or edit an agent. See [docs/architecture.md](docs/architecture.md) for how the pieces fit together.
+
+## Releasing the npm package
+
+Don't change `version` in `mcp-server/package.json` in your PR — the release version comes from a Git tag, so parallel PRs never conflict over it. A maintainer releases by tagging a commit on `main`:
+
+```bash
+git checkout main && git pull
+git tag v1.2.0          # semver, prefixed with "v"
+git push origin v1.2.0
+```
+
+The [publish workflow](.github/workflows/publish-npm.yml) checks that the tagged commit is on `main`, sets the package version from the tag, builds, and publishes to npm. See [Publish](mcp-server/README.md#publish) for details.
 
 ## Review before you push
 

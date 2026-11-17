@@ -128,12 +128,20 @@ The server is published as a public npm package, [`@99x-ai-dlc/ide-expert-agents
 
 ### Publish
 
-Publishing is automated by [`.github/workflows/publish-npm.yml`](https://github.com/xianix-team/ide-expert-agents/blob/main/.github/workflows/publish-npm.yml). On every push to `main` that touches `mcp-server/` or any `*-agents-store/`, CI builds the package and publishes it with npm provenance — **but only if the version in `mcp-server/package.json` is not already on npm**. To release, bump the version in your PR:
+Publishing is automated by [`.github/workflows/publish-npm.yml`](https://github.com/xianix-team/ide-expert-agents/blob/main/.github/workflows/publish-npm.yml) and is driven by **Git tags**, not by the `version` field in `mcp-server/package.json`. Contributors never bump the version in a PR, so parallel PRs don't conflict over it. To release, a maintainer tags a commit on `main` and pushes the tag:
 
 ```bash
-cd mcp-server
-npm version patch --no-git-tag-version   # or minor / major
+git checkout main && git pull
+git tag v1.2.0            # semver with a "v" prefix
+git push origin v1.2.0
 ```
+
+The workflow then:
+
+1. Checks that the tag is valid semver and that the tagged commit is on `main` (it fails otherwise).
+2. Sets the package version from the tag (`v1.2.0` → `1.2.0`). The `version` in `package.json` on `main` is a placeholder and is not used for releases.
+3. Runs `npm run check` (validate, docs check, build, smoke test).
+4. Fails if that version is already on npm, then publishes with npm provenance. Pre-release tags such as `v1.3.0-beta.1` are published under the `next` dist-tag; all others under `latest`.
 
 CI authenticates with [npm trusted publishing](https://docs.npmjs.com/trusted-publishers) (GitHub OIDC), so no npm token is stored in the repo. The trust is configured on npmjs.com under the package's **Settings → Trusted publishing** (GitHub Actions, `xianix-team` / `ide-expert-agents` / `publish-npm.yml`, with **npm publish** allowed). If you rename the workflow file, update that configuration too. To publish manually instead, log in as a member of the `99x-ai-dlc` org and run `npm publish` from `mcp-server/`.
 
@@ -175,7 +183,7 @@ claude mcp add -s user ide-expert-agents -- npx -y @99x-ai-dlc/ide-expert-agents
 
 > **Using a fork or private agent set instead of the bundled agents?** Set `MCP_AGENTS_ROOT` to a local clone's path in the `env` block above — it always takes priority over the bundled copy. This is also how to pick up agent changes without waiting for a new npm publish.
 >
-> **Keeping the published package in sync:** the bundle is a snapshot taken at `npm run build` time — bump the version whenever agents change so CI publishes a new release (see [Publish](#publish)).
+> **Keeping the published package in sync:** the bundle is a snapshot taken at `npm run build` time — agent changes reach `npx` users only after a maintainer pushes a new release tag (see [Publish](#publish)).
 
 ---
 
@@ -384,7 +392,7 @@ A run stays open until the next agent is invoked, so other work later in the sam
 1. Create a folder in the appropriate `*-agents-store/` directory.
 2. Add an `agent.md` (or `SKILL.md`) with YAML frontmatter containing `name` and `description`. To send its events to a specific AI Hub node, add it to your [node map](#create-the-env-file).
 3. Add it to [catalog.json](../catalog.json), then run `npm run docs` to regenerate the README tables and `npm run check` to validate, build, and smoke-test.
-4. For Option A: redeploy (rebuild the image — new stores are picked up automatically, no Dockerfile edit needed). For Option B: publish a new version. For local clone: restart the MCP connection.
+4. For Option A: redeploy (rebuild the image — new stores are picked up automatically, no Dockerfile edit needed). For Option B: a maintainer pushes a new release tag (see [Publish](#publish)). For local clone: restart the MCP connection.
 
 ---
 
