@@ -20,6 +20,7 @@ All agents in this store are served via the repository's MCP server. See [mcp-se
 | **Explore & Build** | `explore-and-build` | When you want to interactively explore a web app (agent-driven, Playwright Codegen, or Chrome DevTools Recorder) and turn the session into a test instruction file and a runnable Playwright spec |
 | **Bug Report** | `bug-report` | When you have annotated screenshots and want them turned into structured, copy-paste-ready bug reports — with an optional direct file into Jira via the Atlassian MCP |
 | **Test Case Generator** | `test-case-generator` | When you want structured functional, edge, negative, and regression test cases generated from a feature spec, a git diff/PR, or both. Cases are grounded in the actual codebase and priority-ranked — it does not write or scaffold test code |
+| **Epic Test Plan** | `epic-test-plan` | When you have an epic (Jira link, document, pasted text, or meeting transcript) and need its full QA documentation set — a spec-quality gate, a risk-based QA level recommendation, a test plan, an hours estimate with a scope mindmap, test cases with happy-path automation candidates, an impact analysis, and an HTML review summary. Works from the requirement only, no codebase tracing; on request it also writes a client-facing estimate justification
 
 ---
 
