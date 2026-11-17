@@ -8,6 +8,7 @@ All agents in this store are served via the repository's MCP server. See [mcp-se
 
 ## Available Agents
 
+<!-- generated:agents:start — edit catalog.json or runbooks/*.md, then run `npm run docs` in mcp-server/ -->
 | Agent | Prompt name | When to use |
 |---|---|---|
 | **OWASP Security Scanner** | `owasp-security-scanner` | When you want a static code scan against OWASP Top 10 (2025) and/or OWASP Top 25 Parameters, with the latest standards fetched live from owasp.org. You choose which scan(s) to run; the agent reports severity-ranked findings with evidence — it does not edit code |
@@ -20,11 +21,13 @@ All agents in this store are served via the repository's MCP server. See [mcp-se
 | **Explore & Build** | `explore-and-build` | When you want to interactively explore a web app (agent-driven, Playwright Codegen, or Chrome DevTools Recorder) and turn the session into a test instruction file and a runnable Playwright spec |
 | **Bug Report** | `bug-report` | When you have annotated screenshots and want them turned into structured, copy-paste-ready bug reports — with an optional direct file into Jira via the Atlassian MCP |
 | **Test Case Generator** | `test-case-generator` | When you want structured functional, edge, negative, and regression test cases generated from a feature spec, a git diff/PR, or both. Cases are grounded in the actual codebase and priority-ranked — it does not write or scaffold test code |
+<!-- generated:agents:end -->
 
 ---
 
 ## Adding an agent
 
-1. Create a folder here with an `agent.md` file containing `name` and `description` in YAML frontmatter.
+1. Create a folder here with an `agent.md` file, starting from [templates/AGENT_TEMPLATE.md](../templates/AGENT_TEMPLATE.md). It needs `name` (equal to the folder name) and `description` in YAML frontmatter.
 2. Rebuild the MCP server (`npm run build` in `mcp-server/`).
-3. The agent appears automatically on the next server restart — no other changes needed.
+3. Add the agent to [catalog.json](../catalog.json) under this store, with a display `title` and `whenToUse` text, then run `npm run docs` in `mcp-server/` to regenerate the table above. Don't edit the table by hand.
+4. The agent appears automatically on the next server restart.

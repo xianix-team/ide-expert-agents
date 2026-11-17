@@ -153,7 +153,7 @@ State:
 - Top 2-3 findings to address first
 - Any areas that could not be checked
 
-Recommend `data-platform-developer` for implementation fixes or `architecture-advisor` for architectural decisions when appropriate. Recommend `context-keeper` only as a follow-up once that agent is available.
+Recommend `data-platform-developer` for implementation fixes or `architecture-advisor` for architectural decisions when appropriate. Once the regressions are triaged, recommend `context-keeper` to close out the cycle.
 
 ---
 

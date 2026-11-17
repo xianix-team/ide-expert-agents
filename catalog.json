@@ -1,0 +1,293 @@
+{
+  "_note": "Source of truth for the agent catalog shown in the READMEs. Each store has the one-line description used in the root README, and each agent (keyed by its frontmatter `name`) has the display title and 'When to use' text used in its store README. Run `npm run docs` in mcp-server/ after editing; CI (`npm run check`) fails if this file disagrees with the agents on disk or the READMEs are not regenerated. The agent prompt itself lives in the agent's agent.md/SKILL.md, not here.",
+  "stores": {
+    "idf-agents-store": {
+      "description": "Structured software delivery — design, risk, UAT, RCA, process health, and more",
+      "agents": {
+        "design-session": {
+          "title": "Design Session",
+          "whenToUse": "Before the first unit is proposed in any mob elaboration — establishes API contracts, data models, and architectural patterns as binding constraints"
+        },
+        "bolt-risk-assessment": {
+          "title": "Bolt Risk Assessment",
+          "whenToUse": "After elaboration sign-off, before the first unit in a bolt executes — assesses blast radius, sequencing risks, rollback, and feature flag requirements"
+        },
+        "uat": {
+          "title": "UAT",
+          "whenToUse": "When all units under an intent are marked Done — generates a plain-language demo script and records the stakeholder validation outcome"
+        },
+        "root-cause-analysis": {
+          "title": "Root Cause Analysis",
+          "whenToUse": "When an incident is resolved or recurring failures suggest a systemic issue — surfaces root causes across solution design, technology, and process"
+        },
+        "progress-digest": {
+          "title": "Progress Digest",
+          "whenToUse": "At any point during delivery — generates a plain-language stakeholder update with no engineering jargon"
+        },
+        "new-engineer-induction": {
+          "title": "New Engineer Induction",
+          "whenToUse": "When an engineer joins the project for the first time — explains the framework using the project's actual files and produces a personalised quick-reference card"
+        },
+        "process-health": {
+          "title": "Process Health",
+          "whenToUse": "After every third or fourth bolt, or when the team suspects process drift — produces a quantitative health report across four metrics"
+        },
+        "dependency-audit": {
+          "title": "Dependency Audit",
+          "whenToUse": "Monthly or when the scheduled audit date in the master rule file is reached — audits dependencies and converts findings into remediation backlog items"
+        },
+        "codebase-archaeology": {
+          "title": "Codebase Archaeology",
+          "whenToUse": "Before onboarding AI-DLC into a mature project, before joining a new team, or as a standalone technical due diligence exercise — maps architecture, extracts coding patterns, audits for defects and technical debt, and classifies all identified work"
+        }
+      }
+    },
+    "devops-agents-store": {
+      "description": "Infrastructure provisioning and IaC generation",
+      "agents": {
+        "iac-generator": {
+          "title": "IPA — Infrastructure Provisioning Agent",
+          "whenToUse": "When you want to provision cloud infrastructure, generate Terraform / Bicep / Pulumi / CDK, design a target cloud architecture, or stand up environments for an existing repo — IPA scans the codebase, asks targeted questions, and generates IaC with a step-by-step approval flow"
+        }
+      }
+    },
+    "architect-agents-store": {
+      "description": "Architecture review and cloud deployment inspection — deployment fitness assessment, agentic AI review, product-engineering foundations checklist, and release readiness checklist",
+      "agents": {
+        "deployment-architect": {
+          "title": "Deployment Architect",
+          "whenToUse": "When you want to inspect a live cloud deployment on Azure, AWS, or GCP — authenticates via the local CLI, discovers all resources, produces an as-deployed architecture document, and runs a structured fitness assessment across performance, security, reliability, robustness, observability, and cost efficiency. Read-only, never modifies resources"
+        },
+        "agentic-ai-reviewer": {
+          "title": "Agentic AI Reviewer",
+          "whenToUse": "When you want to review an agentic-AI codebase (RAG, tool-calling, conversational/support, multi-agent, ML-backed, or autopilot) against the Agentic AI Review Checklists — ISO/IEC 42001-aligned reliability, security, and best-practice controls. Reads code, config, prompts, IaC, CI, and tests, assesses every control verifiable from the repo, flags the rest for human review, and writes a single Markdown fitness report. Read-only, never modifies code"
+        },
+        "product-engineering-essentials": {
+          "title": "Product Engineering Essentials",
+          "whenToUse": "When you want a shared, evidence-based picture of a repository's product-engineering foundations — assesses ten pillars (vision, domain, requirements, UX, architecture, engineering practices, DevOps, QE, security/compliance, delivery feedback loop) and produces a checklist report of what's in place, partial, or missing. Never blocks work, standalone on any repository"
+        },
+        "release-readiness-checklist": {
+          "title": "Release Readiness Checklist",
+          "whenToUse": "When you want to walk through a UAT or Production release checklist item by item before a release ships — records a self-attested status and blocker/N/A note per item and produces a report. A self-attestation record, not an evidence audit; never blocks the release decision. Standalone on any repository"
+        }
+      }
+    },
+    "coding-agents-store": {
+      "description": "Code quality and targeted improvements — error handling audit, runtime debugging from logs/crashes/requirements, observability implementation (logging/metrics/tracing) with cost guardrails, and authentication/authorization implementation mapped to OWASP ASVS / NIST guidance",
+      "agents": {
+        "error-handling-audit": {
+          "title": "Error Handling Audit",
+          "whenToUse": "When you want to inspect code for incorrect, missing, or poorly structured error handling — covers empty catch blocks, swallowed exceptions, missing async guards, lost error context, and unsafe cleanup patterns. Finds issues and applies fixes after approval"
+        },
+        "runtime-debugger": {
+          "title": "Runtime Debugger",
+          "whenToUse": "When you have a real bug in hand — debug logs, crash logs/stack traces, requirement docs, and/or your own observation of expected vs. actual behavior — and want help going from symptom to root cause to an approved fix"
+        },
+        "observability-implementer": {
+          "title": "Observability Implementer",
+          "whenToUse": "When you want to add or improve observability (logging, metrics, tracing) on a platform of your choice — OpenTelemetry, Datadog, New Relic, Grafana/Prometheus/Loki/Tempo, AWS CloudWatch/X-Ray, Elastic/ELK, Splunk, Honeycomb, Sentry, etc. Designs and implements structured logging with dynamic log-level switches, cardinality-safe metrics, sampled tracing, and explicit cost guardrails (volume budgets, alerts, kill-switches) to prevent excessive log/metric/trace volume and runaway cost"
+        },
+        "auth-implementer": {
+          "title": "Auth Implementer",
+          "whenToUse": "When you want to implement authentication (login/logout, SSO/OIDC/SAML, MFA, passwordless) and authorization (RBAC/ABAC, centralized access checks, IDOR prevention) with security as a first-class constraint. Designs and implements credential hashing, session/token strategy, account-abuse protection, and threat mitigations mapped to live-fetched OWASP ASVS / NIST 800-63B guidance and any named compliance framework (GDPR, HIPAA, PCI-DSS, SOC2) — while being explicit about what code alone can and can't guarantee, and recommending a follow-up scan (e.g. `owasp-security-scanner`) and audit for regulated contexts"
+        }
+      }
+    },
+    "qa-agents-store": {
+      "description": "Testing and quality assurance — OWASP static security scanning, black-box / white-box / smoke & sanity / exploratory testing, UI/UX & WCAG accessibility audits, Playwright test authoring from explored sessions, test case generation from specs, diffs, or code alone, and bug reports from annotated screenshots",
+      "agents": {
+        "owasp-security-scanner": {
+          "title": "OWASP Security Scanner",
+          "whenToUse": "When you want a static code scan against OWASP Top 10 (2025) and/or OWASP Top 25 Parameters, with the latest standards fetched live from owasp.org. You choose which scan(s) to run; the agent reports severity-ranked findings with evidence — it does not edit code"
+        },
+        "black-box-testing": {
+          "title": "Black-Box Testing",
+          "whenToUse": "When you want to design and execute functional tests against a live web app without source access — equivalence partitioning, boundary value analysis, decision tables, state transition, pairwise, and negative testing — then run them through Playwright"
+        },
+        "white-box-testing": {
+          "title": "White-Box Testing",
+          "whenToUse": "When you can run the code and want coverage-driven structural tests — statement/branch/condition/MC-DC, basis path, data flow, loop, and mutation testing — to improve coverage or assess an existing suite"
+        },
+        "ui-ux-accessibility-testing": {
+          "title": "UI/UX & Accessibility Testing",
+          "whenToUse": "When you want a design-parity audit against a design spec and/or a WCAG 2.2 AA accessibility audit (axe-core + Lighthouse + manual passes), producing a self-contained HTML report"
+        },
+        "test-cases-from-code": {
+          "title": "Test Cases From Code",
+          "whenToUse": "When you must QA a feature branch with no spec, no reachable author, and no existing tests — reverse-engineer behavior as the oracle, check tenant/authorization isolation, reconcile stale test cases, and hand off a risk register (never confabulates intent)"
+        },
+        "smoke-sanity-testing": {
+          "title": "Smoke & Sanity Testing",
+          "whenToUse": "When you want a fast go/no-go gate on a build — wide-and-shallow smoke across critical paths, or narrow-and-deep sanity on a changed area after a fix"
+        },
+        "exploratory-testing": {
+          "title": "Exploratory Testing",
+          "whenToUse": "When you want structured, charter-guided exploratory testing to find bugs scripted tests miss — tours, heuristics (SFDPOT/HICCUPPS), plus light accessibility and usability lenses"
+        },
+        "explore-and-build": {
+          "title": "Explore & Build",
+          "whenToUse": "When you want to interactively explore a web app (agent-driven, Playwright Codegen, or Chrome DevTools Recorder) and turn the session into a test instruction file and a runnable Playwright spec"
+        },
+        "bug-report": {
+          "title": "Bug Report",
+          "whenToUse": "When you have annotated screenshots and want them turned into structured, copy-paste-ready bug reports — with an optional direct file into Jira via the Atlassian MCP"
+        },
+        "test-case-generator": {
+          "title": "Test Case Generator",
+          "whenToUse": "When you want structured functional, edge, negative, and regression test cases generated from a feature spec, a git diff/PR, or both. Cases are grounded in the actual codebase and priority-ranked — it does not write or scaffold test code"
+        }
+      }
+    },
+    "ux-agents-store": {
+      "description": "UX design and research — persona/journey/service-blueprint/competitive-analysis/prototype generation, design-consistency auditing, design-concept generation, interaction-design review, and design-rationale documentation",
+      "agents": {
+        "persona-builder": {
+          "title": "Persona Builder",
+          "whenToUse": "Starting discovery on a client/product — generates evidence-grounded personas (or clearly-labelled proto-personas) from whatever research inputs exist"
+        },
+        "journey-mapper": {
+          "title": "Journey Mapper",
+          "whenToUse": "After a persona exists — maps their end-to-end journey through one scenario (actions, thoughts, emotions, pain points, opportunities)"
+        },
+        "service-blueprint": {
+          "title": "Service Blueprint",
+          "whenToUse": "After a journey map exists — extends it below the line of visibility (frontstage/backstage/support processes/failure points)"
+        },
+        "competitive-analysis": {
+          "title": "Competitive Analysis",
+          "whenToUse": "Building the competitive picture for a pitch — competitor matrix, positioning, and differentiation opportunities from public research"
+        },
+        "prototype-builder": {
+          "title": "Prototype Builder",
+          "whenToUse": "Need something to click through — scaffolds a clickable Vite+React+Tailwind demo with mock data in an isolated folder"
+        },
+        "design-consistency-audit": {
+          "title": "Design Consistency Audit",
+          "whenToUse": "Auditing a built UI against the project's own design tokens for theme/token/contrast/a11y/spacing/UX consistency, with a gated fix mode"
+        },
+        "design-concept-lab": {
+          "title": "Design Concept Lab",
+          "whenToUse": "Need a few design directions for a screen or flow — generates distinct rendered mockup variants against the project's own tokens and stops for the engineer to pick one"
+        },
+        "ixd-review": {
+          "title": "IxD Review",
+          "whenToUse": "Heuristic interaction-design review of a product, flow, or prototype from screenshots, files, or a live URL — evidence-backed, prioritised recommendations"
+        },
+        "design-rationale": {
+          "title": "Design Rationale",
+          "whenToUse": "After design-consistency-audit findings are resolved — turns them into a factual, customer-facing Design Decision Record"
+        }
+      }
+    },
+    "pre-sales-agents-store": {
+      "description": "Pre-sales pipeline — agentic AI opportunity mining, discovery interview, requirement elaboration, effort estimation, proposal assembly, and case-study drafting from delivered codebases",
+      "agents": {
+        "explore-agentic-ai-usecases": {
+          "title": "Explore Agentic AI Use Cases",
+          "whenToUse": "Mining an existing product codebase for agentic AI opportunities — minimal targeted questions, then a business-reader report (problem, value, solution, spec, man-day estimate) sorted with high-value / low-effort use cases first"
+        },
+        "discovery-interview": {
+          "title": "Discovery Interview",
+          "whenToUse": "Starting a new engagement or opportunity — a Socratic, one-question-at-a-time interview that resolves ambiguity before any scoping happens"
+        },
+        "elaborate": {
+          "title": "Elaborate",
+          "whenToUse": "Turning a loose request into a clear, codebase-grounded requirement and scope spec before any implementation plan is written"
+        },
+        "estimate": {
+          "title": "Estimate",
+          "whenToUse": "Building a 3-point (PERT) effort estimate from a requirement spec, with a client-ready estimation sheet"
+        },
+        "proposal": {
+          "title": "Proposal",
+          "whenToUse": "Assembling a client-facing proposal from whatever discovery, spec, and estimate material exists"
+        },
+        "casestudy-drafter": {
+          "title": "Case Study Drafter",
+          "whenToUse": "Turning a delivered codebase (single repo or multi-repo estate) into industry-class customer case studies — analyses the domain and user journeys, proposes candidate angles (flagging which need customer metrics), narrows them down with minimal structured questions, and writes one Markdown case study per selection (synopsis, problem domain, solution with optional high-level technical approach, impact), named or anonymized per run, with a post-write revise step"
+        }
+      }
+    },
+    "data-platform-agents-store": {
+      "description": "Data-platform analysis and evolution — repo analysis, due diligence, architecture advisory, opportunity scouting, implementation, validation, regression monitoring, and cycle close-out",
+      "agents": {
+        "repo-analyst": {
+          "title": "Repo Analyst",
+          "whenToUse": "Onboarding into an unfamiliar data platform, or starting any analysis pipeline — builds a structured knowledge graph of schema, pipelines, and lineage, cross-referenced against documentation"
+        },
+        "due-diligence": {
+          "title": "Due Diligence",
+          "whenToUse": "Periodic health audit, or onboarding into an unfamiliar data platform — audits security & access, data quality & integrity, GDPR & compliance, pipeline reliability, and architecture consistency, producing evidence-backed findings with severity. Read-only"
+        },
+        "architecture-advisor": {
+          "title": "Architecture Advisor",
+          "whenToUse": "After a due-diligence audit surfaces architectural or structural problems — proposes formal Architecture Decision Records (ADRs) applying data-engineering best practices. Read-only, never implements"
+        },
+        "opportunity-scout": {
+          "title": "Opportunity Scout",
+          "whenToUse": "Scoping what to build next on a data platform, after due-diligence/architecture work — compares business/BI requirements against the current schema to identify missing views, fact tables, and dimensions, and turns gaps into a prioritised backlog. Read-only"
+        },
+        "data-platform-developer": {
+          "title": "Data Platform Developer",
+          "whenToUse": "Implementing one approved opportunity or ADR end to end — creates or changes schema and pipeline code with human checkpoints and mandatory idempotency"
+        },
+        "data-platform-validator": {
+          "title": "Data Platform Validator",
+          "whenToUse": "Independently reviewing a completed data-platform change against its approved opportunity or ADR before merge, with evidence-backed approve/reject findings"
+        },
+        "regression-monitor": {
+          "title": "Regression Monitor",
+          "whenToUse": "Periodically comparing current platform state against an established baseline to report schema drift, undocumented pipeline changes, and data-quality degradation"
+        },
+        "context-keeper": {
+          "title": "Context Keeper",
+          "whenToUse": "Closing out a completed data-platform work cycle with a plain-language summary of what changed, current state, open follow-ups, and recommended next steps"
+        }
+      }
+    },
+    "compliance-agents-store": {
+      "description": "AI compliance, data protection, and governance — EU AI Act controls review with ISO 42001 and NIST AI RMF mapping, and GDPR controls review (personal-data inventory, data-subject rights, LLM data flows, transfers) with ISO 27701 and NIST Privacy Framework mapping",
+      "agents": {
+        "eu-ai-act-controls-reviewer": {
+          "title": "EU AI Act Controls Reviewer",
+          "whenToUse": "When you want to review an agentic-AI code repository for fitness against the **EU AI Act**, with every requirement cross-mapped to **ISO/IEC 42001** Annex A controls and the **NIST AI RMF** functions. Determines the likely EU AI Act risk tier, assesses each obligation verifiable from code/config/prompts/IaC/CI/tests, flags organisational and legal items for a human, and writes a single Markdown fitness report. Read-only. A control-fitness and gap-analysis aid — not legal advice or a formal conformity assessment"
+        },
+        "gdpr-controls-reviewer": {
+          "title": "GDPR Controls Reviewer",
+          "whenToUse": "When you want to review a repository that processes personal data — with extra depth for AI/LLM and agentic systems — for fitness against the **EU GDPR**, with every requirement cross-mapped to **ISO/IEC 27701** and the **NIST Privacy Framework**. Builds a personal-data inventory (incl. special-category data and flows to LLM providers and other third parties), determines controller/processor role, assesses data-subject rights, retention, minimisation, privacy by default, security, transfers and automated decision-making from code/config/prompts/IaC/CI/tests, tags each gap with fine tier and exposure, flags organisational and legal items for a human, and writes a single Markdown fitness report. Use before go-live or a DPIA, or when adding an LLM provider or new personal-data flow. Read-only. A control-fitness and gap-analysis aid — not legal advice or a DPIA"
+        }
+      }
+    },
+    "delivery-agents-store": {
+      "description": "Delivery management — DORA-inspired commitment health reporting, and parallel-execution planning (dependency mapping + wave scheduling), adapted for AI-led development",
+      "agents": {
+        "delivery-commitment-health-report": {
+          "title": "Delivery Commitment Health Report",
+          "whenToUse": "At a sprint/bolt boundary, or whenever a delivery manager or customer wants a data-backed delivery snapshot — produces a DORA-inspired report (deployment/merge frequency, decomposed lead time, change failure rate, MTTR, commitment reliability) adapted for AI-led development, where AI-generation time and human-review time are tracked separately. Read-only"
+        },
+        "planning-helper-agent": {
+          "title": "Planning Helper",
+          "whenToUse": "When an engineer wants to parallelize work — either DECOMPOSE one task/epic into the smallest independently-executable subtasks, or SCHEDULE a set of existing tasks — by mapping inter-dependencies and grouping the work into parallel execution waves. Produces a dependency graph, wave-by-wave plan, and the critical path. Read-only for source"
+        }
+      }
+    },
+    "feature-agents-store": {
+      "description": "Feature implementation — skills for building specific product features end-to-end, e.g. an AI \"digital salesperson\" that maps user intent (chat + generated action buttons) to the product's real features/services, with per-user preference memory and a cross-user plot library",
+      "agents": {
+        "user-intent-extractor": {
+          "title": "User Intent Extractor",
+          "whenToUse": "When building an in-app AI assistant, a \"tell us what you need\" entry point, smart onboarding, or any surface that should map a user's intent (via chat or generated action buttons) to the product's real features/services and offer the best fit — like a salesperson — instead of routing them through a fixed UI flow. Discovers the offering catalog and designs/implements three grounding layers: the offering registry, a per-user preference memory, and a curated cross-user plot library (the recurring intent-journeys the product sees over time), feeding an embedding-similarity matching pipeline with preference/plot-aware ranking"
+        }
+      }
+    },
+    "analyst-agents-store": {
+      "description": "Business/systems analysis — critically evaluating requirements against the Paul-Elder Critical Thinking Framework before they're scoped or built",
+      "agents": {
+        "requirement-analyzer": {
+          "title": "Requirement Analyzer",
+          "whenToUse": "When a requirement or stated intent needs to be critically evaluated before it's scoped or built. Applies the Paul-Elder Critical Thinking Framework — deconstructs the requirement into its Elements of Reasoning, stress-tests each against the nine Essential Intellectual Standards, then uses the seven Intellectual Traits as a reflective pass to catch blind spots — surfacing hidden assumptions, missing viewpoints, logical gaps, and clarifying questions for the requirement's owner"
+        }
+      }
+    }
+  }
+}

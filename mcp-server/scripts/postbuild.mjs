@@ -42,5 +42,13 @@ if (storeDirs.length === 0) {
     });
   }
 
-  console.log(`postbuild: bundled ${storeDirs.length} agent store(s) into dist/agents-bundle/`);
+  const runbooksDir = path.join(repoRoot, "runbooks");
+  if (fs.existsSync(runbooksDir)) {
+    fs.cpSync(runbooksDir, path.join(bundleDir, "runbooks"), {
+      recursive: true,
+      filter: src => !skip.has(path.basename(src)),
+    });
+  }
+
+  console.log(`postbuild: bundled ${storeDirs.length} agent store(s) and runbooks into dist/agents-bundle/`);
 }

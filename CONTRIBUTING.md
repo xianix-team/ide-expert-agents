@@ -20,28 +20,28 @@ The MCP server in `mcp-server/` discovers agents by globbing these folders at st
 
 1. Pick the store that matches the agent's domain (see the "Agent stores" table in the root [README.md](README.md)), or propose a new store if none fits.
 2. Create a folder: `*-agents-store/<agent-name>/`.
-3. Add `agent.md` (or `SKILL.md`) with at minimum:
+3. Start from the template: copy [templates/AGENT_TEMPLATE.md](templates/AGENT_TEMPLATE.md) to `<agent-name>/agent.md`. It sets out the structure the [quality checklist](.claude/skills/agent-quality-review/SKILL.md) expects:
+   - frontmatter with trigger phrases and only the tools the agent needs;
+   - a boundary statement and a "done when";
+   - S0 scope agreement, read-only grounding, the work stages, a checkpoint that stops for confirmation, and a write step with an output skeleton;
+   - a handoff that names the next agent, and guardrails.
 
-   ```yaml
-   ---
-   name: my-agent
-   description: One sentence describing when to invoke this agent.
-   ---
-
-   # Agent instructions here...
-   ```
+   Replace the placeholders and delete every `<!-- GUIDE: … -->` comment; `npm run check` fails while any are left. The only fields the server requires are `name` (equal to the folder name) and `description`.
 
 4. Split long instruction sets into supporting `.md` files in the same folder if it improves readability — they're concatenated into the prompt at serve time.
 5. Rebuild and sanity-check the server: `npm run build` in `mcp-server/`, then restart your MCP client connection and confirm the agent appears.
 
 ## Keep the docs in sync — required, not optional
 
-Whenever an agent is **added**, **removed**, or **updated** (name, prompt name, description, or "when to use" changes), update **both** of the following in the same PR:
+The agent tables in the store READMEs and the root README are **generated** from [`catalog.json`](catalog.json) and the runbook frontmatter. Don't edit them by hand.
 
-1. **That store's own `README.md`** — add/remove/edit the row in the "Available Agents" table (agent name, prompt name, when to use).
-2. **The root `README.md`** — update the agent count and one-line description for that store in the "Agent stores" table.
+Whenever an agent is **added**, **removed**, or **updated** (name, prompt name, description, or "when to use" changes), in the same PR:
 
-A PR that changes an agent without touching both READMEs is incomplete. If you're unsure whether a change is significant enough to warrant a description update, update it anyway.
+1. **`catalog.json`** — add/remove/edit the agent's entry under its store (`title`, `whenToUse`), and update the store's `description` if the change alters what the store covers.
+2. **Runbooks** — if a runbook in [`runbooks/`](runbooks/README.md) lists the agent under `agents`, update it.
+3. **Regenerate** — run `npm run docs` in `mcp-server/` and commit the README changes it makes.
+
+`npm run check` (and CI) fails if `catalog.json` disagrees with the agents on disk, a runbook names an agent that doesn't exist, or the READMEs weren't regenerated. If you're unsure whether a change is significant enough to warrant a description update, update it anyway.
 
 ## Customer IP notice
 
@@ -78,7 +78,7 @@ trip.
 
 1. Branch off `main`.
 2. Make your changes, keeping agent content and README updates in the same commit/PR (see above).
-3. Run `npm run build` in `mcp-server/` if you touched server code, and confirm it succeeds.
+3. Run `npm run check` in `mcp-server/` (Node 20+) and confirm it passes. It validates agent frontmatter and both README agent tables, builds the server, and smoke-tests that every agent is served. CI runs the same check on every PR.
 4. Self-review against [pr-review.md](pr-review.md) — fix anything marked blocking before opening the PR.
 5. Open a PR against `main` with a clear description of what the agent does and, if relevant, what prompted it.
 6. Keep customer-identifying details out of PR descriptions and commit messages, same as agent content.

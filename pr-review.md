@@ -56,19 +56,26 @@ These come straight from `CONTRIBUTING.md` and are mechanical — verify, don't 
 
 This is the rule this repo is strictest about (`CLAUDE.md` and `CONTRIBUTING.md` both
 call it out as required, not optional). A PR that adds/removes/updates an agent but
-doesn't touch both READMEs **in the same PR** is incomplete — request changes, don't
-approve with a follow-up comment.
+doesn't update `catalog.json` and the regenerated READMEs **in the same PR** is
+incomplete — request changes, don't approve with a follow-up comment.
 
-- [ ] **Store README** (`*-agents-store/README.md`) — the "Available Agents" table
-      row is added / removed / edited to match: Agent name, Prompt name, When to use.
-      The "When to use" column should track the frontmatter `description`, not drift
-      from it.
-- [ ] **Root README** (`README.md`) — the "Agent stores" table:
-  - [ ] Agent **count** for that store is updated (+1 / −1 / unchanged on rename)
-  - [ ] The store's **one-line description** is updated if this change alters what
-        the store covers (a new capability, or the loss of one on removal)
+The README agent tables are generated from `catalog.json` and runbook frontmatter
+(`npm run docs`), and the `Validate agents and MCP server` CI job fails on any
+mismatch. So the mechanical part — counts, rows present, prompt names — is checked
+for you. Review the content:
+
+- [ ] **CI is green** — in particular the validate and docs-check steps
+- [ ] **`catalog.json`** — the agent's `title` and `whenToUse` are accurate and
+      track the frontmatter `description`, not drift from it
+- [ ] The store's **`description`** in `catalog.json` is updated if this change
+      alters what the store covers (a new capability, or the loss of one on removal)
+- [ ] **Runbooks** in `runbooks/` that coordinate this agent still describe its
+      inputs, outputs, and default paths correctly (a renamed or re-scoped agent
+      can leave a runbook's stage table stale even when CI passes)
+- [ ] The generated tables were **not hand-edited** — the diff in README tables
+      should match what `npm run docs` produces
 - [ ] If a change is borderline (e.g. a wording tweak to `description` that doesn't
-      change behavior), the repo's stated default is to update the docs anyway —
+      change behavior), the repo's stated default is to update the catalog anyway —
       don't wave through "the READMEs are close enough."
 
 ---
@@ -174,8 +181,8 @@ by globbing, no registry to update. If the PR *does* touch server code:
 ```
 Agent PR Review
 - [ ] Repo conventions (folder, frontmatter, name==folder) — §1
-- [ ] Store README updated — §2
-- [ ] Root README updated (count + description) — §2
+- [ ] catalog.json updated and READMEs regenerated (CI green) — §2
+- [ ] Runbooks that coordinate this agent still accurate — §2
 - [ ] Quality-attribute checklist (agent-quality-review) — §3
 - [ ] Customer IP notice — §4
 - [ ] MCP server build (if src/ touched) — §5

@@ -1,0 +1,121 @@
+// Regenerates the agent and runbook tables in the READMEs from catalog.json and
+// runbook frontmatter. Only the text between generated-region markers is
+// rewritten; everything else in each README stays hand-written.
+//
+//   <store>/README.md   "## Available Agents" table   <- catalog.json stores.<store>.agents
+//   README.md           "## Agent stores" table       <- catalog.json stores (count from disk)
+//   README.md           "## Runbooks" table           <- runbooks/*.md frontmatter
+//   runbooks/README.md  "## Available runbooks" table <- runbooks/*.md frontmatter
+//
+// A README without markers yet gets them wrapped around the first table under
+// its heading on the first run.
+//
+// Usage: node scripts/generate-docs.mjs           write the READMEs (`npm run docs`)
+//        node scripts/generate-docs.mjs --check   exit 1 if any README is out of date
+// Set MCP_AGENTS_ROOT to run against a different checkout.
+
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import { glob } from "glob";
+import matter from "gray-matter";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const root = process.env.MCP_AGENTS_ROOT || path.resolve(__dirname, "../..");
+const check = process.argv.includes("--check");
+
+const catalog = JSON.parse(fs.readFileSync(path.join(root, "catalog.json"), "utf-8"));
+const cell = text => String(text ?? "").replace(/\s*\n\s*/g, " ").replace(/\|/g, "\\|").trim();
+const table = (header, rows) =>
+  [`| ${header.join(" | ")} |`, `|${header.map(() => "---").join("|")}|`, ...rows.map(r => `| ${r.join(" | ")} |`)].join("\n");
+
+const countAgents = store =>
+  glob.sync("*/", { cwd: path.join(root, store) }).filter(d =>
+    ["agent.md", "SKILL.md"].some(f => fs.existsSync(path.join(root, store, d, f)))
+  ).length;
+
+const runbooks = glob
+  .sync("runbooks/*.md", { cwd: root })
+  .filter(f => path.basename(f) !== "README.md")
+  .sort()
+  .map(f => ({ file: path.basename(f), ...matter(fs.readFileSync(path.join(root, f), "utf-8")).data }));
+
+const runbookTable = linkPrefix =>
+  table(
+    ["Runbook", "Prompt name", "Coordinates", "When to use"],
+    runbooks.map(r => [
+      `[**${cell(r.title)}**](${linkPrefix}${r.file})`,
+      `\`${r.name}\``,
+      (r.agents ?? []).map(a => `\`${a}\``).join(", "),
+      cell(r.description),
+    ])
+  );
+
+// Replace the generated region `id` in `md`; add markers around the first table
+// under `heading` if the region doesn't exist yet.
+function render(md, id, heading, body, file) {
+  const start = `<!-- generated:${id}:start — edit catalog.json or runbooks/*.md, then run \`npm run docs\` in mcp-server/ -->`;
+  const end = `<!-- generated:${id}:end -->`;
+  const block = `${start}\n${body}\n${end}`;
+
+  const re = new RegExp(`<!-- generated:${id}:start[^\\n]*-->[\\s\\S]*?<!-- generated:${id}:end -->`);
+  if (re.test(md)) return md.replace(re, () => block);
+
+  const lines = md.split("\n");
+  let i = lines.findIndex(l => l.trim() === heading);
+  if (i < 0) throw new Error(`${file}: no '${heading}' heading to put the ${id} table under`);
+  let j = i + 1;
+  while (j < lines.length && !lines[j].trim().startsWith("|") && !lines[j].startsWith("#")) j++;
+  if (j < lines.length && lines[j].trim().startsWith("|")) {
+    let k = j;
+    while (k < lines.length && lines[k].trim().startsWith("|")) k++;
+    lines.splice(j, k - j, block);
+  } else {
+    lines.splice(i + 1, 0, "", block);
+  }
+  return lines.join("\n");
+}
+
+const outputs = new Map(); // file -> new content
+const update = (rel, fn) => {
+  const file = path.join(root, rel);
+  const before = outputs.get(rel) ?? fs.readFileSync(file, "utf-8");
+  outputs.set(rel, fn(before));
+};
+
+for (const [store, { agents }] of Object.entries(catalog.stores)) {
+  const body = table(
+    ["Agent", "Prompt name", "When to use"],
+    Object.entries(agents).map(([name, a]) => [`**${cell(a.title)}**`, `\`${name}\``, cell(a.whenToUse)])
+  );
+  update(`${store}/README.md`, md => render(md, "agents", "## Available Agents", body, `${store}/README.md`));
+}
+
+const storesBody = table(
+  ["Store", "Agents", "Description"],
+  Object.entries(catalog.stores).map(([store, s]) => [
+    `[${store}](${store}/README.md)`,
+    String(countAgents(store)),
+    cell(s.description),
+  ])
+);
+update("README.md", md => render(md, "stores", "## Agent stores", storesBody, "README.md"));
+update("README.md", md => render(md, "runbooks", "## Runbooks", runbookTable("runbooks/"), "README.md"));
+if (fs.existsSync(path.join(root, "runbooks/README.md"))) {
+  update("runbooks/README.md", md => render(md, "runbooks", "## Available runbooks", runbookTable(""), "runbooks/README.md"));
+}
+
+const stale = [];
+for (const [rel, content] of outputs) {
+  const current = fs.readFileSync(path.join(root, rel), "utf-8");
+  if (current === content) continue;
+  stale.push(rel);
+  if (!check) fs.writeFileSync(path.join(root, rel), content);
+}
+
+if (check) {
+  for (const rel of stale) console.error(`error    ${rel} is out of date — run \`npm run docs\` in mcp-server/`);
+  console.log(`\nDocs check: ${outputs.size} README(s) checked, ${stale.length} out of date.`);
+  process.exit(stale.length > 0 ? 1 : 0);
+}
+console.log(stale.length ? `Updated ${stale.join(", ")}` : "All READMEs already up to date.");

@@ -1,6 +1,6 @@
 {
   "name": "@99x-ai-dlc/ide-expert-agents-mcp",
-  "version": "1.0.5",
+  "version": "1.1.0",
   "description": "MCP server that exposes all IDE expert agents as prompts — works with Claude Code, Cursor, and GitHub Copilot",
   "type": "module",
   "license": "UNLICENSED",
@@ -27,7 +27,12 @@
     "start": "node dist/index.js",
     "start:http": "node dist/http.js",
     "dev": "tsx src/index.ts",
-    "dev:http": "tsx src/http.ts"
+    "dev:http": "tsx src/http.ts",
+    "validate": "node scripts/validate-agents.mjs",
+    "smoke": "node scripts/smoke-test.mjs",
+    "docs": "node scripts/generate-docs.mjs",
+    "docs:check": "node scripts/generate-docs.mjs --check",
+    "check": "npm run validate && npm run docs:check && npm run build && npm run smoke"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",

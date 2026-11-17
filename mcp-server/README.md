@@ -4,7 +4,16 @@ An MCP server that exposes every agent in this repository as an MCP **prompt**. 
 
 ## How it works
 
-On startup the server scans all `*-agents-store/*/` folders, reads each agent's entry file (`agent.md` or `SKILL.md`), and registers it as a named MCP prompt. Supporting docs in the same folder (e.g. `workflow.md`, `templates.md`) are concatenated into the prompt so the full context is always available.
+On startup the server scans all `*-agents-store/*/` folders, reads each agent's entry file (`agent.md` or `SKILL.md`), and registers it as a named MCP prompt. Supporting docs in the same folder (e.g. `workflow.md`, `templates.md`) are concatenated into the prompt so the full context is always available. It also registers each runbook in `runbooks/*.md` (multi-agent coordinators — see [runbooks/README.md](../runbooks/README.md)) as a prompt.
+
+Every agent and runbook is also reachable through two **tools**, for clients and agent modes that only use tools:
+
+| Tool | What it does |
+|---|---|
+| `list_agents` | Lists every agent and runbook with its "when to use" description |
+| `get_agent` | Returns one agent's full instructions by name; the model then follows them |
+
+So in GitHub Copilot Chat (VS Code) you can either run an agent directly as `/mcp.ide-expert-agents.<agent-name>`, or ask in agent mode — e.g. *"use the estimate agent on docs/specs/x-spec.md"* — and Copilot calls the tools itself.
 
 Every agent and runbook is also reachable through two **tools**, for clients and agent modes that only use tools:
 
@@ -374,7 +383,7 @@ A run stays open until the next agent is invoked, so other work later in the sam
 
 1. Create a folder in the appropriate `*-agents-store/` directory.
 2. Add an `agent.md` (or `SKILL.md`) with YAML frontmatter containing `name` and `description`. To send its events to a specific AI Hub node, add it to your [node map](#create-the-env-file).
-3. Rebuild: `npm run build`.
+3. Add it to [catalog.json](../catalog.json), then run `npm run docs` to regenerate the README tables and `npm run check` to validate, build, and smoke-test.
 4. For Option A: redeploy (rebuild the image — new stores are picked up automatically, no Dockerfile edit needed). For Option B: publish a new version. For local clone: restart the MCP connection.
 
 ---
@@ -432,3 +441,7 @@ claude mcp add -s user atlassian \
 | `root-cause-analysis` | Creates improvement/incident tickets | Publishes RCA page |
 | `dependency-audit` | Creates a remediation ticket per finding | — |
 | `progress-digest` | — | Updates the intent's progress page |
+
+## License
+
+Copyright 99x. All rights reserved; contact [sachithp@99x.io](mailto:sachithp@99x.io) for permission to use.

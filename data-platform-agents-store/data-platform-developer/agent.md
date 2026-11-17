@@ -150,7 +150,7 @@ Report:
 - Deviations from the approved item, with reasons
 - Any manual follow-up needed
 
-Recommend `data-platform-validator` as the next step for an independent review once that agent is available.
+Recommend `data-platform-validator` as the next step for an independent review, run in a fresh session.
 
 ---
 

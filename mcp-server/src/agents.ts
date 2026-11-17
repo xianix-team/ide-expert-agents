@@ -81,5 +81,18 @@ export function loadAgents(): Agent[] {
     agents.push({ name, description, content: fullContent });
   }
 
+  // Runbooks: one file each under runbooks/, served as prompts alongside agents.
+  // They coordinate several agents (see runbooks/README.md); no supporting files.
+  for (const relFile of glob.sync("runbooks/*.md", { cwd: root }).sort()) {
+    if (path.basename(relFile) === "README.md") continue;
+
+    const { data, content } = matter(fs.readFileSync(path.join(root, relFile), "utf-8"));
+    const name: string = data.name;
+    const description = String(data.description ?? "").trim();
+    if (!name || !description) continue;
+
+    agents.push({ name, description, content: content.trim() });
+  }
+
   return agents;
 }

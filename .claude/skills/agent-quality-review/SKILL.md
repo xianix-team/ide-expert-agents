@@ -15,6 +15,8 @@ Checks a single agent definition (`agent.md` or `SKILL.md` under `*-agents-store
 
 Read the target file plus any supporting `*.md` files in the same folder (they're concatenated into the served prompt, so they're part of what's being reviewed).
 
+`templates/AGENT_TEMPLATE.md` shows the structure that meets this checklist (S0 scope agreement, read-only grounding, checkpoint before writing, output skeleton, handoff, guardrails). When a gap is structural, point the author at the matching template section in your fix list.
+
 ## Checklist
 
 Walk every item below. For each, note ✅ (meets it), ⚠️ (partial / unclear), or ❌ (missing), with a one-line reason pointing at the specific line or section. Skip an item only if it's genuinely not applicable (e.g. "output location" for an agent that never writes files) — say so explicitly rather than omitting it silently.
@@ -57,11 +59,12 @@ Walk every item below. For each, note ✅ (meets it), ⚠️ (partial / unclear)
 ## Repo-convention checks (not quality attributes, but required by this repo)
 
 - Frontmatter has both `name` and `description`; `name` matches the folder name
-- If this is a **new**, **removed**, or **materially changed** agent (name, prompt name, description, or "when to use" changed), the change must land alongside updates to **both**:
-  1. That store's own `README.md` (row in the "Available Agents" table)
-  2. The root `README.md` (agent count and one-line description for that store)
+- If this is a **new**, **removed**, or **materially changed** agent (name, prompt name, description, or "when to use" changed), the change must land alongside:
+  1. An updated entry in `catalog.json` under its store (`title`, `whenToUse`, and the store `description` if coverage changed)
+  2. Regenerated README tables (`npm run docs` in `mcp-server/`) — the store and root READMEs are generated from `catalog.json`, never hand-edited
+  3. Updates to any `runbooks/*.md` that list this agent under `agents`, if its name, inputs, or outputs changed
 
-  If those README updates aren't part of the same change, flag it as a blocking gap — this is a hard rule in this repo's `CLAUDE.md` and `CONTRIBUTING.md`, not a suggestion.
+  If these aren't part of the same change, flag it as a blocking gap — this is a hard rule in this repo's `CLAUDE.md` and `CONTRIBUTING.md`, not a suggestion. `npm run check` in `mcp-server/` verifies the mechanical parts.
 
 ## Output
 

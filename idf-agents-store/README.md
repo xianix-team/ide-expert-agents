@@ -8,6 +8,7 @@ All agents in this store are served via the repository's MCP server. See [mcp-se
 
 ## Available Agents
 
+<!-- generated:agents:start — edit catalog.json or runbooks/*.md, then run `npm run docs` in mcp-server/ -->
 | Agent | Prompt name | When to use |
 |---|---|---|
 | **Design Session** | `design-session` | Before the first unit is proposed in any mob elaboration — establishes API contracts, data models, and architectural patterns as binding constraints |
@@ -19,13 +20,15 @@ All agents in this store are served via the repository's MCP server. See [mcp-se
 | **Process Health** | `process-health` | After every third or fourth bolt, or when the team suspects process drift — produces a quantitative health report across four metrics |
 | **Dependency Audit** | `dependency-audit` | Monthly or when the scheduled audit date in the master rule file is reached — audits dependencies and converts findings into remediation backlog items |
 | **Codebase Archaeology** | `codebase-archaeology` | Before onboarding AI-DLC into a mature project, before joining a new team, or as a standalone technical due diligence exercise — maps architecture, extracts coding patterns, audits for defects and technical debt, and classifies all identified work |
+<!-- generated:agents:end -->
 
 ---
 
 ## Adding an agent
 
-1. Create a folder here with an `agent.md` file containing `name` and `description` in YAML frontmatter.
+1. Create a folder here with an `agent.md` file, starting from [templates/AGENT_TEMPLATE.md](../templates/AGENT_TEMPLATE.md). It needs `name` (equal to the folder name) and `description` in YAML frontmatter.
 2. Rebuild the MCP server (`npm run build` in `mcp-server/`).
-3. The agent appears automatically on the next server restart — no other changes needed.
+3. Add the agent to [catalog.json](../catalog.json) under this store, with a display `title` and `whenToUse` text, then run `npm run docs` in `mcp-server/` to regenerate the table above. Don't edit the table by hand.
+4. The agent appears automatically on the next server restart.
 
 IDF agents require the 99x Intent Delivery Framework to be installed in the target project. The exception is `codebase-archaeology` and `dependency-audit`, which are fully standalone.

@@ -115,7 +115,7 @@ Re-write the report with each finding's updated `status` (`accepted` / `wontfix`
 
 ## S5 — Report
 
-State plainly: the report file path, the finding counts by severity/category, and what changed if fix mode ran. Suggest a natural next step: a `design-rationale` agent (if available) to turn resolved findings into a customer-facing decision record.
+State plainly: the report file path, the finding counts by severity/category, and what changed if fix mode ran. Suggest a natural next step: the `design-rationale` agent, to turn resolved findings into a customer-facing decision record.
 
 ---
 

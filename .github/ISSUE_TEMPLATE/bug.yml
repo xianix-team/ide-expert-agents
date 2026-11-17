@@ -1,0 +1,58 @@
+name: Bug report
+description: An agent misbehaves, or the MCP server, installer, or CI scripts fail.
+title: "[bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Remove client code, names, and data from anything you paste. Security issues go through private reporting instead (see SECURITY.md).
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - An agent's behaviour
+        - A runbook
+        - MCP server (stdio)
+        - MCP server (HTTP / Docker)
+        - Skill installer
+        - npm scripts / CI
+        - Docs
+    validations:
+      required: true
+  - type: input
+    id: agent
+    attributes:
+      label: Agent or runbook name
+      description: The prompt name, e.g. `estimate`. Leave blank if not agent-related.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: For agent behaviour, include your answers to its opening (S0) questions.
+    validations:
+      required: true
+  - type: input
+    id: client
+    attributes:
+      label: IDE / CLI and model
+      placeholder: e.g. Claude Code 2.x with Opus, Cursor agent mode, Copilot in VS Code
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Package version or commit
+      placeholder: e.g. @99x-ai-dlc/ide-expert-agents-mcp 1.1.0, or a commit SHA
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or output
+      render: text

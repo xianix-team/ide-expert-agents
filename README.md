@@ -262,13 +262,14 @@ More detail, including Docker setup and every setting, is in [AI Hub usage metri
 
 ## Agent stores
 
+<!-- generated:stores:start — edit catalog.json or runbooks/*.md, then run `npm run docs` in mcp-server/ -->
 | Store | Agents | Description |
 |---|---|---|
 | [idf-agents-store](idf-agents-store/README.md) | 9 | Structured software delivery — design, risk, UAT, RCA, process health, and more |
 | [devops-agents-store](devops-agents-store/README.md) | 1 | Infrastructure provisioning and IaC generation |
 | [architect-agents-store](architect-agents-store/README.md) | 4 | Architecture review and cloud deployment inspection — deployment fitness assessment, agentic AI review, product-engineering foundations checklist, and release readiness checklist |
 | [coding-agents-store](coding-agents-store/README.md) | 4 | Code quality and targeted improvements — error handling audit, runtime debugging from logs/crashes/requirements, observability implementation (logging/metrics/tracing) with cost guardrails, and authentication/authorization implementation mapped to OWASP ASVS / NIST guidance |
-| [qa-agents-store](qa-agents-store/README.md) | 2 | Testing and quality assurance — OWASP Top 10 / Top 25 Parameters static security scanning, and structured test case generation from specs/diffs |
+| [qa-agents-store](qa-agents-store/README.md) | 10 | Testing and quality assurance — OWASP static security scanning, black-box / white-box / smoke & sanity / exploratory testing, UI/UX & WCAG accessibility audits, Playwright test authoring from explored sessions, test case generation from specs, diffs, or code alone, and bug reports from annotated screenshots |
 | [ux-agents-store](ux-agents-store/README.md) | 9 | UX design and research — persona/journey/service-blueprint/competitive-analysis/prototype generation, design-consistency auditing, design-concept generation, interaction-design review, and design-rationale documentation |
 | [pre-sales-agents-store](pre-sales-agents-store/README.md) | 6 | Pre-sales pipeline — agentic AI opportunity mining, discovery interview, requirement elaboration, effort estimation, proposal assembly, and case-study drafting from delivered codebases |
 | [data-platform-agents-store](data-platform-agents-store/README.md) | 8 | Data-platform analysis and evolution — repo analysis, due diligence, architecture advisory, opportunity scouting, implementation, validation, regression monitoring, and cycle close-out |
@@ -276,6 +277,24 @@ More detail, including Docker setup and every setting, is in [AI Hub usage metri
 | [delivery-agents-store](delivery-agents-store/README.md) | 2 | Delivery management — DORA-inspired commitment health reporting, and parallel-execution planning (dependency mapping + wave scheduling), adapted for AI-led development |
 | [feature-agents-store](feature-agents-store/README.md) | 1 | Feature implementation — skills for building specific product features end-to-end, e.g. an AI "digital salesperson" that maps user intent (chat + generated action buttons) to the product's real features/services, with per-user preference memory and a cross-user plot library |
 | [analyst-agents-store](analyst-agents-store/README.md) | 1 | Business/systems analysis — critically evaluating requirements against the Paul-Elder Critical Thinking Framework before they're scoped or built |
+<!-- generated:stores:end -->
+
+---
+
+## Runbooks
+
+Runbooks coordinate several agents through a multi-stage workflow. Each one is served as a prompt like an agent. It checks which stage outputs already exist in your project, then tells you which agent to run next and what to answer that agent's opening questions with. A runbook never runs the other agents itself, and it is read-only. See [runbooks/README.md](runbooks/README.md).
+
+In Claude Code: `/mcp__ide-expert-agents__presales-pipeline`
+
+<!-- generated:runbooks:start — edit catalog.json or runbooks/*.md, then run `npm run docs` in mcp-server/ -->
+| Runbook | Prompt name | Coordinates | When to use |
+|---|---|---|---|
+| [**Data Platform Cycle**](runbooks/data-platform-cycle.md) | `data-platform-cycle` | `repo-analyst`, `due-diligence`, `architecture-advisor`, `opportunity-scout`, `data-platform-developer`, `data-platform-validator`, `regression-monitor`, `context-keeper` | Coordinates one data-platform work cycle across the data-platform agents — repo-analyst → due-diligence → architecture-advisor → opportunity-scout → data-platform-developer ⇄ data-platform-validator → regression-monitor → context-keeper. Checks which reports exist and which ADR/OPP items are built and validated, then tells you which agent to run next and exactly what to answer its opening questions with. Read-only. Use when starting or resuming data-platform work, or when asked "what's next on the data platform" or "run the data-platform cycle". |
+| [**Pre-Sales Pipeline**](runbooks/presales-pipeline.md) | `presales-pipeline` | `discovery-interview`, `explore-agentic-ai-usecases`, `elaborate`, `estimate`, `proposal`, `casestudy-drafter` | Coordinates the pre-sales agents from first conversation to client proposal — discovery-interview → elaborate → estimate → proposal, with an optional agentic-AI entry point (explore-agentic-ai-usecases) and post-delivery case studies (casestudy-drafter). Checks which stage outputs already exist, then tells you which agent to run next and exactly what to answer its opening questions with. Read-only. Use when starting or resuming a pre-sales engagement, or when asked "what's next in pre-sales" or "run the pre-sales pipeline". |
+<!-- generated:runbooks:end -->
+
+For a worked example, see the [pre-sales pipeline walkthrough](examples/presales-pipeline-walkthrough.md) in [examples/](examples/README.md).
 
 ---
 
@@ -283,19 +302,26 @@ More detail, including Docker setup and every setting, is in [AI Hub usage metri
 
 > **⚠️ Customer IP notice:** Agents and skills in this repository are shared publicly across teams. Contributors must ensure content is **generic and reusable** — do not include any customer-specific data, proprietary business logic, confidential architecture details, credentials, or other protected intellectual property belonging to a 99x customer. If an agent was inspired by client work, generalize it (naming, examples, domain specifics) before contributing it here. When in doubt, leave it out and check with your engagement lead.
 
-1. Create a folder in the appropriate `*-agents-store/`.
-2. Add an `agent.md` (or `SKILL.md`) with at minimum:
+1. Create a folder in the appropriate `*-agents-store/`. The folder name must match the agent's `name`.
+2. Copy [templates/AGENT_TEMPLATE.md](templates/AGENT_TEMPLATE.md) to `<agent-name>/agent.md`, fill in the placeholders, and delete the `<!-- GUIDE: … -->` comments. At minimum an agent needs this frontmatter:
 
    ```yaml
    ---
    name: my-agent
    description: One sentence describing when to invoke this agent.
    ---
-
-   # Agent instructions here...
    ```
 
-3. Rebuild: `npm run build` in `mcp-server/`.
-4. Restart the MCP server connection in your tool — the agent appears automatically.
+3. Add the agent to [catalog.json](catalog.json) under its store, with a display `title` and `whenToUse` text.
+4. In `mcp-server/`, run `npm run docs` to regenerate the README tables, then `npm run check` to validate and smoke-test.
+5. Restart the MCP server connection in your tool — the agent appears automatically.
 
-No changes to the MCP server code are needed.
+No changes to the MCP server code are needed. Don't edit the generated tables by hand: `npm run check` (and CI) fails when they don't match `catalog.json`.
+
+## Security
+
+Please report vulnerabilities privately — see [SECURITY.md](SECURITY.md).
+
+## License
+
+Copyright 99x. All rights reserved; contact [sachithp@99x.io](mailto:sachithp@99x.io) for permission to use.
