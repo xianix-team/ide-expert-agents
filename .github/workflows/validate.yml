@@ -27,6 +27,18 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # The installer runs on macOS bash 3.2, which reads a non-ASCII byte right
+      # after "$VAR" (e.g. "$URL…") as part of the name and fails under `set -u`.
+      # CI's bash 5 doesn't, so check for the pattern instead. Use "${VAR}…".
+      - name: Check installer script
+        working-directory: .
+        run: |
+          bash -n scripts/install-skills.sh
+          if LC_ALL=C grep -nE '\$[A-Za-z_][A-Za-z0-9_]*[^ -~]' scripts/install-skills.sh; then
+            echo "::error file=scripts/install-skills.sh::Brace variables followed by non-ASCII characters, e.g. \${VAR}…"
+            exit 1
+          fi
+
       # Frontmatter, unique names, runbook rosters, and catalog.json vs disk
       - name: Validate agents, runbooks, and catalog
         run: npm run validate
