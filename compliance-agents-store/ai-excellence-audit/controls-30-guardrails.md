@@ -1,0 +1,37 @@
+## Framework module: Guardrails
+
+- **Module ID:** guardrails
+- **Pillar group:** Protect
+- **Applies when:** Always.
+- **Intent:** Rules ask. Guardrails enforce. Enforced permissions, hooks and restricted actions.
+- **Controls:** 10 (4 Automatable, 6 Partial, 0 Manual); 7 Baseline, 3 Advanced
+
+| # | Practice (control) | Level | ISO/IEC 42001 and other refs | Severity | Automation | How to check |
+|---|---|---|---|---|---|---|
+| 1 | **Least-privilege agent permissions** - Configure tool permissions with explicit allow and deny lists. Deny reading secret files and running destructive commands by default; require confirmation for anything that writes outside the workspace. | Baseline | A.9.4 · 6.1.3 | Critical | Automatable | Inspect `.claude/settings.json`, `.cursor/`, `.vscode/settings.json` tool-approval settings. `Pass`: explicit allow/ask/deny with secrets and destructive commands denied. `Fail`: broad `Bash(*)` allow, `bypassPermissions`, `--dangerously-skip-permissions` or auto-approve-all in committed config or scripts. `Fail`: no config at all. Content-exclusion files (`.cursorignore`, `.aiexclude`, `.aiderignore`, `.codeiumignore`) count as deny evidence for the tools that read them. |
+| 2 | **No production access** - Agents never hold production credentials or connect to production databases. Use local, ephemeral or dedicated non-production environments. | Baseline | A.4.5 · A.9.4 | Critical | Partial | Look for production hosts, connection strings or credentials in agent-visible files and MCP configs, and deny rules for prod paths (`infra/prod/**`). In CI, agent jobs must not share a workflow or job with deployment secrets, and deploy jobs should use protected environments with required reviewers (`environment:`). What developer machines hold at runtime cannot be verified from the repo. |
+| 3 | **Scoped, short-lived credentials** - Where agents need tokens (CI, cloud, issue trackers), use dedicated, narrowly scoped and expiring credentials - never a developer's personal admin token. | Baseline | A.4.5 · SSDF PO.5 | High | Partial | Look for CI using OIDC/workload identity (`id-token: write`) rather than long-lived secrets, MCP/agent configs referencing env vars not literal tokens, and per-purpose service accounts. Workflows that run an AI agent declare minimal `permissions:` (not `write-all` or a missing block on a repo with permissive defaults). |
+| 4 | **Branch protection** - Protected branches require pull requests, passing checks and human approval. Agents cannot force-push, bypass checks or approve their own work. | Baseline | A.9.4 · SSDF PO.5 | High | Partial | Look for rulesets/branch protection as code (`.github/rulesets`, Terraform `github_branch_protection`, settings app config) and CODEOWNERS. Live settings are not in the repo; in interactive mode and with the user's consent, a read-only `gh api repos/<o>/<r>/branches/<b>/protection` can confirm them. |
+| 5 | **Secret protection** - Secrets are kept out of repositories and agent context (vaults, .env excluded from agent read), with pre-commit and server-side secret scanning. | Baseline | A.7.2 · SSDF PS.1 | Critical | Automatable | Look for secret scanning (gitleaks, trufflehog, GitHub push protection, pre-commit hook), `.env*` gitignored, and secrets absent from tracked files. If a secret is found: `Fail`, never print the value. |
+| 6 | **Controlled MCP servers & plugins** - Only approved MCP servers/plugins, pinned to versions, from trusted sources. Review tool descriptions - they are instructions the model will read. | Baseline | A.4.4 · A.10.3 | High | Automatable | Inspect `.mcp.json`, `.cursor/mcp.json`, `.vscode/mcp.json`, plugin/marketplace settings. Each server should be pinned (no `@latest`, no unversioned `npx -y pkg`), from a trusted source, over https, and listed on the tool register. curl-piped-to-shell launchers are a `Fail`. `enableAllProjectMcpServers: true` (auto-approving every server a repo declares) is a `Fail`. Literal tokens in an MCP `env` block are also a Secret-protection `Fail`. |
+| 7 | **Treat external content as untrusted** - Web pages, issues, PR comments, documents and dependency READMEs can carry prompt injection. Agents processing them run with reduced permissions and no secret access. | Baseline | OWASP LLM01 · A.7.2 | High | Partial | Look for a rule that issues/PR comments/web content are untrusted, and CI where an agent runs on `issue_comment`/`pull_request_target`/untrusted triggers with write permissions or secrets (`Fail`). Agent workflows triggered by comments or issues should restrict who can trigger them (for example by `author_association` or an allowed-users list). |
+| 8 | **Sandboxed execution** - Run autonomous agents in containers / dev-containers or cloud sandboxes with network egress restricted to approved hosts (package registries, Git remote). | Advanced | A.4.5 · OWASP ASI05 | Medium | Partial | Look for `.devcontainer/`, agent sandbox settings, egress allow-lists, ephemeral CI runners for autonomous agents. |
+| 9 | **Hooks for policy enforcement** - Use pre-tool-use / post-tool-use hooks to block dangerous commands, enforce formatting, run tests after edits and log actions. | Advanced | A.6.2.8 · A.9.4 | Medium | Automatable | Inspect agent hook config (`.claude/settings.json` hooks), git hooks (`.husky/`, `pre-commit`) that block dangerous commands, format, test or log actions. Hook scripts run with the developer's rights: a hook that downloads and executes remote code is a `Fail` here and under Skills *Trusted sources only*. |
+| 10 | **Kill switch & audit log** - Ability to revoke agent credentials quickly; agent actions logged and retained according to the engagement's retention rules. | Advanced | A.6.2.8 · 9.1 | Medium | Partial | Look for a credential-revocation runbook and agent action logging/telemetry config. Retention and revocation speed are organisational. |
+
+**Risks if this pillar is weak** (framework risk register - cite the relevant one in a finding's reason):
+
+- **Excessive agency** (high) - An agent deletes data, rewrites history, changes infrastructure or deploys because it had the permission and misread the task.
+- **Prompt injection leads to data exfiltration** (high) - Instructions hidden in an issue, web page or dependency cause the agent to send customer code or secrets to an attacker.
+- **Credential and privilege abuse** (high) - Agent uses or leaks a developer's broad token; actions are untraceable to an accountable identity.
+- **Malicious MCP server / plugin** (high) - Tool poisoning or a compromised plugin reads files or runs commands outside the user's intent.
+- **Unexpected code execution** (high) - Agent runs untrusted scripts (install hooks, generated code) on a developer machine with access to other customers' repositories.
+- **No record of agent actions** (med) - Cannot investigate an incident or demonstrate control to the customer.
+
+**Self-check questions for a human** (use in A3 to gather attestations for Manual and unverifiable rows):
+
+- Is there a reviewed, shared permission configuration for each agent tool used?
+- Can any agent read secrets, .env files or data exports? Show the deny rules.
+- Do agents ever have production or customer-environment credentials?
+- Which MCP servers are enabled, who approved them and are they pinned?
+- Are autonomous agents run in a sandbox with restricted network access?
