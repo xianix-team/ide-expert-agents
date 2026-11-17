@@ -1,13 +1,13 @@
 name: Publish MCP server to npm
 
+# Releases are driven by Git tags, not by the version in mcp-server/package.json.
+# To release, tag a commit on main and push the tag:
+#   git tag v1.2.0 && git push origin v1.2.0
+# The package version is set from the tag at publish time.
 on:
   push:
-    branches: [main]
-    paths:
-      - "mcp-server/**"
-      - "*-agents-store/**" # agent stores are bundled into the package at build time
-      - ".github/workflows/publish-npm.yml"
-  workflow_dispatch:
+    tags:
+      - "v*.*.*"
 
 concurrency:
   group: publish-npm
@@ -25,6 +25,30 @@ jobs:
         working-directory: mcp-server
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history, to confirm the tag is on main
+
+      - name: Validate tag and confirm it points to a commit on main
+        id: tag
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          VERSION="${TAG#v}"
+          if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
+            echo "::error::Tag '$TAG' is not a semver tag like v1.2.3 or v1.2.3-beta.1"
+            exit 1
+          fi
+          git fetch origin main
+          if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/main; then
+            echo "::error::Tag '$TAG' points to $GITHUB_SHA, which is not on main. Tag a commit on main."
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          # pre-release versions (e.g. 1.2.3-beta.1) go to the "next" dist-tag, not "latest"
+          if [[ "$VERSION" == *-* ]]; then
+            echo "dist_tag=next" >> "$GITHUB_OUTPUT"
+          else
+            echo "dist_tag=latest" >> "$GITHUB_OUTPUT"
+          fi
 
       - uses: actions/setup-node@v4
         with:
@@ -39,24 +63,23 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
-        run: npm run build
+      - name: Set package version from tag
+        run: npm version "${{ steps.tag.outputs.version }}" --no-git-tag-version --allow-same-version
 
-      - name: Check whether this version is already published
-        id: check
+      - name: Check
+        run: npm run check
+
+      - name: Fail if this version is already published
         run: |
           NAME=$(node -p "require('./package.json').name")
           VERSION=$(node -p "require('./package.json').version")
           if npm view "$NAME@$VERSION" version >/dev/null 2>&1; then
-            echo "::notice::$NAME@$VERSION is already on npm — bump the version in mcp-server/package.json to publish."
-            echo "publish=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "Publishing $NAME@$VERSION"
-            echo "publish=true" >> "$GITHUB_OUTPUT"
+            echo "::error::$NAME@$VERSION is already on npm. Push a new tag with a higher version."
+            exit 1
           fi
+          echo "Publishing $NAME@$VERSION"
 
       # Authenticates via npm trusted publishing (GitHub OIDC) — no NPM_TOKEN.
       # Provenance is generated automatically for trusted publishes.
       - name: Publish
-        if: steps.check.outputs.publish == 'true'
-        run: npm publish
+        run: npm publish --tag "${{ steps.tag.outputs.dist_tag }}"
