@@ -83,7 +83,7 @@ Cover this minimum checklist, then anything else the material suggests:
 - **Duplicates and master data** — repeated entities under different keys, inconsistent formats or encodings.
 - **Sensitive fields** — credentials, secrets, personal or financial data sitting in extracts (see principle 9).
 - **Quality** — for the critical data items behind the top two opportunities, check the six dimensions: **accuracy** (matches reality), **completeness** (needed data present), **uniqueness** (no duplicates), **consistency** (no conflicts across records or systems), **timeliness** (available when needed) and **validity** (format, type, range). Select the dimensions that matter for the use; a valid value is not necessarily accurate.
-- **Security and access** — how data reaches any AI model (provider, hosting region, retention), who can access it, and whether personal or plate-level data is minimised or masked before use.
+- **Security and access** — how data reaches any AI model (provider, hosting region, retention), who can access it, and whether personal or other sensitive data is minimised or masked before use.
 - **Availability and access** — where data lives, how many systems, how it can be extracted, legal or contractual limits.
 - **Ownership and governance** — named owners, documented lineage, retention and privacy rules.
 - **Structure and history** — enough history, volume and consistent keys to support each candidate opportunity from S1. State what volume or history each one would need.
