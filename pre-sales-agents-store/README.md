@@ -12,6 +12,7 @@ All agents in this store are served via the repository's MCP server. See [mcp-se
 | Agent | Prompt name | When to use |
 |---|---|---|
 | **Explore Agentic AI Use Cases** | `explore-agentic-ai-usecases` | Mining an existing product codebase for agentic AI opportunities — minimal targeted questions, then a business-reader report (problem, value, solution, spec, man-day estimate) sorted with high-value / low-effort use cases first |
+| **AI Readiness Assessment** | `ai-readiness-assessment` | Before any AI project — a short, low-cost assessment of data quality, domain-knowledge capture, and organisational capability, producing a business-reader scorecard, prioritised readiness roadmap, and recommended next steps |
 | **Discovery Interview** | `discovery-interview` | Starting a new engagement or opportunity — a Socratic, one-question-at-a-time interview that resolves ambiguity before any scoping happens |
 | **Elaborate** | `elaborate` | Turning a loose request into a clear, codebase-grounded requirement and scope spec before any implementation plan is written |
 | **Estimate** | `estimate` | Building a 3-point (PERT) effort estimate from a requirement spec, with a client-ready estimation sheet |
@@ -19,7 +20,7 @@ All agents in this store are served via the repository's MCP server. See [mcp-se
 | **Case Study Drafter** | `casestudy-drafter` | Turning a delivered codebase (single repo or multi-repo estate) into industry-class customer case studies — analyses the domain and user journeys, proposes candidate angles (flagging which need customer metrics), narrows them down with minimal structured questions, and writes one Markdown case study per selection (synopsis, problem domain, solution with optional high-level technical approach, impact), named or anonymized per run, with a post-write revise step |
 <!-- generated:agents:end -->
 
-This store forms a full pipeline: `discovery-interview` → `elaborate` → `estimate` → `proposal`. For agentic AI opportunities, `explore-agentic-ai-usecases` runs up front — its prioritized use cases feed `elaborate` → `estimate` → `proposal` for the selected candidates. After delivery, `casestudy-drafter` turns the shipped work into case-study collateral that feeds future `proposal` runs as proof of capability.
+This store forms a full pipeline: `discovery-interview` → `elaborate` → `estimate` → `proposal`. For AI engagements, `ai-readiness-assessment` can run first as a short, low-cost entry step — it scores data, domain-knowledge, and organisational readiness and recommends what to fix before building. For agentic AI opportunities, `explore-agentic-ai-usecases` runs up front — its prioritized use cases feed `elaborate` → `estimate` → `proposal` for the selected candidates. After delivery, `casestudy-drafter` turns the shipped work into case-study collateral that feeds future `proposal` runs as proof of capability.
 
 ---
 
