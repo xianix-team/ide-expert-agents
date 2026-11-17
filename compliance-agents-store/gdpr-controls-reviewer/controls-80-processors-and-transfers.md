@@ -1,0 +1,15 @@
+## Framework module: Processors, Recipients And International Transfers
+
+- **Module ID:** processors-recipients-and-transfers
+- **Applies when:** Personal data is sent to any third party (LLM or AI provider, cloud, SaaS, analytics, email, observability), or stored or accessed outside the EEA, or the organisation acts as a processor for customers.
+- **Primary regime:** EU GDPR (mapped to ISO/IEC 27701 and NIST Privacy Framework)
+- **Controls:** 6 (1 Automatable, 3 Partial, 2 Manual)
+
+| # | Requirement (control question) | GDPR | Fine tier | Role | ISO/IEC 27701 | NIST PF | Severity | Automation | How to check |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 | Every third party that receives personal data is identified, forming a sub-processor and recipient inventory that matches what the code actually calls. | Art 28(1); 30(1)(d) | Lower (83(4)) | Both | 7.2.6; 7.5.4; 8.5.6 | ID.DE-P; ID.IM-P | High | Automatable | List every SDK, API, and endpoint from A1 that receives personal data (LLM providers, analytics, CRM, email, Sentry and similar). Compare with any inventory, sub-processor list, or privacy notice in-repo. |
+| 2 | An Art 28 data-processing agreement is in place with each processor, including LLM vendors (instructions only, confidentiality, security, sub-processors, deletion or return, audit). | Art 28(3) | Lower (83(4)) | Controller | 7.2.6 | ID.DE-P | High | Manual | Contractual. List the processors found in row 1 for the DPO to confirm. |
+| 3 | AI provider settings match the privacy commitments: minimal or zero data retention, no use of data for training, an EU or adequate-region endpoint, and stored threads, files, or assistants are deleted. | Art 5(1)(e); 28(3); 44 | Upper (83(5)) | Both | 7.2.6; 7.5.1 | ID.DE-P; CT.DM-P | High | Partial | Inspect LLM client config: base URL or region (Azure OpenAI region, Bedrock region, Vertex location), retention and storage flags, use of provider-side threads, files, or vector stores, and their cleanup. Account-level settings are manual. |
+| 4 | International transfers outside the EEA are identified and each has a mechanism: adequacy decision, SCCs with a transfer impact assessment, or BCRs. | Art 44–46; 49 | Upper (83(5)) | Both | 7.5.1; 7.5.2; 7.5.3 | ID.DE-P; GV.PO-P | High | Partial | Inspect IaC regions, CDN and replication, and third-party endpoints located outside the EEA. Which mechanism applies is legal. |
+| 5 | As processor: personal data is processed only on the controller's instructions, the controller is helped with rights requests and breaches, and data is deleted or returned at contract end. | Art 28(3)(a), (e)-(g) | Lower (83(4)) | Processor | 8.2.2; 8.3.1; 8.4.2 | ID.DE-P; CT.DM-P | Medium | Partial | Inspect per-tenant export and delete APIs, tenant-offboarding jobs, and processing gated by tenant config. N/A when only a controller. |
+| 6 | Changes to sub-processors are authorised by, or notified to, the controller, and flow-down terms apply. | Art 28(2), (4) | Lower (83(4)) | Processor | 8.5.6; 8.5.7; 8.5.8 | ID.DE-P | Low | Manual | Contractual and organisational. |

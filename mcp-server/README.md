@@ -15,6 +15,15 @@ Every agent and runbook is also reachable through two **tools**, for clients and
 
 So in GitHub Copilot Chat (VS Code) you can either run an agent directly as `/mcp.ide-expert-agents.<agent-name>`, or ask in agent mode — e.g. *"use the estimate agent on docs/specs/x-spec.md"* — and Copilot calls the tools itself.
 
+Every agent and runbook is also reachable through two **tools**, for clients and agent modes that only use tools:
+
+| Tool | What it does |
+|---|---|
+| `list_agents` | Lists every agent and runbook with its "when to use" description |
+| `get_agent` | Returns one agent's full instructions by name; the model then follows them |
+
+So in GitHub Copilot Chat (VS Code) you can either run an agent directly as `/mcp.ide-expert-agents.<agent-name>`, or ask in agent mode — e.g. *"use the estimate agent on docs/specs/x-spec.md"* — and Copilot calls the tools itself.
+
 The server exposes two entry points:
 
 | Entry point | Transport | Use when |

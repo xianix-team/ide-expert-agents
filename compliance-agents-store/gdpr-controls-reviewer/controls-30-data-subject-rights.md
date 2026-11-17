@@ -1,0 +1,16 @@
+## Framework module: Data Subject Rights
+
+- **Module ID:** data-subject-rights
+- **Applies when:** The system stores personal data about identifiable people. As a processor, it must be able to help the controller fulfil these rights (Art 28(3)(e)).
+- **Primary regime:** EU GDPR (mapped to ISO/IEC 27701 and NIST Privacy Framework)
+- **Controls:** 7 (4 Automatable, 3 Partial, 0 Manual)
+
+| # | Requirement (control question) | GDPR | Fine tier | Role | ISO/IEC 27701 | NIST PF | Severity | Automation | How to check |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 | Right of access: a person's personal data can be found and exported from **every** store (DB, logs keyed to the user, conversation history, agent memory, vector store, object storage). | Art 15 | Upper (83(5)) | Both | 7.3.6; 7.3.8; 8.3.1 | CT.DM-P | High | Automatable | Find an export endpoint or admin tool and check it covers each store in the A1 inventory. List any store it misses. |
+| 2 | Right to rectification: personal data can be corrected, and corrections reach derived copies (caches, embeddings, search indexes, summaries). | Art 16 | Upper (83(5)) | Both | 7.3.6; 8.3.1 | CT.DM-P | Medium | Automatable | Inspect update paths, then check whether re-embedding, re-indexing, or cache invalidation follows. |
+| 3 | Right to erasure: deleting a person removes or anonymises their data in every store — including vector embeddings, conversation memory, LLM response caches, logs, analytics, and search indexes — and backups expire on a documented schedule. | Art 17 | Upper (83(5)) | Both | 7.3.6; 7.4.5; 8.3.1 | CT.DM-P; CT.DP-P | Critical | Automatable | Trace the delete-account or delete-user path store by store. Soft delete alone is not erasure. Name each store it misses. |
+| 4 | Right to restriction and to object: processing can be paused for a person, and objection to direct marketing or profiling stops it absolutely. | Art 18; 21 | Upper (83(5)) | Controller | 7.3.5 | CT.DM-P | Medium | Partial | Look for restriction or "do not process" flags honoured in pipelines, and marketing opt-out or unsubscribe paths. Whether these are honoured end to end is runtime. |
+| 5 | Right to data portability: data the person provided is exportable in a structured, machine-readable format (JSON/CSV). | Art 20 | Upper (83(5)) | Controller | 7.3.8 | CT.DM-P | Medium | Automatable | Inspect the export format. N/A where the lawful basis is neither consent nor contract. |
+| 6 | Requests are identity-verified, logged, tracked, and answered within one month (extendable per `gdpr-reference.md`), free of charge by default. | Art 12(2)-(3); 12(5)-(6) | Upper (83(5)) | Controller | 7.3.9 | CT.PO-P; CM.PO-P | High | Partial | Look for a request intake (form, ticket type, admin queue), identity-verification step, and due-date tracking. Running the process is manual. |
+| 7 | Recipients (processors, LLM providers, integrations) are told about rectification, erasure, or restriction, and deletion propagates to them. | Art 19 | Upper (83(5)) | Controller | 7.3.7 | CT.DM-P; ID.DE-P | Medium | Partial | Check whether the delete or update path calls third-party deletion APIs (CRM, email, analytics, vector DB SaaS, provider file and thread stores). Contractual propagation is manual. |
