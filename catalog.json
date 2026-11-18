@@ -180,11 +180,15 @@
       }
     },
     "pre-sales-agents-store": {
-      "description": "Pre-sales pipeline — agentic AI opportunity mining, discovery interview, requirement elaboration, effort estimation, proposal assembly, and case-study drafting from delivered codebases",
+      "description": "Pre-sales pipeline — agentic AI opportunity mining, AI readiness assessment, discovery interview, requirement elaboration, effort estimation, proposal assembly, and case-study drafting from delivered codebases",
       "agents": {
         "explore-agentic-ai-usecases": {
           "title": "Explore Agentic AI Use Cases",
           "whenToUse": "Mining an existing product codebase for agentic AI opportunities — minimal targeted questions, then a business-reader report (problem, value, solution, spec, man-day estimate) sorted with high-value / low-effort use cases first"
+        },
+        "ai-readiness-assessment": {
+          "title": "AI Readiness Assessment",
+          "whenToUse": "Before any AI project — a short, low-cost assessment that researches the client's industry, competitors, candidate AI opportunities, and regulatory exposure on the web, then scores data quality and security, domain-knowledge capture, and organisational capability (including AI governance and evaluation) against them, producing a business-reader report with domain model, scorecard, prioritised readiness roadmap, and recommended next steps"
         },
         "discovery-interview": {
           "title": "Discovery Interview",
