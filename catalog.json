@@ -52,8 +52,12 @@
       }
     },
     "architect-agents-store": {
-      "description": "Architecture review and cloud deployment inspection — deployment fitness assessment, agentic AI review, product-engineering foundations checklist, and release readiness checklist",
+      "description": "Architecture design, review, and cloud deployment inspection — product backend architecture design, deployment fitness assessment, agentic AI review, product-engineering foundations checklist, and release readiness checklist",
       "agents": {
+        "product-backend-architect": {
+          "title": "Product Backend Architect",
+          "whenToUse": "When you need to design, or evolve, the backend for a product or major feature — confirms architecture drivers (scenarios, quality-attribute targets, constraints) first, then produces a backend architecture spec covering architecture style, decomposition, data architecture and migration safety, API contracts, integration/events, reliability, scalability, security and privacy, compliance, responsible usage of AI, and observability, with each decision traced to a driver. Greenfield or existing backend; read-only on code, writes only the spec"
+        },
         "deployment-architect": {
           "title": "Deployment Architect",
           "whenToUse": "When you want to inspect a live cloud deployment on Azure, AWS, or GCP — authenticates via the local CLI, discovers all resources, produces an as-deployed architecture document, and runs a structured fitness assessment across performance, security, reliability, robustness, observability, and cost efficiency. Read-only, never modifies resources"
