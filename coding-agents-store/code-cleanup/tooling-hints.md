@@ -4,9 +4,11 @@ Optional, per-language tools that can supply **HIGH-confidence mechanical
 evidence** for dead code and unused dependencies.
 
 These tools are **not required**. The skill stays technology-neutral. Prefer
-their output over manual grep when a tool is already present in the repo or is
-clearly installable without unrelated dependency upgrades. If a tool is absent
-and installing it would widen scope, rely on repository search instead and keep
+their output over manual grep when a tool is already present in the repo. If a
+tool is absent, you may propose running it ephemerally with a pinned version
+(e.g. `npx knip@<version>`, `pipx run vulture==<version>`) and ask first —
+say plainly that this downloads and runs third-party code. Never add it to the
+project's manifest or lockfile as part of cleanup. Otherwise rely on repository search and keep
 confidence accordingly.
 
 Evidence from these tools still feeds the confidence / priority /

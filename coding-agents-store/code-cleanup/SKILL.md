@@ -62,11 +62,11 @@ before introducing anything new.
 
 **Used does not mean necessary. Working does not mean justified.**
 
-## References (later sections of this prompt)
+## References (later sections of this prompt, or sibling files in this folder)
 
-- **Cleanup Checklist** — checklist, necessity detail, Analyze classification
-- **Tooling hints** — optional mechanical evidence tools
-- **Vibe-Code Smells** — AI/vibe-code smell catalogue
+- **Cleanup Checklist** (`cleanup-checklist.md`) — checklist, necessity detail, Analyze classification
+- **Tooling hints** (`tooling-hints.md`) — optional mechanical evidence tools
+- **Vibe-Code Smells** (`vibe-code-smells.md`) — AI/vibe-code smell catalogue
 
 ## Related agents
 
@@ -92,6 +92,14 @@ Where should I start cleaning?
 
 Then STOP. Mode defaults to CLEAN unless the user asked for Analyze or Review.
 For a small repo or an explicit scope, skip intake.
+
+If the user wants a commit after each accepted cleanup, they set that
+convention here (git repositories only).
+
+If the folder is **not a git repository**, say so before the first cleanup —
+even when intake is otherwise skipped: cleanup will keep a pre-edit copy of
+every touched file for Revert (see **Workspace safety**), and will confirm with
+the user before deleting any file.
 
 ## Operating modes
 
@@ -180,6 +188,11 @@ before claiming verified:
 
 - **Agent runs it** when it can exercise the behavior itself (start the app or
   script, call the endpoint, run the CLI command) and report what it observed.
+  Only exercise behavior locally or against test config. If the command could
+  reach a non-local service (staging/prod endpoints, third-party APIs), write
+  persistent data (real DB, migrations), or trigger outbound messages
+  (email, SMS, push), describe it and ask before running — or use the
+  "ask the user" path below.
 - **Otherwise ask the user** to run it: give 2–4 concrete steps and the
   expected result, then STOP and wait for their answer.
 
@@ -282,8 +295,7 @@ Do not produce a long report because a possible issue exists.
 
 One cleanup at a time. **No automatic source modification.**
 
-Every HITL message: simple English, a short summary, then **one target
-question**. The options must answer that question only.
+Follow **Human chat rules (CLEAN)** below for every HITL message.
 
 Pattern:
 
@@ -369,9 +381,20 @@ Before each cleanup, capture: tracked mods, staged mods, untracked files,
 deleted files. Pre-existing changes belong to the user — never
 modify/delete/revert them automatically.
 
-For every file the cleanup will touch, also record whether it already had
-pre-existing changes (e.g. its `git diff` output or a content hash). This
-snapshot is what makes a safe Revert possible.
+For every file the cleanup will touch, record its pre-cleanup state:
+
+- **Tracked file with pre-existing changes** → its `git diff` against HEAD (so
+  cleanup hunks can be told apart from the user's).
+- **Untracked file, or any file in a non-git workspace** → a copy of its full
+  pre-cleanup content (`git diff` shows nothing for untracked files).
+- **File the cleanup will delete** → a copy of its full content.
+- **File the cleanup will create** → note that it is new (Revert deletes it).
+
+A content hash alone is not enough — it cannot restore anything. This snapshot
+is what makes a safe Revert possible.
+
+Non-git workspace: confirm with the user before deleting any file, even when
+the deletion was part of an approved cleanup.
 
 After edits and after mutating commands, re-check workspace. Unexpected
 changes → **STOP**.
@@ -450,11 +473,17 @@ Then **STOP**.
 Important loop: one cleanup → one approval → isolated change → verify → accept.
 
 Do **not** require one git commit per finding. This is not a Git workflow
-manager. Commit after Accept only if the user asks (or session convention).
+manager. Commit after Accept only if the user asks (or set that convention at
+intake).
 If a commit exists, Revert = `git revert <sha>`. Otherwise, revert by removing
 only the hunks this cleanup added, using the workspace-safety snapshot:
 
 - File had **no** pre-existing changes → restore it to its pre-cleanup state.
+- File was **created** by the cleanup → delete it. File was **deleted** by the
+  cleanup → restore it from the snapshot copy.
+- Snapshot for a file is **missing** (lost to context compaction, session
+  restart, or never captured) → **STOP** and tell the user. Never guess prior
+  content.
 - File **had** pre-existing user changes → **STOP** and ask the user before
   reverting; show which hunks belong to the cleanup.
 
