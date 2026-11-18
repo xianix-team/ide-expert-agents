@@ -1,457 +1,181 @@
 # Vibe-Code Smells
 
-Investigation guide for AI / "vibe coding" repositories. Use with
-`code-cleanup` **CLEAN** (next fix) or **ANALYZE** (report).
+Investigation guide for AI / "vibe coding" repositories, used in **CLEAN**
+(find the next fix) and **ANALYZE** (report).
 
-A smell is a signal to investigate — **not** automatically a defect.
-When uncertain, leave alone / report; do not change the code.
+A smell is a signal to investigate — **not** automatically a defect. Every
+smell below goes through the same CLEAN gates (evidence, Fixability Gate,
+HITL APPROVE, preserve intentional boundaries). When uncertain → leave alone /
+Report-only. Necessity detail: **Cleanup Checklist → Necessity /
+used-but-unnecessary**.
 
-For necessity, Fixability Gate, and approval rules: see the **CLEAN
-workflow** section at the top of this prompt. For checklists: see
-**Cleanup Checklist**.
-
-**Feature flow:** when complexity spans a feature, reconstruct
-Requirement → flow → machinery before judging individual files.
+Each entry: **Signs** · **Check** · **Clean when** · **Leave when**.
 
 ---
 
-## 1. Duplicate solutions
+## 1. Duplicate solutions / old + new coexisting
 
-**Symptoms**
-- Two or more modules implement the same use case with slight naming differences
-- Parallel utility folders (`helpers`, `utils`, `lib`, `common`) with overlapping functions
-- Same validation, mapping, or API-client logic copied across features
+- **Signs:** same use case implemented twice with slight naming differences;
+  parallel `helpers`/`utils`/`lib`/`common`; copied validation/mapping/API
+  clients; `*_old`, `*_v2`, `legacy`/`new` modules; a flag permanently
+  selecting one path; compat shims or dual serializers after a finished
+  migration; docs describing the retired path.
+- **Check:** call sites and which variant production entry points / default
+  config use; behavioral differences (bugs hide in "almost duplicates");
+  remaining references incl. strings, DI, reflection; tests per path; git
+  history for an incomplete migration.
+- **Clean when:** one variant is clearly canonical, the other has no distinct
+  behavior or reachable references, and call sites move in a small verified
+  diff.
+- **Leave when:** variants encode different rules/environments; the flag still
+  toggles somewhere real; rollback path is operationally required; dynamic use
+  can't be ruled out; consolidation needs a wide rename or public API change.
 
-**What to investigate**
-- Call sites for each variant; which one is actually used in production paths
-- Behavioral differences (subtle bugs often hide in the "almost duplicate")
-- Tests: which implementation is covered
-- Git history / comments suggesting an incomplete migration
+## 2. Speculative abstraction / generalization
 
-**When it is safe to clean**
-- One implementation is clearly canonical; others have no distinct behavior
-- Call sites can be redirected with a small, verified diff
-- Tests or manual checks cover the consolidated path
+- **Signs:** interfaces, factories, adapters, strategies, `Base*`/`Abstract*`
+  with one implementation or that only forward calls; plugin/provider/registry
+  systems with one registrant; config knobs, generics, or "for future use"
+  parameters for a single case; caching/queues/pooling with no load need;
+  options for unsupported environments; env vars always defaulted the same.
+- **Check:** whether a second implementation or configuration exists (incl.
+  other packages, deploy manifests) or is committed in-repo; whether it's an
+  established local pattern or extension point; capability justification
+  (required vs additional flexibility).
+- **Clean when:** removing or specializing the layer leaves a simpler direct
+  path with identical behavior, no external contract or configurator depends on
+  it, tests target behavior not the seam, and the lost capability isn't
+  required (human APPROVE).
+- **Leave when:** it's a deliberate boundary (SDK, DI, test seam, plugin/public
+  contract); implementations exist outside the scanned tree; removal forces a
+  redesign; future commitment is unclear (Report-only).
 
-**When NOT to automatically change it**
-- Variants encode different business rules or environments
-- Dynamic loading makes ownership unclear
-- Consolidation would require a wide rename or public API change
+## 3. Defensive / resilience / branch excess
 
----
+- **Signs:** null checks for values the types or invariants guarantee;
+  try/catch that swallows "just in case"; validation repeated at every layer;
+  fallbacks that hide programming errors; stacked retries, timeouts, or
+  circuit breakers on one call; enum values or states no behavior uses;
+  branches for impossible states.
+- **Check:** real invariants and trust boundaries; whether defenses mask bugs;
+  logging/metrics that never fire; the required recovery story.
+- **Clean when:** checks are proven unreachable or redundant, removal keeps the
+  same failure modes, swallowed errors align to existing error patterns, and
+  the change is local and covered.
+- **Leave when:** it guards untrusted input; runtime data can break compile-time
+  assumptions (dynamic languages, FFI, deserialization); removal changes
+  production failure visibility.
 
-## 2. File proliferation
+## 4. Happy-path-only implementation
 
-**Symptoms**
-- Many tiny files each containing a single thin wrapper or type
-- New file per micro-function without an existing folder convention for that split
-- "One class/component per file" taken to extremes that hurt navigation vs local norms
-- Empty or near-empty modules left after generation
+- **Signs:** no handling for empty lists, missing fields, timeouts, denied
+  auth; TODO error paths; callers assume a success body; retries absent where
+  siblings have them.
+- **Check:** domain requirements, existing error patterns, logs or failing
+  tests showing the gap, whether it's intentional MVP scope.
+- **Clean when:** it fixes a correctness defect with clear expected behavior,
+  following established patterns.
+- **Leave when:** the failure UX/business rule is unspecified; proper handling
+  is a new feature; edge cases are speculative.
 
-**What to investigate**
-- Dominant repository file-size and folder conventions
-- Whether splits match real boundaries or only AI output habits
-- Import graph complexity introduced by the split
+## 5. File proliferation / responsibility drift
 
-**When it is safe to clean**
-- Merging restores the repository's existing module pattern
-- No public export surface expands unintentionally
-- Build/tests still pass; navigation improves or stays equal
+- **Signs:** many tiny single-wrapper files; near-empty generated modules;
+  splits that don't match local conventions; UI doing persistence or business
+  rules; a "service" spanning unrelated domains; files named for one concern
+  doing another.
+- **Check:** dominant file-size/folder conventions; whether splits match real
+  boundaries; import-graph cost; whether drift already causes defects or
+  change collisions; natural owners in the existing structure.
+- **Clean when:** a small merge or move restores the existing pattern without
+  new layers or an expanded public export surface.
+- **Leave when:** the project prefers fine-grained files; files are generated
+  or plugin-loaded by path; the merge creates a mixed-responsibility module;
+  the fix implies redesign or breaks public package layout.
 
-**When NOT to automatically change it**
-- The project standard genuinely prefers fine-grained files
-- Files are code-generated or plugin-loaded by path
-- Merge would create an oversized mixed-responsibility module
+## 6. Pattern inconsistency / naming drift
 
----
-
-## 3. Speculative abstractions
-
-**Symptoms**
-- Interfaces/protocols with a single implementation
-- Factories, adapters, repositories, or strategy layers with no alternate impl
-- Generic `Base*` / `Abstract*` types that only forward calls
-- Premature plugin or provider systems for one consumer
-- Abstractions introduced only to satisfy a design principle
-
-**What to investigate**
-- Whether a second implementation exists or is planned in-repo (docs, TODOs with owners)
-- Indirection cost vs call-site clarity
-- Whether the abstraction matches an established local pattern
-- Capability justification: required capability vs additional flexibility
-- Public contracts, DI seams, tests, plugins, or framework conventions that need the boundary
-
-**When it is safe to clean**
-- Removing the layer reveals a simpler direct call with identical behavior
-- No external/public contract depends on the abstraction
-- Tests target behavior, not the artificial seam
-- Capability lost is not currently required and human APPROVE was obtained
-
-**When NOT to automatically change it**
-- The abstraction is a required boundary (SDK, DI, testing seam used deliberately)
-- Multiple implementations exist outside the scanned tree (packages, plugins)
-- Removal forces a large redesign
-- Requirement ownership or future commitment is unclear (report-only)
-
----
-
-## 4. Pattern inconsistency
-
-**Symptoms**
-- Mixed approaches for the same concern (e.g. three HTTP client styles)
-- Inconsistent error returns, logging, or config access across siblings
-- Folder A follows pattern X; Folder B reinvented pattern Y for the same job
-
-**What to investigate**
-- Which pattern is dominant and documented
-- Whether inconsistency causes bugs or onboarding friction (evidence)
-- Migration leftovers vs intentional dual support
-
-**When it is safe to clean**
-- Aligning a small area to the dominant pattern without behavior change
-- Dual patterns are accidental and one path is unused
-
-**When NOT to automatically change it**
-- Domains genuinely differ (e.g. legacy module vs new module during planned migration)
-- "Consistency" would mean a repo-wide rewrite
-- No dominant pattern can be established from evidence
-
----
-
-## 5. Defensive-code explosion
-
-**Symptoms**
-- Nested null checks for values the type system or invariants already guarantee
-- Repeated try/catch that swallow errors "just in case"
-- Redundant validation at every layer with no trust-boundary rationale
-- Default fallbacks that hide programming errors
-
-**What to investigate**
-- Actual invariants and trust boundaries
-- Whether defenses mask real bugs
-- Logging/metrics that never fire (dead defenses)
-
-**When it is safe to clean**
-- Redundant checks are proven unreachable and removal preserves failure modes
-- Swallowed errors can be aligned to existing error-handling patterns
-- Change is local and covered by tests
-
-**When NOT to automatically change it**
-- Boundary validation protects untrusted input
-- Runtime data can violate compile-time assumptions (dynamic languages, FFI, deserialization)
-- Removing checks would change failure visibility in production
-
----
-
-## 6. Comment noise
-
-**Symptoms**
-- Comments that narrate what the next line does
-- AI chat residue (`Here's the updated function`, `I'll now refactor...`)
-- Section banners and emoji decoration without information
-- Docstrings that duplicate names/types without adding contracts
-
-**What to investigate**
-- Whether any comment documents non-obvious invariants, workarounds, or legal constraints
-- Whether comments contradict the code (stale)
-
-**When it is safe to clean**
-- Pure narration or chat residue with no hidden requirements
-- Clearly stale comments that mislead
-
-**When NOT to automatically change it**
-- Comments cite tickets, security rationale, or protocol quirks
-- License headers or required attribution
-- Uncertainty whether a "weird" comment marks a fragile workaround
-
----
+- **Signs:** several styles for one concern (HTTP clients, error returns,
+  logging, config access); one entity with many names (`User`/`Account`/
+  `Customer`); `fetchX`/`getX`/`loadX` for one operation; misleading names.
+- **Check:** which pattern or term is dominant and documented (docs, API
+  contracts, main modules); whether the drift causes bugs or wrong calls;
+  migration leftovers vs intentional dual support.
+- **Clean when:** a small, privately scoped area aligns to the dominant
+  pattern/term with search-confirmed completeness, or a name is actively
+  misleading.
+- **Leave when:** domains genuinely differ; alignment means a repo-wide rewrite
+  or mass rename; public contracts, DB columns, or payloads would change; no
+  dominant pattern can be shown.
 
 ## 7. Dependency inflation
 
-**Symptoms**
-- Large dependency lists for small applications
-- Overlapping libraries for the same task
-- Heavy packages used for one trivial helper
-- Dependencies added in AI sessions and never referenced
-
-**What to investigate**
-- Actual import/usage of each dependency
-- Stdlib/framework alternatives already used elsewhere
-- Security and maintenance cost vs benefit
-
-**When it is safe to clean**
-- Unused dependencies confirmed across the repo and tooling
-- Trivial usage replaceable with existing utilities without behavior change
-
-**When NOT to automatically change it**
-- Dependency is required by tooling, plugins, or optional features loaded dynamically
-- Replacement would alter behavior or public APIs
-- "Upgrade while removing" unrelated packages
-
----
-
-## 8. Hallucinated or incorrectly used APIs
-
-**Symptoms**
-- Calls to methods/options that do not exist in the installed version
-- Parameters that are ignored or mean something else in the real API
-- Imports that typecheck via stubs but fail at runtime
-- Copy-pasted examples that do not match project framework version
-
-**What to investigate**
-- Official docs / types for the locked dependency version
-- Runtime failures, skipped tests, or `# type: ignore` / suppression comments
-- Similar correct usages elsewhere in the repo
-
-**When it is safe to clean**
-- Correct usage is unambiguous for the pinned version
-- Fix is localized; tests or typecheck catch regressions
-
-**When NOT to automatically change it**
-- Version skew across environments is unclear
-- Behavior of the "correct" API call would change outputs
-- Fix requires a framework upgrade (out of cleanup scope)
-
----
-
-## 9. Happy-path-only implementations
-
-**Symptoms**
-- No handling for empty lists, missing fields, timeouts, or denied auth
-- TODOs for error paths never implemented
-- UI/API assumes success bodies always present
-- Retries/fallback absent where sibling modules implement them
-
-**What to investigate**
-- Domain requirements and existing error patterns
-- Production logs or failing tests hinting at gaps
-- Whether omission is intentional MVP scope
-
-**When it is safe to clean**
-- Adding handling aligns with established patterns and does not invent new product behavior
-- Change is necessary to fix a correctness defect with clear expected behavior
-
-**When NOT to automatically change it**
-- Desired failure UX/business rule is unspecified
-- "Proper" handling would constitute a new feature
-- Only speculative edge cases without evidence of need
-
----
-
-## 10. Weak AI-generated tests
-
-**Symptoms**
-- Tests that mock the system under test until nothing real runs
-- Assertions on call counts only, not outcomes
-- Copy-pasted tests with renamed symbols and identical bodies
-- Tests named for implementation details that break on valid refactors
-- Coverage of getters/trivial code while critical paths go untested
-
-**What to investigate**
-- What behavior the test actually guarantees
-- Whether failures would catch real regressions
-- Dominant testing style in the repository
-
-**When it is safe to clean**
-- Replace or tighten tests to assert observable behavior without widening scope into new features
-- Remove purely tautological tests that provide false confidence (only if suite remains honest)
-
-**When NOT to automatically change it**
-- Rewriting the suite for preference alone
-- Deleting failing tests to green the baseline
-- Expanding into large new product test matrices under "cleanup"
-
----
-
-## 11. Unnecessary generalization
-
-**Symptoms**
-- Config knobs and generics for a single hard-coded case
-- Over-parameterized helpers "for future use"
-- Template/plugin systems with one instantiation
-- Generic systems built for one concrete use case
-
-**What to investigate**
-- Real call sites and configuration values in use
-- Whether generalization matches an established extension point
-- Whether lost flexibility is a demonstrated requirement
-
-**When it is safe to clean**
-- Specializing to the actual case preserves behavior and simplifies call sites
-- No external configurators depend on the knobs
-
-**When NOT to automatically change it**
-- Extension points are part of a public/plugin contract
-- Multiple real configurations exist in deploy manifests not obvious from code alone
-
----
-
-## 12. Old and new implementations coexisting after AI refactors
-
-**Symptoms**
-- `*_old`, `*_v2`, `legacy`, `new` modules both present
-- Feature flag permanently selecting one path; the other still compiled
-- Imports split across old/new with incomplete cutover
-- Docs still describe the retired path
-
-**What to investigate**
-- Which path is live in default config and production entry points
-- Remaining references (including strings, DI, reflection)
-- Tests covering each path
-
-**When it is safe to clean**
-- Dead path has zero reachable references and verification is strong
-- Cutover is complete; removing old code is behavior-neutral
-
-**When NOT to automatically change it**
-- Flag still toggles in real environments
-- Rollback path is operationally required
-- Reference search cannot rule out dynamic use
-
----
-
-## 13. Responsibility drift
-
-**Symptoms**
-- UI module performing persistence and business rules
-- "Service" class that orchestrates unrelated domains
-- Shared kernel that accumulates unrelated helpers over AI sessions
-- Files named for one concern but implementing another
-
-**What to investigate**
-- Local architecture and naming conventions
-- Whether drift already causes defects or change collisions
-- Natural ownership for each responsibility in the existing structure
-
-**When it is safe to clean**
-- Small moves back to existing owners without new layers
-- Behavior preserved; tests updated only as needed for new locations
-
-**When NOT to automatically change it**
-- Fix implies a broad architectural redesign
-- Ownership is disputed or undocumented and behavior is unclear
-- Move would break public package layout
-
----
-
-## 14. Unexpected diff expansion
-
-**Symptoms**
-- Cleanup of one function touches many unrelated files
-- Formatting, renames, or import reshuffles dominate the diff
-- Generated code or lockfiles change without intent
-- Agent "while at it" improvements accumulate
-
-**What to investigate**
-- Root cause: tooling auto-format, wrong scope, cascading renames
-- Whether each file change maps to the stated plan item
-- Prefer **REVIEW mode** for a formal diff-scoped audit after
-  agent sessions
-
-**When it is safe to clean**
-- Revert unrelated hunks under Human-in-the-loop; re-apply only the planned
-  minimal change
-- Re-run verify on the narrowed diff
-
-**When NOT to automatically change it**
-- Continue stacking fixes on an already exploded diff
-- Accept drive-by upgrades or mass renames as collateral
-
-**Rule:** If the diff expands unexpectedly, **stop and reassess**.
-
----
-
-## 15. Naming / domain terminology drift
-
-**Symptoms**
-- Multiple names for the same domain entity (`User`, `Account`, `Customer`, `Client`)
-- AI synonyms introduced mid-refactor (`fetchX` vs `getX` vs `loadX` for same operation)
-- Folder names disagree with type names and API routes
-- Misleading names that imply behavior the code does not perform
-
-**What to investigate**
-- Ubiquitous language in docs, API contracts, and dominant modules
-- Whether drift causes incorrect calls or operator confusion
-- Public API / serialization names that must remain stable
-
-**When it is safe to clean**
-- Local rename to the dominant term within a private module, with search-confirmed completeness
-- Fixing a name that is actively misleading and privately scoped
-
-**When NOT to automatically change it**
-- Mass rename across the repository for stylistic consistency
-- Renaming public contracts, DB columns, or external payloads without explicit approval
-- Ambiguous domain language with no clear canonical term
-
----
-
-## 16–23. Used-but-unnecessary / speculative complexity (smell index)
-
-Full necessity rules live in **Cleanup Checklist → Necessity /
-used-but-unnecessary**. Use that section for capability justification, weak
-justifications, hierarchy, boundaries, and classification safety. Also use
-**Vibe-code expansion** in the CLEAN workflow (Requirement → actual
-implementation).
-
-Below: smell-specific **symptoms** only.
-
-### 16. Used-but-unnecessary code
-
-**Symptoms**
-- Code is imported, called, compiles, and may have tests
-- Machinery exists mainly for flexibility, purity, or "niceness"
-- Removing or specializing it would not remove a demonstrated product behavior
-
-### 17. Speculative / nice-to-have functionality
-
-**Symptoms**
-- Working capability with no demonstrated current or committed requirement
-- Fallback provider nobody currently requires
-- Optional features enabled "just in case"
-- AI-added helpers that product flows never need
-
-### 18. Premature extensibility
-
-**Symptoms**
-- Extensibility hooks with no demonstrated extension
-- Provider switching with one fixed provider
-- Plugin/registry systems for a single registrant
-
-### 19. Premature scalability
-
-**Symptoms**
-- Caching, queues, sharding, pooling, or fan-out with no demonstrated load need
-- Scalability infrastructure for hypothetical traffic
-
-### 20. Hypothetical configuration
-
-**Symptoms**
-- Configuration options with no demonstrated current use
-- Modes/flags for unsupported environments
-- Env vars read once and always defaulted the same way
-
-### 21. Redundant resilience
-
-**Symptoms**
-- Multiple retry layers "for safety"
-- Duplicate timeouts/circuit breakers wrapping the same call
-- Fallbacks that hide errors without a required recovery story
-
-### 22. Unnecessary compatibility layers
-
-**Symptoms**
-- Compatibility code for unsupported versions
-- Shims bridging APIs the repo no longer targets
-- Dual serializers/clients "for migration" with migration complete
-
-### 23. Unnecessary states / branches
-
-**Symptoms**
-- Additional states or branches that support no demonstrated behavior
-- Enums/status machines with unused values still threaded everywhere
-- Defensive branches for impossible or already-protected states
-
-For items 16–23: investigate and decide using **Cleanup Checklist →
-Necessity / used-but-unnecessary**. When safe to clean / when not: same gates
-as the CLEAN workflow (evidence, HITL APPROVE, Report-only when uncertain,
-preserve intentional boundaries).
+- **Signs:** big dependency lists for small apps; overlapping libraries;
+  heavy packages for one trivial helper; deps added in AI sessions and never
+  imported.
+- **Check:** actual imports/usage (see **Tooling hints**); stdlib/framework
+  alternatives already used; maintenance and security cost.
+- **Clean when:** unused across repo and tooling, or trivial use is replaceable
+  by existing utilities with no behavior change.
+- **Leave when:** needed by tooling, plugins, or dynamically loaded features;
+  replacement changes behavior/APIs; it would mean unrelated upgrades.
+
+## 8. Hallucinated or misused APIs
+
+- **Signs:** methods/options missing from the installed version; ignored or
+  misread parameters; imports that pass stubs but fail at runtime; examples
+  for another framework version.
+- **Check:** docs/types for the locked version; runtime failures, skipped
+  tests, suppression comments; correct usages elsewhere in the repo.
+- **Clean when:** correct usage is unambiguous for the pinned version and the
+  fix is local with tests/typecheck as a net.
+- **Leave when:** version skew across environments is unclear; the correct call
+  changes outputs; it needs a framework upgrade.
+
+## 9. Weak AI-generated tests
+
+- **Signs:** the system under test mocked away; call-count-only assertions;
+  copy-pasted bodies; tests tied to implementation details; trivial code
+  covered while critical paths aren't.
+- **Check:** what behavior each test actually guarantees; whether it would
+  catch a real regression; the repo's dominant test style.
+- **Clean when:** tightening assertions to observable behavior, or removing
+  tautological tests while the suite stays honest.
+- **Leave when:** it's preference-only rewriting; it means deleting failing
+  tests to go green; it grows into a new test matrix.
+
+## 10. Comment noise
+
+- **Signs:** comments narrating the next line; AI chat residue ("Here's the
+  updated function"); decorative banners/emoji; docstrings that repeat
+  names/types.
+- **Check:** whether a comment records an invariant, workaround, ticket,
+  security or legal constraint; whether it contradicts the code.
+- **Clean when:** it's pure narration/residue, or clearly stale and misleading.
+- **Leave when:** it cites tickets, security rationale, or protocol quirks; it's
+  a license/attribution header; it may mark a fragile workaround.
+
+## 11. Used-but-unnecessary / speculative functionality
+
+- **Signs:** code that's imported, called, compiles, maybe tested — but exists
+  for flexibility or "niceness"; a working capability with no current or
+  committed requirement (fallback provider nobody needs, features enabled
+  "just in case", AI-added helpers no flow uses).
+- **Check / decide:** **Cleanup Checklist → Necessity / used-but-unnecessary**
+  and **Vibe-code expansion** in the CLEAN workflow (Requirement → actual
+  implementation).
+
+## 12. Unexpected diff expansion
+
+- **Signs:** cleaning one function touches many unrelated files; formatting,
+  renames, or import reshuffles dominate; generated code or lockfiles change
+  without intent; "while at it" fixes pile up.
+- **Check:** root cause (auto-format, wrong scope, cascading renames); whether
+  every changed file maps to the approved item. Use **REVIEW mode** for a
+  formal diff-scoped audit after agent sessions.
+- **Clean when:** reverting unrelated hunks under HITL and re-applying only the
+  planned minimal change, then re-verifying the narrowed diff.
+- **Never:** keep stacking fixes on an exploded diff or accept drive-by
+  upgrades/mass renames as collateral.
+
+**Rule:** if the diff expands unexpectedly, **stop and reassess**.

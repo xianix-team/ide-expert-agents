@@ -3,21 +3,12 @@
 Technology-neutral checklist for the `code-cleanup` skill.
 
 In **CLEAN** mode: use sections as a search aid for the *next* worthwhile
-fix — not as a requirement to complete every box before fixing.
+fix — not as a requirement to complete every box first. The workflow, gates,
+and approval rules live in the CLEAN workflow (steps 1–9).
 
 In **ANALYZE** mode: work through sections more thoroughly for a report.
 
 A checked item means "investigated with evidence," not "must change."
-
----
-
-## How to use (CLEAN)
-
-1. Understand repo + baseline.
-2. Scan for the next high-value, fixable item (waste → simplify → quality →
-   unnecessary work → security).
-3. Fixability Gate (CLEAN workflow step 5) before bothering the human.
-4. Park other candidates internally; do not build F1–F30 first.
 
 ---
 
@@ -229,15 +220,3 @@ docs / minor.
 
 Never raise priority on hypotheticals alone. A smell is not automatically a
 defect.
-
----
-
-## Fixability / change gates (before CLEAN edit)
-
-- [ ] Fixability Gate passed (CLEAN workflow step 5)
-- [ ] Change budget recorded
-- [ ] Workspace baseline captured (user pre-existing files untouched)
-- [ ] Creation/dependency guards if adding files/deps
-- [ ] Net complexity expected to reduce or stay equal
-
-If any fail → leave alone or investigate — do not modify.
