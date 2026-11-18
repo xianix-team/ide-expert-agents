@@ -52,11 +52,15 @@
       }
     },
     "architect-agents-store": {
-      "description": "Architecture design, review, and cloud deployment inspection — product backend architecture design, deployment fitness assessment, agentic AI review, product-engineering foundations checklist, and release readiness checklist",
+      "description": "Architecture design, review, and cloud deployment inspection — product backend and frontend architecture design, deployment fitness assessment, agentic AI review, product-engineering foundations checklist, and release readiness checklist",
       "agents": {
         "product-backend-architect": {
           "title": "Product Backend Architect",
           "whenToUse": "When you need to design, or evolve, the backend for a product or major feature — confirms architecture drivers (scenarios, quality-attribute targets, constraints) first, then produces a backend architecture spec covering architecture style, decomposition, data architecture and migration safety, API contracts, integration/events, reliability, scalability, security and privacy, compliance, responsible usage of AI, and observability, with each decision traced to a driver. Greenfield or existing backend; read-only on code, writes only the spec"
+        },
+        "product-frontend-architect": {
+          "title": "Product Frontend Architect",
+          "whenToUse": "When you need to design, or evolve, the frontend for a product or major feature — confirms architecture drivers (user scenarios, performance and accessibility targets, browser/device support, compliance requirements, constraints) first, then produces a frontend architecture spec covering rendering approach, business-logic placement (client vs BFF vs backend), module structure, state and API integration, security, privacy, compliance, performance budgets, UX-supporting architecture (accessibility, i18n, resilience states), responsible usage of AI, observability, and build/delivery, with each decision traced to a driver. Leaves UX design to the UX agents; greenfield or existing frontend; read-only on code, writes only the spec"
         },
         "deployment-architect": {
           "title": "Deployment Architect",
