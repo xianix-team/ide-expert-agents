@@ -259,6 +259,7 @@ Recommend the natural next step by name:
 - `product-backend-architect`, if the backend or BFF side isn't designed yet or business rules need to move there.
 - `journey-mapper`, `ixd-review`, or `design-concept-lab` for the UX and interaction design this spec deliberately leaves out, and `design-consistency-audit` to check the design-system foundations.
 - `auth-implementer` to build the session and token design, and `observability-implementer` for the RUM and error-tracking design.
+- `iac-generator` to turn the hosting, CDN, and edge design into infrastructure as code.
 - `owasp-security-scanner` to check the existing frontend code against the security design, and `ui-ux-accessibility-testing` to audit accessibility against the confirmed WCAG level.
 - `gdpr-controls-reviewer` when personal data of people in the EU is in scope, and `eu-ai-act-controls-reviewer` or `agentic-ai-reviewer` when the product has AI features.
 
