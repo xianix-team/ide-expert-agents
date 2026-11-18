@@ -242,6 +242,7 @@ State the output path and a one-line summary: the architecture style, the number
 
 Recommend the natural next step by name:
 
+- `product-frontend-architect` to design the frontend against these API contracts and this auth model.
 - `iac-generator` to turn the deployment shape into infrastructure as code.
 - `auth-implementer` or `observability-implementer` to build the security or observability design into the code.
 - `gdpr-controls-reviewer` to check the privacy and compliance design against GDPR controls, when personal data of people in the EU is in scope.
