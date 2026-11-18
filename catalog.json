@@ -250,8 +250,12 @@
       }
     },
     "compliance-agents-store": {
-      "description": "AI compliance, data protection, and governance — EU AI Act controls review with ISO 42001 and NIST AI RMF mapping, and GDPR controls review (personal-data inventory, data-subject rights, LLM data flows, transfers) with ISO 27701 and NIST Privacy Framework mapping",
+      "description": "AI compliance, data protection, and governance — 99x AI Engineering Excellence audit of how a team uses AI to build (8 pillars, ISO 42001 mapping), EU AI Act controls review with ISO 42001 and NIST AI RMF mapping, and GDPR controls review (personal-data inventory, data-subject rights, LLM data flows, transfers) with ISO 27701 and NIST Privacy Framework mapping",
       "agents": {
+        "ai-excellence-audit": {
+          "title": "AI Excellence Audit",
+          "whenToUse": "When you want to audit how a team governs and uses AI coding assistants and agents against the **99x AI Engineering Excellence Framework** — 8 pillars (Process, Rules, Guardrails, Coding standards, Documentation, Skills, Automated review, Data protection) and 70 practices, each mapped to **ISO/IEC 42001**. Assesses agent rules files, permission and MCP configs, CI gates, CODEOWNERS, PR templates, ADRs, skills and secret hygiene from the repo, flags organisational items for a human, and writes a single Markdown report with a Baseline/Advanced maturity rating and a ranked gap list. Use before starting or renewing an engagement that allows AI tools, when onboarding a repo to agentic development, or as a CI quality gate. Read-only. An engineering gap-analysis aid — not a certification or formal ISO 42001 audit. For the regulatory fitness of an AI product you ship, use `eu-ai-act-controls-reviewer`"
+        },
         "eu-ai-act-controls-reviewer": {
           "title": "EU AI Act Controls Reviewer",
           "whenToUse": "When you want to review an agentic-AI code repository for fitness against the **EU AI Act**, with every requirement cross-mapped to **ISO/IEC 42001** Annex A controls and the **NIST AI RMF** functions. Determines the likely EU AI Act risk tier, assesses each obligation verifiable from code/config/prompts/IaC/CI/tests, flags organisational and legal items for a human, and writes a single Markdown fitness report. Read-only. A control-fitness and gap-analysis aid — not legal advice or a formal conformity assessment"
