@@ -56,7 +56,7 @@
       "agents": {
         "product-backend-architect": {
           "title": "Product Backend Architect",
-          "whenToUse": "When you need to design, or evolve, the backend for a product or major feature — confirms architecture drivers (scenarios, quality-attribute targets, constraints) first, then produces a backend architecture spec covering architecture style, decomposition, data architecture and migration safety, API contracts, integration/events, reliability, scalability, security and privacy, compliance, responsible usage of AI, and observability, with each decision traced to a driver. Greenfield or existing backend; read-only on code, writes only the spec"
+          "whenToUse": "When you need to design, or evolve, the backend for a product or major feature — confirms architecture drivers (scenarios, quality-attribute targets, compliance requirements, constraints) first, then produces a backend architecture spec covering architecture style, decomposition, data architecture and migration safety, API contracts, integration/events, reliability, scalability, security and privacy, compliance, responsible usage of AI, and observability, with each decision traced to a driver. Greenfield or existing backend; read-only on code, writes only the spec"
         },
         "product-frontend-architect": {
           "title": "Product Frontend Architect",
