@@ -4,6 +4,8 @@ description: Turns resolved design-consistency findings into a factual, customer
 tools:
   - Read
   - Write
+autonomy: high
+human-judgement: medium
 ---
 
 # Design Rationale Agent

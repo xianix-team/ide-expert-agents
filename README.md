@@ -6,7 +6,7 @@ A collection of expert AI agents for software engineering — covering delivery 
 
 ## How it works
 
-Each agent lives as a markdown file with a YAML frontmatter header (`name`, `description`) followed by its full instruction set. An MCP server in `mcp-server/` discovers all agents at startup and exposes them as **MCP prompts** — the standard primitive that maps to slash commands in Claude Code and Cursor.
+Each agent lives as a markdown file with a YAML frontmatter header (`name`, `description`, `autonomy`, `human-judgement`) followed by its full instruction set. The two ratings, each **High**, **Medium**, or **Low**, show how much of the task the agent does on its own and how much human judgement its output needs before you act on it. Each store's README lists them, and [CONTRIBUTING.md](CONTRIBUTING.md#autonomy-and-human-judgement) defines the levels. An MCP server in `mcp-server/` discovers all agents at startup and exposes them as **MCP prompts** — the standard primitive that maps to slash commands in Claude Code and Cursor.
 
 ```
 *-agents-store/

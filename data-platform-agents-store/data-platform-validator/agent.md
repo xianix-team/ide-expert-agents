@@ -4,6 +4,8 @@ description: Independently reviews an implemented data-platform change against i
 tools:
   - Read
   - Bash
+autonomy: high
+human-judgement: medium
 ---
 
 # Data Platform Validator Agent

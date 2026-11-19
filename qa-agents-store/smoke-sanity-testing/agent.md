@@ -7,6 +7,8 @@ tools:
   - Glob
   - Bash
   - Write
+autonomy: high
+human-judgement: low
 ---
 
 # Smoke & Sanity Testing Agent

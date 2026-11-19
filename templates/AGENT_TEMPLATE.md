@@ -6,6 +6,8 @@ tools:
   - Glob
   - Grep
   - Write
+autonomy: <high | medium | low>
+human-judgement: <high | medium | low>
 ---
 
 <!-- GUIDE: How to use this template
@@ -26,6 +28,8 @@ tools:
   - tools: the least the workflow needs. Drop Write if it only reports in chat; drop Bash unless
     a stage runs a command; add Edit only if it changes existing files. Every capability the
     body claims must be backed by a tool listed here.
+  - autonomy / human-judgement: required, each high | medium | low. Rate them with the rubric in
+    CONTRIBUTING.md ("Autonomy and human judgement"). They appear in the README tables and in list_agents.
 -->
 
 # <Agent Title>

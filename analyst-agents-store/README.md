@@ -9,9 +9,9 @@ All agents in this store are served via the repository's MCP server. See [mcp-se
 ## Available Agents
 
 <!-- generated:agents:start — edit catalog.json or runbooks/*.md, then run `npm run docs` in mcp-server/ -->
-| Agent | Prompt name | When to use |
-|---|---|---|
-| **Requirement Analyzer** | `requirement-analyzer` | When a requirement or stated intent needs to be critically evaluated before it's scoped or built. Applies the Paul-Elder Critical Thinking Framework — deconstructs the requirement into its Elements of Reasoning, stress-tests each against the nine Essential Intellectual Standards, then uses the seven Intellectual Traits as a reflective pass to catch blind spots — surfacing hidden assumptions, missing viewpoints, logical gaps, and clarifying questions for the requirement's owner |
+| Agent | Prompt name | Autonomy | Human judgement | When to use |
+|---|---|---|---|---|
+| **Requirement Analyzer** | `requirement-analyzer` | High | High | When a requirement or stated intent needs to be critically evaluated before it's scoped or built. Applies the Paul-Elder Critical Thinking Framework — deconstructs the requirement into its Elements of Reasoning, stress-tests each against the nine Essential Intellectual Standards, then uses the seven Intellectual Traits as a reflective pass to catch blind spots — surfacing hidden assumptions, missing viewpoints, logical gaps, and clarifying questions for the requirement's owner |
 <!-- generated:agents:end -->
 
 ---

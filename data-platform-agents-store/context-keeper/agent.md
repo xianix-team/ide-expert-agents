@@ -4,6 +4,8 @@ description: Closes out a completed data-platform work cycle by writing a plain-
 tools:
   - Read
   - Write
+autonomy: high
+human-judgement: low
 ---
 
 # Context Keeper Agent

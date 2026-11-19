@@ -8,6 +8,8 @@ tools:
   - Write
   - WebSearch
   - WebFetch
+autonomy: medium
+human-judgement: high
 ---
 
 # AI Readiness Assessment Agent

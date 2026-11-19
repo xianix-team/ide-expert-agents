@@ -6,6 +6,8 @@ tools:
   - Write
   - Edit
   - Bash
+autonomy: medium
+human-judgement: medium
 ---
 
 # Data Platform Developer Agent

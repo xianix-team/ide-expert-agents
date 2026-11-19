@@ -9,17 +9,17 @@ All agents in this store are served via the repository's MCP server. See [mcp-se
 ## Available Agents
 
 <!-- generated:agents:start — edit catalog.json or runbooks/*.md, then run `npm run docs` in mcp-server/ -->
-| Agent | Prompt name | When to use |
-|---|---|---|
-| **Design Session** | `design-session` | Before the first unit is proposed in any mob elaboration — establishes API contracts, data models, and architectural patterns as binding constraints |
-| **Bolt Risk Assessment** | `bolt-risk-assessment` | After elaboration sign-off, before the first unit in a bolt executes — assesses blast radius, sequencing risks, rollback, and feature flag requirements |
-| **UAT** | `uat` | When all units under an intent are marked Done — generates a plain-language demo script and records the stakeholder validation outcome |
-| **Root Cause Analysis** | `root-cause-analysis` | When an incident is resolved or recurring failures suggest a systemic issue — surfaces root causes across solution design, technology, and process |
-| **Progress Digest** | `progress-digest` | At any point during delivery — generates a plain-language stakeholder update with no engineering jargon |
-| **New Engineer Induction** | `new-engineer-induction` | When an engineer joins the project for the first time — explains the framework using the project's actual files and produces a personalised quick-reference card |
-| **Process Health** | `process-health` | After every third or fourth bolt, or when the team suspects process drift — produces a quantitative health report across four metrics |
-| **Dependency Audit** | `dependency-audit` | Monthly or when the scheduled audit date in the master rule file is reached — audits dependencies and converts findings into remediation backlog items |
-| **Codebase Archaeology** | `codebase-archaeology` | Before onboarding AI-DLC into a mature project, before joining a new team, or as a standalone technical due diligence exercise — maps architecture, extracts coding patterns, audits for defects and technical debt, and classifies all identified work |
+| Agent | Prompt name | Autonomy | Human judgement | When to use |
+|---|---|---|---|---|
+| **Design Session** | `design-session` | Low | High | Before the first unit is proposed in any mob elaboration — establishes API contracts, data models, and architectural patterns as binding constraints |
+| **Bolt Risk Assessment** | `bolt-risk-assessment` | High | Medium | After elaboration sign-off, before the first unit in a bolt executes — assesses blast radius, sequencing risks, rollback, and feature flag requirements |
+| **UAT** | `uat` | Low | High | When all units under an intent are marked Done — generates a plain-language demo script and records the stakeholder validation outcome |
+| **Root Cause Analysis** | `root-cause-analysis` | High | Medium | When an incident is resolved or recurring failures suggest a systemic issue — surfaces root causes across solution design, technology, and process |
+| **Progress Digest** | `progress-digest` | High | Low | At any point during delivery — generates a plain-language stakeholder update with no engineering jargon |
+| **New Engineer Induction** | `new-engineer-induction` | Low | Low | When an engineer joins the project for the first time — explains the framework using the project's actual files and produces a personalised quick-reference card |
+| **Process Health** | `process-health` | High | Medium | After every third or fourth bolt, or when the team suspects process drift — produces a quantitative health report across four metrics |
+| **Dependency Audit** | `dependency-audit` | High | Medium | Monthly or when the scheduled audit date in the master rule file is reached — audits dependencies and converts findings into remediation backlog items |
+| **Codebase Archaeology** | `codebase-archaeology` | High | Medium | Before onboarding AI-DLC into a mature project, before joining a new team, or as a standalone technical due diligence exercise — maps architecture, extracts coding patterns, audits for defects and technical debt, and classifies all identified work |
 <!-- generated:agents:end -->
 
 ---

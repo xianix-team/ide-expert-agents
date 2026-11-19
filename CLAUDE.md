@@ -6,7 +6,9 @@ This repo hosts agent definitions under `*-agents-store/<agent-name>/agent.md` (
 
 The agent tables in the READMEs are **generated** — never edit them by hand. Their source of truth is [`catalog.json`](catalog.json) (store descriptions, plus each agent's display title and "When to use" text) and the frontmatter of `runbooks/*.md`.
 
-Whenever an agent is **added**, **removed**, or **updated** (name, prompt name, description, or "when to use" changes) under any `*-agents-store/<agent-name>/` folder, in the **same change**:
+Every agent's frontmatter must set `autonomy` and `human-judgement` (each `high` | `medium` | `low`), rated per the rubric in `CONTRIBUTING.md` → "Autonomy and human judgement". The store README tables show them, read from frontmatter rather than `catalog.json`.
+
+Whenever an agent is **added**, **removed**, or **updated** (name, prompt name, description, "when to use", autonomy, or human-judgement changes) under any `*-agents-store/<agent-name>/` folder, in the **same change**:
 
 1. **Update `catalog.json`**
    - Add/remove/edit the agent's entry under its store: key = the frontmatter `name` (which must match the folder name), `title`, `whenToUse`.

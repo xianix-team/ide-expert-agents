@@ -9,6 +9,8 @@ tools:
   - Edit
   - Bash
   - WebFetch
+autonomy: medium
+human-judgement: high
 ---
 
 # Auth Implementer Agent

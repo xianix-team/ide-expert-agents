@@ -8,6 +8,8 @@ tools:
   - Bash
   - mcp__chrome-devtools__lighthouse_audit
   - mcp__chrome-devtools__emulate
+autonomy: high
+human-judgement: medium
 ---
 
 # UI/UX & Accessibility Audit Agent

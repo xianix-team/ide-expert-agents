@@ -4,6 +4,8 @@ description: Conducts a one-question-at-a-time Socratic interview with a prospec
 tools:
   - Read
   - Write
+autonomy: low
+human-judgement: high
 ---
 
 # Discovery Interview Agent

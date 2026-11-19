@@ -6,6 +6,8 @@ tools:
   - Write
   - Edit
   - Bash
+autonomy: high
+human-judgement: medium
 ---
 
 # Dependency Audit Agent

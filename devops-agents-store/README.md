@@ -9,9 +9,9 @@ All agents in this store are served via the repository's MCP server. See [mcp-se
 ## Available Agents
 
 <!-- generated:agents:start — edit catalog.json or runbooks/*.md, then run `npm run docs` in mcp-server/ -->
-| Agent | Prompt name | When to use |
-|---|---|---|
-| **IPA — Infrastructure Provisioning Agent** | `iac-generator` | When you want to provision cloud infrastructure, generate Terraform / Bicep / Pulumi / CDK, design a target cloud architecture, or stand up environments for an existing repo — IPA scans the codebase, asks targeted questions, and generates IaC with a step-by-step approval flow |
+| Agent | Prompt name | Autonomy | Human judgement | When to use |
+|---|---|---|---|---|
+| **IPA — Infrastructure Provisioning Agent** | `iac-generator` | Medium | High | When you want to provision cloud infrastructure, generate Terraform / Bicep / Pulumi / CDK, design a target cloud architecture, or stand up environments for an existing repo — IPA scans the codebase, asks targeted questions, and generates IaC with a step-by-step approval flow |
 <!-- generated:agents:end -->
 
 ---

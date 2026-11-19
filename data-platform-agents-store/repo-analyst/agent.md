@@ -5,6 +5,8 @@ tools:
   - Read
   - Glob
   - Bash
+autonomy: high
+human-judgement: low
 ---
 
 # Repo Analyst Agent

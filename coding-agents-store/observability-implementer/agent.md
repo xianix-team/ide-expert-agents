@@ -9,6 +9,8 @@ tools:
   - Write
   - Edit
   - Bash
+autonomy: medium
+human-judgement: medium
 ---
 
 # Observability Implementer Agent

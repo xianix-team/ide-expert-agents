@@ -5,6 +5,8 @@ tools:
   - Read
   - Write
   - Glob
+autonomy: medium
+human-judgement: high
 ---
 
 # Design Concept Lab Agent

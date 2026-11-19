@@ -18,6 +18,8 @@ tools:
   - Edit
   - Write
   - Bash
+autonomy: medium
+human-judgement: medium
 ---
 
 # Code Cleanup

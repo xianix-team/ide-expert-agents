@@ -6,6 +6,8 @@ tools:
   - Write
   - Bash
   - Glob
+autonomy: high
+human-judgement: medium
 ---
 
 # Codebase Archaeology Agent

@@ -8,6 +8,8 @@ tools:
   - Bash
   - WebFetch
   - Write
+autonomy: high
+human-judgement: medium
 ---
 
 # OWASP Security Scanner Agent

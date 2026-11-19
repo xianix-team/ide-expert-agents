@@ -5,6 +5,8 @@ tools:
   - Read
   - Write
   - Bash
+autonomy: low
+human-judgement: low
 ---
 
 # New Engineer Induction Agent

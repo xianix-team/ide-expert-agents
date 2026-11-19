@@ -4,6 +4,8 @@ description: Takes due-diligence findings for a data platform and proposes forma
 tools:
   - Read
   - Write
+autonomy: high
+human-judgement: high
 ---
 
 # Architecture Advisor Agent

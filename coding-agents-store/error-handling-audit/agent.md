@@ -6,6 +6,8 @@ tools:
   - Edit
   - Glob
   - Bash
+autonomy: medium
+human-judgement: medium
 ---
 
 # Error Handling Audit Agent

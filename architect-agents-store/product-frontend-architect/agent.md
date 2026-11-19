@@ -19,6 +19,8 @@ tools:
   - Glob
   - Grep
   - Write
+autonomy: medium
+human-judgement: high
 ---
 
 # Product Frontend Architect Agent

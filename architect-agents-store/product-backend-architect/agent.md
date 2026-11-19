@@ -18,6 +18,8 @@ tools:
   - Glob
   - Grep
   - Write
+autonomy: medium
+human-judgement: high
 ---
 
 # Product Backend Architect Agent
