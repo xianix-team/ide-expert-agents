@@ -5,6 +5,8 @@ tools:
   - Read
   - Write
   - Bash
+autonomy: high
+human-judgement: medium
 ---
 
 # Process Health Agent

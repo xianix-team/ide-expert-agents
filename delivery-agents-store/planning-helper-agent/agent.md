@@ -7,6 +7,8 @@ tools:
   - Glob
   - Bash
   - Write
+autonomy: high
+human-judgement: medium
 ---
 
 # Planning Helper Agent

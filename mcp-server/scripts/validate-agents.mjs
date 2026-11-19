@@ -8,6 +8,7 @@
 //   - missing `name` or `description` frontmatter (the MCP server silently skips these)
 //   - a `name` that is not lowercase-with-hyphens (install-skills.sh skips these)
 //   - a `name` that differs from its folder name
+//   - missing or invalid `autonomy` / `human-judgement` frontmatter (each must be low | medium | high)
 //   - a leftover `<!-- GUIDE: … -->` comment from templates/AGENT_TEMPLATE.md
 //   Runbooks
 //   - missing `name`, `title`, `description`, or `agents` frontmatter
@@ -32,6 +33,8 @@ const root = process.env.MCP_AGENTS_ROOT || path.resolve(__dirname, "../..");
 
 const ENTRY_FILENAMES = ["agent.md", "SKILL.md"];
 const KEBAB = /^[a-z0-9]+(-[a-z0-9]+)*$/;
+const LEVELS = ["low", "medium", "high"];
+const RANK_FIELDS = ["autonomy", "human-judgement"];
 
 const errors = [];
 const err = (where, msg) => errors.push(`${where}: ${msg}`);
@@ -93,6 +96,11 @@ for (const store of stores) {
 
     if (!KEBAB.test(name)) err(entryRel, `name '${name}' is not lowercase-with-hyphens`);
     if (name !== folder) err(entryRel, `name '${name}' differs from folder name '${folder}'`);
+    for (const field of RANK_FIELDS) {
+      if (!LEVELS.includes(data[field])) {
+        err(entryRel, `\`${field}\` must be one of ${LEVELS.join(" | ")} (got ${JSON.stringify(data[field] ?? null)}); see "Autonomy and human judgement" in CONTRIBUTING.md`);
+      }
+    }
     claim(name, rel);
 
     // Leftover guidance from templates/AGENT_TEMPLATE.md would be served as part of the prompt.

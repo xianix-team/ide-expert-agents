@@ -7,6 +7,8 @@ tools:
   - Grep
   - Bash
   - Write
+autonomy: high
+human-judgement: high
 ---
 
 # Explore Agentic AI Use Cases Agent

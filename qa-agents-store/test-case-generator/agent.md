@@ -7,6 +7,8 @@ tools:
   - Glob
   - Bash
   - Write
+autonomy: high
+human-judgement: low
 ---
 
 # Test Case Generator Agent

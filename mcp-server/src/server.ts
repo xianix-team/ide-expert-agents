@@ -65,7 +65,7 @@ export function createServer(): Server {
       {
         name: LIST_TOOL,
         description:
-          "Lists the IDE expert agents (pre-sales, analysis, architecture, coding, QA, DevOps, data platform, UX, delivery, compliance) and multi-agent runbooks, with when to use each. Call this to find an agent for the user's task, then call get_agent with its name.",
+          "Lists the IDE expert agents (pre-sales, analysis, architecture, coding, QA, DevOps, data platform, UX, delivery, compliance) and multi-agent runbooks, with when to use each and, for agents, their autonomy and human-judgement levels (low/medium/high). Call this to find an agent for the user's task, then call get_agent with its name.",
         inputSchema: { type: "object" as const, properties: {} },
         annotations: { readOnlyHint: true, openWorldHint: false },
       },
@@ -93,7 +93,11 @@ export function createServer(): Server {
     const { name, arguments: args } = request.params;
 
     if (name === LIST_TOOL) {
-      const text = agents.map(a => `- **${a.name}** — ${a.description}`).join("\n");
+      const rank = (a: (typeof agents)[number]) =>
+        a.autonomy && a.humanJudgement
+          ? ` _(autonomy: ${a.autonomy}; human judgement: ${a.humanJudgement})_`
+          : "";
+      const text = agents.map(a => `- **${a.name}**${rank(a)} — ${a.description}`).join("\n");
       return { content: [{ type: "text" as const, text: `${agents.length} agents and runbooks:\n\n${text}` }] };
     }
 

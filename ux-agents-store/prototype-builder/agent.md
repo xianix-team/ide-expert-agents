@@ -6,6 +6,8 @@ tools:
   - Write
   - Bash
   - Glob
+autonomy: high
+human-judgement: low
 ---
 
 # Prototype Builder Agent

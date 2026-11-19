@@ -20,6 +20,8 @@ tools:
   - Glob
   - Bash
   - Write
+autonomy: high
+human-judgement: medium
 ---
 
 # Test Cases From Code

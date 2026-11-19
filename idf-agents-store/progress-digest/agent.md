@@ -5,6 +5,8 @@ tools:
   - Read
   - Write
   - Bash
+autonomy: high
+human-judgement: low
 ---
 
 # Progress Digest Agent

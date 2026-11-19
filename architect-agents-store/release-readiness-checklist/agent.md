@@ -13,6 +13,8 @@ description: >-
 tools:
   - Read
   - Write
+autonomy: low
+human-judgement: high
 ---
 
 # Release Readiness Checklist Agent

@@ -4,6 +4,8 @@ description: Turn one or more annotated screenshots (arrows, text, comment bubbl
 tools:
   - Read
   - Write
+autonomy: high
+human-judgement: low
 ---
 
 # Bug Report Agent

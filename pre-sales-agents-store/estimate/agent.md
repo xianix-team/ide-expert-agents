@@ -4,6 +4,8 @@ description: Builds a 3-point (PERT) effort estimate from a requirement spec, in
 tools:
   - Read
   - Write
+autonomy: high
+human-judgement: high
 ---
 
 # Estimate Agent

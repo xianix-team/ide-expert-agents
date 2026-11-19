@@ -7,6 +7,8 @@ tools:
   - Grep
   - Bash
   - Write
+autonomy: medium
+human-judgement: medium
 ---
 
 # Case Study Drafter Agent

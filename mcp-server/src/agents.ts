@@ -28,11 +28,23 @@ export function getAgentsRoot(): string {
   return repoRoot;
 }
 
+export type Level = "low" | "medium" | "high";
+
 export interface Agent {
   name: string;
   description: string;
   content: string;
+  /** How much of the task the agent carries out on its own (agents only; runbooks omit it). */
+  autonomy?: Level;
+  /** How much human judgement its output needs before it is acted on (agents only). */
+  humanJudgement?: Level;
 }
+
+const LEVELS: readonly string[] = ["low", "medium", "high"];
+const asLevel = (v: unknown): Level | undefined =>
+  typeof v === "string" && LEVELS.includes(v.trim().toLowerCase())
+    ? (v.trim().toLowerCase() as Level)
+    : undefined;
 
 const ENTRY_FILENAMES = ["agent.md", "SKILL.md"];
 
@@ -78,7 +90,13 @@ export function loadAgents(): Agent[] {
       fullContent += `\n\n---\n\n${fs.readFileSync(sf, "utf-8").trim()}`;
     }
 
-    agents.push({ name, description, content: fullContent });
+    agents.push({
+      name,
+      description,
+      content: fullContent,
+      autonomy: asLevel(data.autonomy),
+      humanJudgement: asLevel(data["human-judgement"]),
+    });
   }
 
   // Runbooks: one file each under runbooks/, served as prompts alongside agents.

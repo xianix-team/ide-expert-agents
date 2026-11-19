@@ -3,6 +3,7 @@
 // rewritten; everything else in each README stays hand-written.
 //
 //   <store>/README.md   "## Available Agents" table   <- catalog.json stores.<store>.agents
+//                                                        + autonomy / human-judgement from agent frontmatter
 //   README.md           "## Agent stores" table       <- catalog.json stores (count from disk)
 //   README.md           "## Runbooks" table           <- runbooks/*.md frontmatter
 //   runbooks/README.md  "## Available runbooks" table <- runbooks/*.md frontmatter
@@ -83,10 +84,26 @@ const update = (rel, fn) => {
   outputs.set(rel, fn(before));
 };
 
+// Autonomy / human-judgement levels live in each agent's own frontmatter.
+const agentFrontmatter = (store, name) => {
+  const file = ["agent.md", "SKILL.md"].map(f => path.join(root, store, name, f)).find(f => fs.existsSync(f));
+  return file ? matter(fs.readFileSync(file, "utf-8")).data : {};
+};
+const level = v => (typeof v === "string" && v ? v[0].toUpperCase() + v.slice(1).toLowerCase() : "—");
+
 for (const [store, { agents }] of Object.entries(catalog.stores)) {
   const body = table(
-    ["Agent", "Prompt name", "When to use"],
-    Object.entries(agents).map(([name, a]) => [`**${cell(a.title)}**`, `\`${name}\``, cell(a.whenToUse)])
+    ["Agent", "Prompt name", "Autonomy", "Human judgement", "When to use"],
+    Object.entries(agents).map(([name, a]) => {
+      const fm = agentFrontmatter(store, name);
+      return [
+        `**${cell(a.title)}**`,
+        `\`${name}\``,
+        level(fm.autonomy),
+        level(fm["human-judgement"]),
+        cell(a.whenToUse),
+      ];
+    })
   );
   update(`${store}/README.md`, md => render(md, "agents", "## Available Agents", body, `${store}/README.md`));
 }

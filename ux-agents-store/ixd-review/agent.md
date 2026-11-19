@@ -5,6 +5,8 @@ tools:
   - Read
   - Glob
   - Write
+autonomy: high
+human-judgement: medium
 ---
 
 # IxD Review Agent

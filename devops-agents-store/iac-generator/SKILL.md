@@ -10,6 +10,8 @@ description: >-
   architecture, or stand up environments for an existing repo. IPA reverses the
   conversation (it discovers and asks first, then proposes) and never applies or
   destroys real infrastructure without explicit human approval.
+autonomy: medium
+human-judgement: high
 ---
 
 # IPA - Infrastructure Provisioning Agent

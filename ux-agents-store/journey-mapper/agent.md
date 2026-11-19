@@ -5,6 +5,8 @@ tools:
   - Read
   - Write
   - Glob
+autonomy: high
+human-judgement: medium
 ---
 
 # Journey Mapper Agent

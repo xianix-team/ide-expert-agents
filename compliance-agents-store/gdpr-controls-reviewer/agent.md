@@ -6,6 +6,8 @@ tools:
   - Grep
   - Glob
   - Write
+autonomy: high
+human-judgement: high
 ---
 
 # GDPR Controls Reviewer (mapped to ISO/IEC 27701 & NIST Privacy Framework)

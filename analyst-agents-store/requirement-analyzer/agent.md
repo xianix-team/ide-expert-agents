@@ -6,6 +6,8 @@ tools:
   - Glob
   - Grep
   - Write
+autonomy: high
+human-judgement: high
 ---
 
 # Requirement Analyzer Agent

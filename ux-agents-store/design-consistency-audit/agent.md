@@ -6,6 +6,8 @@ tools:
   - Edit
   - Glob
   - Bash
+autonomy: high
+human-judgement: medium
 ---
 
 # Design Consistency Audit Agent

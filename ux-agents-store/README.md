@@ -9,17 +9,17 @@ All agents in this store are served via the repository's MCP server. See [mcp-se
 ## Available Agents
 
 <!-- generated:agents:start — edit catalog.json or runbooks/*.md, then run `npm run docs` in mcp-server/ -->
-| Agent | Prompt name | When to use |
-|---|---|---|
-| **Persona Builder** | `persona-builder` | Starting discovery on a client/product — generates evidence-grounded personas (or clearly-labelled proto-personas) from whatever research inputs exist |
-| **Journey Mapper** | `journey-mapper` | After a persona exists — maps their end-to-end journey through one scenario (actions, thoughts, emotions, pain points, opportunities) |
-| **Service Blueprint** | `service-blueprint` | After a journey map exists — extends it below the line of visibility (frontstage/backstage/support processes/failure points) |
-| **Competitive Analysis** | `competitive-analysis` | Building the competitive picture for a pitch — competitor matrix, positioning, and differentiation opportunities from public research |
-| **Prototype Builder** | `prototype-builder` | Need something to click through — scaffolds a clickable Vite+React+Tailwind demo with mock data in an isolated folder |
-| **Design Consistency Audit** | `design-consistency-audit` | Auditing a built UI against the project's own design tokens for theme/token/contrast/a11y/spacing/UX consistency, with a gated fix mode |
-| **Design Concept Lab** | `design-concept-lab` | Need a few design directions for a screen or flow — generates distinct rendered mockup variants against the project's own tokens and stops for the engineer to pick one |
-| **IxD Review** | `ixd-review` | Heuristic interaction-design review of a product, flow, or prototype from screenshots, files, or a live URL — evidence-backed, prioritised recommendations |
-| **Design Rationale** | `design-rationale` | After design-consistency-audit findings are resolved — turns them into a factual, customer-facing Design Decision Record |
+| Agent | Prompt name | Autonomy | Human judgement | When to use |
+|---|---|---|---|---|
+| **Persona Builder** | `persona-builder` | High | Medium | Starting discovery on a client/product — generates evidence-grounded personas (or clearly-labelled proto-personas) from whatever research inputs exist |
+| **Journey Mapper** | `journey-mapper` | High | Medium | After a persona exists — maps their end-to-end journey through one scenario (actions, thoughts, emotions, pain points, opportunities) |
+| **Service Blueprint** | `service-blueprint` | High | Medium | After a journey map exists — extends it below the line of visibility (frontstage/backstage/support processes/failure points) |
+| **Competitive Analysis** | `competitive-analysis` | High | Medium | Building the competitive picture for a pitch — competitor matrix, positioning, and differentiation opportunities from public research |
+| **Prototype Builder** | `prototype-builder` | High | Low | Need something to click through — scaffolds a clickable Vite+React+Tailwind demo with mock data in an isolated folder |
+| **Design Consistency Audit** | `design-consistency-audit` | High | Medium | Auditing a built UI against the project's own design tokens for theme/token/contrast/a11y/spacing/UX consistency, with a gated fix mode |
+| **Design Concept Lab** | `design-concept-lab` | Medium | High | Need a few design directions for a screen or flow — generates distinct rendered mockup variants against the project's own tokens and stops for the engineer to pick one |
+| **IxD Review** | `ixd-review` | High | Medium | Heuristic interaction-design review of a product, flow, or prototype from screenshots, files, or a live URL — evidence-backed, prioritised recommendations |
+| **Design Rationale** | `design-rationale` | High | Medium | After design-consistency-audit findings are resolved — turns them into a factual, customer-facing Design Decision Record |
 <!-- generated:agents:end -->
 
 ---

@@ -5,6 +5,8 @@ tools:
   - Bash
   - Read
   - Write
+autonomy: high
+human-judgement: medium
 ---
 
 # Deployment Architect Agent

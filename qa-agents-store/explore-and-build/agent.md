@@ -6,6 +6,8 @@ tools:
   - Write
   - Bash
   - Glob
+autonomy: low
+human-judgement: low
 ---
 
 # Explore & Build Agent

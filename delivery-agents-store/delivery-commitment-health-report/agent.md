@@ -7,6 +7,8 @@ tools:
   - Glob
   - Bash
   - Write
+autonomy: high
+human-judgement: medium
 ---
 
 # Delivery Commitment Health Report Agent

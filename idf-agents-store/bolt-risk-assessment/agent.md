@@ -5,6 +5,8 @@ tools:
   - Read
   - Edit
   - Bash
+autonomy: high
+human-judgement: medium
 ---
 
 # Bolt Risk Assessment Agent

@@ -7,6 +7,8 @@ tools:
   - Glob
   - Edit
   - Bash
+autonomy: medium
+human-judgement: medium
 ---
 
 # Runtime Debugger Agent

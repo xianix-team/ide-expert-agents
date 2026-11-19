@@ -8,6 +8,8 @@ tools:
   - Bash
   - Edit
   - Write
+autonomy: high
+human-judgement: low
 ---
 
 # White-Box Testing Agent

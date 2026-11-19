@@ -6,6 +6,8 @@ tools:
   - Write
   - Edit
   - Bash
+autonomy: low
+human-judgement: high
 ---
 
 # Design Session Agent

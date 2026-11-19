@@ -6,6 +6,8 @@ tools:
   - Grep
   - Glob
   - Write
+autonomy: high
+human-judgement: high
 ---
 
 # EU AI Act Controls Reviewer (mapped to ISO/IEC 42001 & NIST AI RMF)

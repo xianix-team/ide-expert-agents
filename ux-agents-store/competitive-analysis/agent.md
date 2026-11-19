@@ -6,6 +6,8 @@ tools:
   - WebFetch
   - Read
   - Write
+autonomy: high
+human-judgement: medium
 ---
 
 # Competitive Analysis Agent

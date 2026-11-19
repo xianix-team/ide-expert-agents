@@ -26,7 +26,7 @@ The MCP server in `mcp-server/` discovers agents by globbing these folders at st
    - S0 scope agreement, read-only grounding, the work stages, a checkpoint that stops for confirmation, and a write step with an output skeleton;
    - a handoff that names the next agent, and guardrails.
 
-   Replace the placeholders and delete every `<!-- GUIDE: … -->` comment; `npm run check` fails while any are left. The only fields the server requires are `name` (equal to the folder name) and `description`.
+   Replace the placeholders and delete every `<!-- GUIDE: … -->` comment; `npm run check` fails while any are left. The required frontmatter fields are `name` (equal to the folder name), `description`, `autonomy`, and `human-judgement` (see [Autonomy and human judgement](#autonomy-and-human-judgement)).
 
 4. Split long instruction sets into supporting `.md` files in the same folder if it improves readability — they're concatenated into the prompt at serve time.
 5. Add the agent to [catalog.json](catalog.json) under its store, with a display `title` and `whenToUse` text (see [Keep the docs in sync](#keep-the-docs-in-sync--required-not-optional)).
@@ -37,11 +37,38 @@ The MCP server in `mcp-server/` discovers agents by globbing these folders at st
 
 No changes to the MCP server code are needed. Don't edit the generated README tables by hand: `npm run check` (and CI) fails when they don't match `catalog.json`. Agent changes reach `npx` users with the next npm release (see [Releasing the npm package](#releasing-the-npm-package)).
 
+## Autonomy and human judgement
+
+Every agent states two ratings in its frontmatter, each `high`, `medium`, or `low`:
+
+```yaml
+autonomy: high
+human-judgement: medium
+```
+
+**`autonomy`** — how much of the task the agent carries out on its own once scope is agreed.
+
+| Level | Meaning | Typical shape |
+|---|---|---|
+| `high` | Runs the task end to end and hands back a finished result, with few or no checkpoints after scope agreement. | Audits, scans, reports, test runs, drafts generated from inputs. |
+| `medium` | Does most of the work but stops at defined checkpoints for the human to approve, choose, or confirm before it continues. | Propose → approve → apply loops; design specs with a decision per section; gated code changes. |
+| `low` | The human drives. The agent facilitates step by step — an interview, a walkthrough, or a session where the content comes from the human's answers or actions. | Discovery interviews, checklists walked item by item, guided sessions. |
+
+**`human-judgement`** — how much expert human judgement the output needs before anyone acts on it.
+
+| Level | Meaning | Typical shape |
+|---|---|---|
+| `high` | The output is a decision, commitment, or risk position that a qualified person must evaluate and own: architecture, security, compliance, commercial, or stakeholder sign-off. | Estimates, proposals, architecture specs, compliance reviews, infra plans, UAT. |
+| `medium` | A practitioner should review and triage the output, but it is grounded in evidence they can check. | Findings to prioritise, code changes to review, research to validate. |
+| `low` | The output is factual or can be checked mechanically. A quick sanity check is enough. | Inventories, regression reports, test results, summaries of existing material. |
+
+Rate the agent's default mode. If it has an optional mode that changes the picture (for example, an audit that can also apply fixes), rate the mode most users run. `npm run check` fails if either field is missing or has another value. The generated README tables and the MCP `list_agents` tool show both ratings.
+
 ## Keep the docs in sync — required, not optional
 
 The agent tables in the store READMEs and the root README are **generated** from [`catalog.json`](catalog.json) and the runbook frontmatter. Don't edit them by hand.
 
-Whenever an agent is **added**, **removed**, or **updated** (name, prompt name, description, or "when to use" changes), in the same PR:
+Whenever an agent is **added**, **removed**, or **updated** (name, prompt name, description, "when to use", autonomy, or human-judgement changes), in the same PR:
 
 1. **`catalog.json`** — add/remove/edit the agent's entry under its store (`title`, `whenToUse`), and update the store's `description` if the change alters what the store covers.
 2. **Runbooks** — if a runbook in [`runbooks/`](runbooks/README.md) lists the agent under `agents`, update it.

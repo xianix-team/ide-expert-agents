@@ -15,6 +15,8 @@ tools:
   - Write
   - Grep
   - Glob
+autonomy: high
+human-judgement: low
 ---
 
 # Product Engineering Essentials Agent

@@ -4,6 +4,8 @@ description: Compares current data-platform state against an established baselin
 tools:
   - Read
   - Bash
+autonomy: high
+human-judgement: low
 ---
 
 # Regression Monitor Agent
