@@ -81,7 +81,7 @@
       }
     },
     "coding-agents-store": {
-      "description": "Code quality and targeted improvements — error handling audit, runtime debugging from logs/crashes/requirements, observability implementation (logging/metrics/tracing) with cost guardrails, authentication/authorization implementation mapped to OWASP ASVS / NIST guidance, and behavior-preserving code cleanup for vibe-coded / overgrown codebases",
+      "description": "Code quality and targeted improvements — error handling audit, runtime debugging from logs/crashes/requirements, observability implementation (logging/metrics/tracing) with cost guardrails, authentication/authorization implementation mapped to OWASP ASVS / NIST guidance, behavior-preserving code cleanup for vibe-coded / overgrown codebases, and batched framework / runtime / language-version upgrades of legacy codebases",
       "agents": {
         "error-handling-audit": {
           "title": "Error Handling Audit",
@@ -102,6 +102,10 @@
         "code-cleanup": {
           "title": "Code Cleanup",
           "whenToUse": "When you want to clean up an existing codebase—especially AI/vibe-coded ones—by removing waste, simplifying bulky code, and fixing evidenced quality, performance, or security issues while preserving required behavior. Default CLEAN finds one worthwhile cleanup at a time, proposes it, waits for approval, fixes, verifies, then continues; Analyze and Review only when explicitly requested. For a dedicated error-handling audit use `error-handling-audit`; for a full OWASP scan use `owasp-security-scanner`"
+        },
+        "legacy-modernizer": {
+          "title": "Legacy Modernizer",
+          "whenToUse": "When you need to plan or carry out a major framework, runtime, or language-version upgrade in a legacy codebase (e.g. .NET Framework → modern .NET, Java 8 → 21, Spring Boot 2 → 3, React class components → hooks, Python 2 → 3). Profiles the versions actually in use, fetches the official migration guides live, maps every breaking change and deprecated API to `file:line` in a risk-weighted inventory, and writes a batched upgrade plan with a rollback point per batch. After sign-off it applies the upgrade in small approved batches, verified against a build/test baseline captured before the first edit. Teams can customize it without forking: an optional project profile (`.legacy-modernizer.md` in the target repo) sets the target, scope, commands, and project rules, and drop-in stack playbooks add stack-specific guidance (see the agent's `templates/` folder). For routine dependency/CVE triage use `dependency-audit` instead"
         }
       }
     },
