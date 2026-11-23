@@ -63,6 +63,7 @@ The script clones the latest `main` of this repo into a temp folder, which it de
 | Cursor | `<project>/.cursor/skills/<name>/SKILL.md` | `/<name>` in Agent chat |
 
 Each `SKILL.md` holds the same content the MCP server serves: the agent's other `*.md` files are added to the end, and subfolders such as `templates/` are copied along with it. To update skills you installed earlier, run the script again.
+
 ---
 
 ## Track usage in AI Hub (optional)
