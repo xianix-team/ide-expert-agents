@@ -81,7 +81,7 @@
       }
     },
     "coding-agents-store": {
-      "description": "Code quality and targeted improvements — error handling audit, runtime debugging from logs/crashes/requirements, observability implementation (logging/metrics/tracing) with cost guardrails, authentication/authorization implementation mapped to OWASP ASVS / NIST guidance, and behavior-preserving code cleanup for vibe-coded / overgrown codebases",
+      "description": "Code quality and targeted improvements — error handling audit, runtime debugging from logs/crashes/requirements, observability implementation (logging/metrics/tracing) with cost guardrails, authentication/authorization implementation mapped to OWASP ASVS / NIST guidance, behavior-preserving code cleanup for vibe-coded / overgrown codebases, and token-efficiency coaching for AI-assisted development (context audit plus an always-on rule for Claude Code, Cursor, and Copilot)",
       "agents": {
         "error-handling-audit": {
           "title": "Error Handling Audit",
@@ -102,6 +102,10 @@
         "code-cleanup": {
           "title": "Code Cleanup",
           "whenToUse": "When you want to clean up an existing codebase—especially AI/vibe-coded ones—by removing waste, simplifying bulky code, and fixing evidenced quality, performance, or security issues while preserving required behavior. Default CLEAN finds one worthwhile cleanup at a time, proposes it, waits for approval, fixes, verifies, then continues; Analyze and Review only when explicitly requested. For a dedicated error-handling audit use `error-handling-audit`; for a full OWASP scan use `owasp-security-scanner`"
+        },
+        "token-efficiency-coach": {
+          "title": "Token Efficiency Coach",
+          "whenToUse": "When AI-assisted development in a project burns too many tokens — usage limits hit early, high cost, or context filling up in long sessions — in Claude Code, Cursor, or GitHub Copilot. Audits always-on rules and instructions, MCP tool load, skill descriptions, unignored generated files, and noisy commands, ranks fixes by estimated savings, then writes a short always-on token-efficiency rule for each tool and applies the config fixes you approve. Also rewrites a pasted prompt to be cheaper"
         }
       }
     },
