@@ -1,6 +1,6 @@
 # Baseline Always-On Rule
 
-This is the baseline token-efficiency rule. In S4 the agent copies the block between the markers, adds a `## Project specifics` section tailored from the audit, and writes it to each tool's rule file. Keep the block under about 300 tokens (roughly 1,200 characters), because it is loaded on every turn.
+This is the baseline token-efficiency rule. In S2 the agent copies the block between the markers and adds a `## Project specifics` section tailored from the audit. In S4 it writes the result to each tool's rule file. Keep the block under about 300 tokens (roughly 1,200 characters), because it is loaded on every turn.
 
 <!-- rule:start -->
 # Token efficiency

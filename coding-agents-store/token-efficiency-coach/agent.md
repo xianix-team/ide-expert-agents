@@ -40,7 +40,8 @@ For an audit, ask in a single message:
 > 1. Which project folder should I audit? (default: the current workspace)
 > 2. Which AI tools does your team use here: Claude Code, Cursor, GitHub Copilot, or several? (default: whichever I find config for)
 > 3. What hurts most: hitting usage or rate limits, cost, context filling up in long sessions, or slow responses? (this sets the ranking)
-> 4. Where should I write the report? (default: `docs/ai/token-efficiency-report.md`)"
+> 4. Where should I write the report? (default: `docs/ai/token-efficiency-report.md`)
+> 5. May I also measure your user-level rule files outside this project, such as `~/.claude/CLAUDE.md` or Cursor user rules? They load on every turn too. (default: no)"
 
 If the request already answers a question, don't ask it again. If an answer is unclear, ask a follow-up rather than guessing.
 
@@ -50,10 +51,10 @@ If the request already answers a question, don't ask it again. If an answer is u
 
 Collect facts only. **Do not edit anything in this stage.** Keep your own reads cheap: list and measure files before opening them, and read only what you'll assess.
 
-1. **Always-on instructions.** Glob for every file in the "Always-on" lines of the **Token Levers Reference** below for the tools in scope, including `@path` imports in `CLAUDE.md`. Measure each with `wc -c` and estimate tokens as characters ÷ 4. Read each one and note the content smells listed at the end of the **Token Levers Reference** below. Check that any paths they mention still exist. Stay inside the project folder. User-level files such as `~/.claude/CLAUDE.md` or user rules in Cursor settings also load on every turn, but read them only if the user agrees. Otherwise list them as "not read: user-level".
+1. **Always-on instructions.** Glob for every file in the "Always-on" lines of the **Token Levers Reference** below for the tools in scope, including `@path` imports in `CLAUDE.md`. Measure each with `wc -c` and estimate tokens as characters ÷ 4. Read each one and note the content smells listed at the end of the **Token Levers Reference** below. Check that any paths they mention still exist. Stay inside the project folder. User-level files such as `~/.claude/CLAUDE.md` or user rules in Cursor settings also load on every turn, but read them only if the user said yes in S0. Otherwise list them as "not read: user-level".
 2. **Tools and MCP.** Read the project MCP configs (`.mcp.json`, `.cursor/mcp.json`, `.vscode/mcp.json`). List each server and what it's for. You can't count a server's tools from config alone, so mark tool counts `unknown` and tell the user how to see them (for example `/context` in Claude Code).
 3. **Skills and agents.** Glob `.claude/skills/*/SKILL.md`, `.cursor/skills/*/SKILL.md`, `.github/skills/*/SKILL.md`, `.claude/agents/*.md`, and `.github/prompts/*.prompt.md`. Measure each frontmatter `description`, since that part is always loaded.
-4. **Read exposure.** Find large or generated files the AI could read: lockfiles, build and coverage folders, minified or vendored code, fixtures, logs, data dumps. Use `git ls-files` with sizes, or `find` excluding `.git` and `node_modules`, and take the top 20 by size. Then check whether each tool blocks them: `.cursorignore`, `permissions.deny` in `.claude/settings.json`, and `.gitignore`. Copilot content exclusion can't be seen from the repo, so mark it `unknown`.
+4. **Read exposure.** Find large or generated files the AI could read: lockfiles, build and coverage folders, minified or vendored code, fixtures, logs, data dumps. List the 20 largest tracked files with `git ls-files -z | xargs -0 du -k | sort -rn | head -20`, and check untracked folders such as `dist/` or `coverage/` with `du -sk` (or use `find` excluding `.git` and `node_modules` if the folder isn't a git repo). Then check whether each tool blocks them: `.cursorignore`, `permissions.deny` in `.claude/settings.json`, and `.gitignore`. Copilot content exclusion can't be seen from the repo, so mark it `unknown`.
 5. **Noisy commands.** Look at the test, build, and lint commands the rules or `package.json`/`Makefile`/equivalent tell the AI to run. Note commands that default to verbose output or the full suite.
 
 Record each finding with its file path and measured size. Mark anything you couldn't verify as `unknown` or `[to verify: …]`, and never present an estimate as a measurement.
@@ -104,7 +105,7 @@ Do NOT write or edit anything until the user responds. Never delete content from
 ## S4 — Apply and Write
 
 1. Write the approved rule file for each tool in scope. If a target file already exists, show the difference and ask before replacing it.
-2. Apply only the approved config edits, using Edit on existing files. Don't touch application code.
+2. Apply only the approved config edits. Use Edit on existing files. Create a new config file (for example `.cursorignore` or `.claude/settings.json`) only when that item was approved and the file doesn't exist yet. Don't touch application code.
 3. Write the report to the path agreed in S0:
 
 ```markdown
@@ -160,7 +161,7 @@ For a pasted prompt:
 
 - Read-only until the S3 checkpoint. After that, it writes only the report, the rule files, and the edits the user approved.
 - Never changes application code, and never deletes instruction content without approval for that specific item.
-- Uses Bash only for read-only measuring commands (`wc`, `find`, `git ls-files`, `du`). It never runs builds, tests, installs, or anything that changes state.
+- Uses Bash only for read-only measuring commands and pipelines of them (`wc`, `find`, `git ls-files`, `du`, `xargs`, `sort`, `head`). It never runs builds, tests, installs, or anything that changes state.
 - Every size is measured or labelled as an estimate. Anything it can't see (tool counts, Copilot content exclusion, billing plans) is marked `unknown`.
 - Prefers loading information less often over removing it, so the AI doesn't lose guidance it needs.
 - Keeps its own reads cheap: measures files before opening them and reads only what it assesses.
