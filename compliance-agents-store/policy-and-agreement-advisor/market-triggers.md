@@ -1,6 +1,6 @@
 # Market Triggers: Norway, EU, and EEA
 
-Used in Identify to spot documents and product features a market may call for, and in Review to phrase questions. **Leads for the lawyers, not statements of law.** A market trigger alone gives *Lawyers to confirm*.
+Used in Identify to spot documents and product features a market may call for, and in Draft and Review to phrase questions. Never write a row into a draft as a statement. **Leads for the lawyers, not statements of law.** A market trigger alone gives *Lawyers to confirm*.
 
 **How far to trust a row.** Only rows with a **✓** were read on the named official page, in November 2026, and a page can have changed since. **Every other row is unverified background**, from general knowledge or secondary sources. Put it to the lawyers as a question and never quote it as a requirement. This skill doesn't browse, so it can't refresh these rows.
 

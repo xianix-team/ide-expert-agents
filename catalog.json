@@ -266,7 +266,7 @@
       }
     },
     "compliance-agents-store": {
-      "description": "AI compliance, data protection, governance, and product policy documents — EU AI Act controls review with ISO 42001 and NIST AI RMF mapping, GDPR controls review (personal-data inventory, data-subject rights, LLM data flows, transfers) with ISO 27701 and NIST Privacy Framework mapping, and identifying which policies and agreements a product needs and reviewing submitted ones (privacy policy, EULA, SLA, support agreement, DPA) against the product, for Norway, the EU, and the EEA",
+      "description": "AI compliance, data protection, governance, and product policy documents — EU AI Act controls review with ISO 42001 and NIST AI RMF mapping, GDPR controls review (personal-data inventory, data-subject rights, LLM data flows, transfers) with ISO 27701 and NIST Privacy Framework mapping, and identifying which policies and agreements a product needs, drafting them for lawyers to complete, and reviewing submitted ones (privacy policy, EULA, SLA, support agreement, DPA) against the product, for Norway, the EU, and the EEA",
       "agents": {
         "eu-ai-act-controls-reviewer": {
           "title": "EU AI Act Controls Reviewer",
@@ -278,7 +278,7 @@
         },
         "policy-and-agreement-advisor": {
           "title": "Policy and Agreement Advisor",
-          "whenToUse": "When an engineer needs to know **which policies and agreements a particular product needs** (privacy policy, cookie policy, terms, EULA, SLA, support agreement, DPA, AI notice and others), or has to **review documents submitted by the customer or their lawyers** against what the product and team really do. Identify mode gives each document's reason, parties, preparer, timing, and the facts and product features engineering must supply. Review mode reports untrue statements, missing disclosures, promises that can't be kept, inconsistencies, and product work needed, with comments to send back, and re-reviews new versions. For **Norway, the EU, and the EEA**. Never drafts legal text or gives legal advice: lawyers, usually the customer's, do that. For a GDPR gap analysis use `gdpr-controls-reviewer`, and for AI Act obligations `eu-ai-act-controls-reviewer`"
+          "whenToUse": "When an engineer needs to know **which policies and agreements a particular product needs** (privacy policy, cookie policy, terms, EULA, SLA, support agreement, DPA, AI notice and others), to **draft them** for lawyers to complete and approve, or to **review submitted documents** against what the product and team really do. Identify mode gives each document's reason, parties, approver, timing, and the facts and product features engineering must supply. Draft mode writes working drafts from verified product facts and agreed commitments, with numbered questions where a decision or a legal position is needed, and a note under every heading on why it matters and is considered. Review mode reports untrue statements, missing disclosures, promises that can't be kept, inconsistencies, and product work needed, with comments to send back, and re-reviews new versions. For **Norway, the EU, and the EEA**. Recommends other skills the product's facts call for, such as `gdpr-controls-reviewer` for personal data and `eu-ai-act-controls-reviewer` for AI features. Never gives legal advice or writes legal clauses: lawyers, usually the customer's, do that and approve every document"
         }
       }
     },

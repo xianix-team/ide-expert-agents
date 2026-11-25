@@ -1,6 +1,6 @@
 # Review Checks
 
-Used in R2. Record the result with its evidence. Don't propose other numbers or wording.
+Used in R2, and in D3 on our own draft. Record the result with its evidence. Don't propose other numbers or wording. In D3, a result that would be a finding becomes a placeholder, product work, or a raised gap.
 
 ## Promise check
 

@@ -1,10 +1,10 @@
 # Document Catalog
 
-Used in S1 (what to look for), I1 (what is needed), and R2 (what to check). "Prepared by" is the usual arrangement, so confirm it. The lawyers decide the content. The lists here cover only what can be checked against the product.
+Used in S1 (what to look for), I1 (what is needed), D1 and D3 (what a draft needs), and R2 (what to check). "Final text by" is who usually completes and approves the document, so confirm it. The engineer may draft it first, except where the Drafting Guide says otherwise or the lawyers write their own. The lists here cover only what can be checked against the product.
 
 ## Grounding signals
 
-Case-insensitive leads for S1. In Identify use all of them. In Review use the ones the submitted documents touch. Distinctive terms aren't anchored with `\b`, because that would miss names such as `OPENAI_API_KEY` or `user_email`. Expect false positives: open the file before recording a fact, and ignore UI or tree uses of `children`.
+Case-insensitive leads for S1. In Identify use all of them. In Draft and Review use the ones the documents touch. Distinctive terms aren't anchored with `\b`, because that would miss names such as `OPENAI_API_KEY` or `user_email`. Expect false positives: open the file before recording a fact, and ignore UI or tree uses of `children`.
 
 The lists are examples. A vendor or data field with another name won't match, so also read dependency manifests, environment templates, and outbound URLs, and look through the data models.
 
@@ -31,7 +31,7 @@ Acceptance flow:    accept(ed)?[_-]?terms|terms[_-]?(version|accepted)|agreed[_-
 
 The **Triggered when** column is the strong trigger. Where a row says *otherwise Recommended*, the weaker case never makes it Needed by itself.
 
-| Document (Norwegian title) | Triggered when | Between | Usually prepared by | Needed by |
+| Document (Norwegian title) | Triggered when | Between | Final text by | Needed by |
 |---|---|---|---|---|
 | **Privacy policy** (personvernerklæring) | Any personal data, including logs and analytics | Publisher → users | Customer's lawyers | Before real personal data is collected |
 | **Cookie policy** (informasjonskapsler) | Cookies, SDKs, or device storage beyond the strictly necessary. Strictly necessary only: *otherwise Recommended*, usually inside the privacy policy | Publisher → users | Customer's lawyers, cookie list from engineering | Before public access |
@@ -57,7 +57,7 @@ A document not listed: review it with the general checks, agree its purpose and 
 
 ## What to check in each document
 
-**Supply** is what engineering gives the lawyers (Identify). **Check** is what to compare with the product (Review). **Often wrong** is where submitted documents and products usually part ways.
+**Supply** is what engineering gives the lawyers (Identify), and what a draft is written from (Draft). **Check** is what to compare with the product (Draft self-check and Review). **Often wrong** is where submitted documents and products usually part ways.
 
 ### Privacy policy
 
