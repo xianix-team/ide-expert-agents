@@ -18,7 +18,7 @@ Read-only on the codebase and on every document it's given. Writes only the plan
 
 **Done when:** in Plan mode, the product owner has approved the documents agreed on (the skill plan, the training guide, or both), they are written, and the team knows the first skill to run and who runs it. In Coach mode, the engineer has checked one real skill output and can say what they'd accept, reject, or question in it.
 
-Two references follow this section: **Delivery Playbooks** (which skills suit which kind of delivery, and what each needs first) and the **Skill Catalog** (every skill and runbook, with autonomy and human-judgement ratings). The catalog is the only source for skill names. "Skill" and "agent" mean the same thing here.
+Two references follow this section: **Delivery Playbooks** (which skills suit which kind of delivery, what each one needs and produces, and who usually owns it) and the **Skill Catalog** (every skill and runbook, with autonomy and human-judgement ratings). The catalog is the only source for skill names. "Skill" and "agent" mean the same thing here.
 
 ---
 
@@ -52,7 +52,7 @@ Don't re-ask what the request already answers. If 1 or 4 is missing or vague, or
    - which skills are already installed (`.claude/skills/*/SKILL.md`, `.github/skills/*/SKILL.md`, `.cursor/skills/*/SKILL.md`), and whether an MCP config mentions `ide-expert-agents`. A server can also be configured at user level, so finding nothing means `unknown`, not "not connected";
    - the signals behind each prerequisite in the **Delivery Playbooks** below: AI-DLC framework, design tokens, test setup, infrastructure code, personal data, or LLM use;
    - outputs earlier skills left behind (for example under `docs/specs/` or `docs/plans/`), so the plan doesn't repeat finished work.
-3. For a skill that is installed on disk, read its opening questions when you draft its starter prompt. For any other skill, work from the catalog entry.
+3. Take what a skill needs and produces from, in order: its own file, if it is installed on disk; the **What each skill needs and produces** table in the playbooks; its catalog entry. If none of them says, write `[to verify: run the skill and read its opening questions]`. This applies to the plan, the "have ready" lists, and the starter prompts. Never fill the gap from what a skill like that usually needs.
 
 Don't call the MCP `get_agent` tool here. It loads another skill's instructions to act on and may record a usage event. If the user names a skill that isn't in the catalog, say you can't confirm it exists and that their copy of the library may be out of date. Leave it out of the plan and list it as an open question.
 
@@ -73,6 +73,8 @@ Reflect the intent back in at most ten lines:
 
 Wait for the answer. A wrong reading here makes every recommendation wrong.
 
+If no playbook matches, say so instead of forcing the nearest one. Build the list from the catalog, one skill per workstream or risk, mark it as "no playbook" in the plan, and expect more gaps.
+
 ---
 
 ## S3 — Choose the Skills
@@ -81,7 +83,7 @@ Start from the matching playbooks, check each candidate against the **Skill Cata
 
 1. **Tie every skill to the intent.** Each one names the `W` or `R` it serves. If it serves none, leave it out.
 2. **One skill per job.** Where two overlap, pick one and say why.
-3. **Check prerequisites.** If one isn't met, add it as a setup step with an owner, or move the skill to a later phase. Never plan a skill the team can't run yet without saying so.
+3. **Check prerequisites** against the needs table. If one isn't met, add it as a setup step with an owner, or move the skill to a later phase. Never plan a skill the team can't run yet without saying so.
 4. **Name an owner role.** The person who runs a skill checks its output. A skill rated **High** on human judgement also needs a qualified approver. If the team has nobody qualified, that is a gap.
 5. **Keep it small.** Pick a **starter set of 3–5 skills** for the first iteration, fewer if the team is new to AI-assisted work, and favour low human-judgement skills with quick, checkable results where they fit. Add the rest by phase, normally no more than 12 overall. List the tempting ones you left out as **Not now**, with a reason.
 6. **Chain outputs.** For each skill, state what it needs and which earlier output supplies it. Where a runbook covers the sequence, recommend the runbook. Runbooks are available only over MCP.
@@ -100,7 +102,7 @@ Build only from the skills chosen in S3. Give the starter set full modules and l
    - their skills: when to reach for each, how to run it in their tool, and what to have ready;
    - **one exercise on a real backlog item** from S1. If none was provided, use a `<placeholder>` and ask the product owner to name one;
    - a **starter prompt** to paste, filled from the intent, with `<placeholders>` for unknowns;
-   - a **review check** of 3–5 questions for judging the output, including one way it could look right and be wrong;
+   - a **review check** of 3–5 questions for judging the output, including one way it could look right and be wrong, based on what the skill's source says about its limits or else on the Working Agreements;
    - the evidence that the exercise is done: a file, a decision, or a review comment.
 3. **Cadence:** a short kickoff, the first real use, a 15-minute review after it, and a check at the end of the iteration on what to keep, drop, or add. Mark times as suggestions.
 
@@ -164,8 +166,8 @@ _Generated <date> by `team-planner-and-trainer`. Inputs: <documents read>._
 |---|---|---|---|---|---|---|
 
 ## Later Phases
-| Phase | Skill | Serves | Owner | Start when | Needs | Produces |
-|---|---|---|---|---|---|---|
+| Phase | Skill | Serves | Owner | Approver | Start when | Needs | Produces |
+|---|---|---|---|---|---|---|---|
 
 ## Decisions That Stay Human
 | Decision | Role | Skill output that informs it |
@@ -190,7 +192,7 @@ _Generated <date> by `team-planner-and-trainer`. Inputs: <documents read>._
 ```markdown
 # Training Guide — <team or product>
 
-_Generated <date> by `team-planner-and-trainer`. Goes with: <skill plan path>._
+_Generated <date> by `team-planner-and-trainer`. Goes with: <skill plan path, or "no skill plan">._
 
 ## Start Here
 <what we're delivering, the starter set, how to run a skill in our tool(s)>
@@ -214,13 +216,15 @@ _Generated <date> by `team-planner-and-trainer`. Goes with: <skill plan path>._
 ## Open Questions
 ```
 
+If only the training guide is written, add the Setup First, Decisions That Stay Human, and Gaps sections from the skill plan after Working Agreements, and name the approver beside each High human-judgement skill. Otherwise nobody sees them.
+
 ---
 
 ## S7 — Handoff
 
 State the paths written, the first skill to run, who runs it, and any open gap or unmet prerequisite. Tell the product owner to:
 
-- share the training guide, and have each engineer run this skill in Coach mode for their own role;
+- if there is a training guide, share it and have each engineer run this skill in Coach mode for their own role;
 - rerun Plan mode at the end of the iteration with what the team learned, so skills that didn't help are dropped.
 
 When the work itself needs breaking down, recommend `planning-helper-agent`. For a delivery baseline, recommend `delivery-commitment-health-report`.
@@ -229,13 +233,16 @@ When the work itself needs breaking down, recommend `planning-helper-agent`. For
 
 ## Coach Mode
 
-For one person learning their part. Writes no files. One question per turn.
+For one person learning their part. Writes no files. Setup is one message; after that, one question per turn.
 
-1. **Set up.** Ask for their role, tool, the training guide's path (default: look under `docs/delivery/` for `*-training-guide.md`), and one real task they're working on. If there is no guide, offer to coach on one skill chosen from the catalog for that task.
-2. **Choose.** Read their module. Before telling them, ask which skill they'd use for the task and why. Then confirm it, or explain the better fit from the catalog.
+1. **Set up.** Look under `docs/delivery/` for `*-training-guide.md`. Then ask in a single message for whatever you don't already know: their role, their tool, which guide to use, and one real task they're working on. If there is no guide, or it has no module for their role, offer to coach on one skill from the catalog, picked together in step 2. Where the steps below refer to their module, use this stand-in:
+   - **what to have ready:** the skill's row in the needs table;
+   - **review check:** Did it answer the scope I gave? Do the sources I opened support it? What is assumed or unknown? Who must approve it, given its human-judgement rating?
+   - **next skill:** what usually follows it in a matching playbook, or "none" if nothing does.
+2. **Choose.** Read their module, if there is one. Before telling them, ask which skill they'd use for the task and why. Then confirm it, or explain the better fit from the catalog.
 3. **Prepare.** Help them draft the starter prompt. Point out what the skill will need that they haven't got. They run the skill themselves, in their own session.
 4. **Review.** When they bring back the output (pasted, or a path), ask what they'd accept, reject, or question before giving your view. Then go through the module's review check, pointing to specific lines, and verify any cited path you can read. Help them judge the output. Don't rewrite it.
-5. **Close.** Give one thing they did well, one to change next time, and the next skill in their plan. Suggest they bring recurring problems to the team's review.
+5. **Close.** Give one thing they did well, one to change next time, and the next skill (from their guide, or the stand-in). Suggest they bring recurring problems to the team's review.
 
 ---
 

@@ -130,7 +130,11 @@ if (fs.existsSync(path.join(root, "runbooks/README.md"))) {
 // leaves itself out.
 const TRAINER = "team-planner-and-trainer";
 const trainerCatalog = `delivery-agents-store/${TRAINER}/skill-catalog.md`;
-if (fs.existsSync(path.join(root, trainerCatalog))) {
+if (fs.existsSync(path.join(root, path.dirname(trainerCatalog)))) {
+  if (!fs.existsSync(path.join(root, trainerCatalog))) {
+    console.error(`error    ${trainerCatalog} is missing; ${TRAINER} has no skill list without it`);
+    process.exit(1);
+  }
   const oneLine = text => String(text ?? "").replace(/\s*\n\s*/g, " ").trim();
   const sections = Object.entries(catalog.stores).map(([store, { agents }]) => {
     const lines = Object.entries(agents)

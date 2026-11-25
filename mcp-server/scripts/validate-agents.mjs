@@ -14,7 +14,11 @@
 //   - missing `name`, `title`, `description`, or `agents` frontmatter
 //   - an `agents` entry that is not a real agent, or that the body never mentions
 //   Trainer playbooks (delivery-agents-store/team-planner-and-trainer/playbooks.md)
-//   - a `backticked-name` that is not a real agent or runbook (renamed or removed)
+//   - playbooks.md or skill-catalog.md missing while the agent exists
+//   - a `backticked-name` that is not a real agent or runbook (renamed or removed);
+//     backticked text with other characters, such as a path, is ignored
+//   An agent the playbooks never mention is a warning, not an error: the trainer still
+//   lists it from the catalog but has no needs, outputs, or playbook for it.
 //   Both
 //   - the same `name` used twice across agents and runbooks (only one would be served)
 //   catalog.json
@@ -146,11 +150,23 @@ for (const rel of runbookFiles) {
 // ── Trainer playbooks ───────────────────────────────────────────────────────
 // Hand-written, but they name skills all over the library, so a rename or removal
 // would leave the trainer recommending something that does not exist.
-const playbooksRel = "delivery-agents-store/team-planner-and-trainer/playbooks.md";
-if (fs.existsSync(path.join(root, playbooksRel))) {
-  const text = fs.readFileSync(path.join(root, playbooksRel), "utf-8");
-  for (const name of new Set([...text.matchAll(/`([^`\n]+)`/g)].map(m => m[1]))) {
-    if (!seenNames.has(name)) err(playbooksRel, `names \`${name}\`, which is not an agent or runbook`);
+const TRAINER = "team-planner-and-trainer";
+const warnings = [];
+if (allAgents.has(TRAINER)) {
+  const trainerDir = `delivery-agents-store/${TRAINER}`;
+  const playbooksRel = `${trainerDir}/playbooks.md`;
+  for (const rel of [playbooksRel, `${trainerDir}/skill-catalog.md`]) {
+    if (!fs.existsSync(path.join(root, rel))) err(rel, `missing; ${TRAINER} depends on it`);
+  }
+  if (fs.existsSync(path.join(root, playbooksRel))) {
+    const text = fs.readFileSync(path.join(root, playbooksRel), "utf-8");
+    const named = new Set([...text.matchAll(/`([^`\n]+)`/g)].map(m => m[1]).filter(n => KEBAB.test(n)));
+    for (const name of named) {
+      if (!seenNames.has(name)) err(playbooksRel, `names \`${name}\`, which is not an agent or runbook`);
+    }
+    for (const name of allAgents) {
+      if (name !== TRAINER && !named.has(name)) warnings.push(`${playbooksRel}: does not mention '${name}'; add its needs and outputs`);
+    }
   }
 }
 
@@ -182,6 +198,7 @@ if (catalog) {
   }
 }
 
+for (const w of warnings) console.error(`warning  ${w}`);
 for (const e of errors) console.error(`error    ${e}`);
 console.log(
   `\nChecked ${allAgents.size} agents in ${stores.length} stores and ${runbookFiles.length} runbook(s): ${errors.length} error(s).`
