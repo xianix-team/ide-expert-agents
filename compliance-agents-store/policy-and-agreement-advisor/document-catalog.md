@@ -47,7 +47,7 @@ The **Triggered when** column is the strong trigger. Where a row says *otherwise
 | **Vulnerability disclosure policy** | A contract or customer policy asks for one, or software is distributed to others. Internet-facing service alone: *otherwise Recommended* | Publisher → researchers | Customer's security owner | At launch |
 | **Subscription, refund, cancellation policy** | Paid plans, trials, auto-renewal, in-app purchases | Seller → buyer | Customer's lawyers and finance | Before the first sale |
 | **Retention and deletion policy; account-deletion page** | A store app with accounts, or a contract or policy that refers to a separate document. *Otherwise Recommended*, usually inside the privacy policy | Publisher → users | Customer's lawyers, facts from engineering | Before launch or store submission |
-| **Content and notice policy** | User-generated content | Publisher → users and rights holders | Customer's lawyers | Before publishing opens |
+| **Content and notice policy** | Users publish content that other users or the public can see. Content seen only by the publisher or the user's own organisation (tickets, files): *otherwise Recommended*, usually inside the terms | Publisher → users and rights holders | Customer's lawyers | Before publishing opens |
 | **API terms** | Third parties call the API | Publisher → developers | Customer's lawyers | Before keys are issued |
 | **Beta or pilot terms** | Pre-release use by real users | Publisher → testers | Customer's lawyers | Before the pilot |
 | **Data export and exit terms** | A hosted service sold under contract to other organisations that hold their data in it. *Otherwise Recommended* | Provider → customer | Provider's lawyers | Before signing |

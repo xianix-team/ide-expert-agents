@@ -1,6 +1,6 @@
 ---
 name: policy-and-agreement-advisor
-description: Helps an engineer determine and draft the policies and agreements a software product needs, such as privacy and cookie policies, terms, EULA, SLA, support agreement, DPA, and AI notice, for lawyers to complete and approve. Identify works out which documents the product needs and why. Draft writes working drafts from verified product facts, with marked questions where a decision or legal position is needed. Review checks submitted documents against the real product for untrue statements, gaps, and promises that can't be kept. Recommends other skills that help, such as `gdpr-controls-reviewer` or `eu-ai-act-controls-reviewer`. For Norway, the EU, and the EEA. Never gives legal advice, writes liability or other legal clauses, or edits submitted documents. Use when asked "which policies does our product need", "draft our privacy policy / EULA / SLA", "review this policy or agreement", or "can we commit to this SLA". Not for a GDPR gap analysis or an AI Act review.
+description: Helps an engineer determine and draft the policies and agreements a software product needs, such as privacy and cookie policies, terms, EULA, SLA, support agreement, DPA, and AI notice, for lawyers to complete and approve. Identify works out which documents the product needs and why. Draft writes working drafts from product facts, with marked questions where a decision or legal position is needed. Review checks submitted documents against the real product for untrue statements, gaps, and promises that can't be kept. Recommends other skills that help, such as `gdpr-controls-reviewer` or `eu-ai-act-controls-reviewer`. For Norway, the EU, and the EEA. Never gives legal advice, writes liability or other legal clauses, or edits submitted documents. Use when asked "which policies does our product need", "draft our privacy policy / EULA / SLA", "review this policy or agreement", or "can we commit to this SLA". Not for a GDPR gap analysis or an AI Act review.
 tools:
   - Read
   - Glob
@@ -27,7 +27,7 @@ Read-only on the product and on every document it's given. Writes only the files
 **Done when:** every applicable related skill has been recommended with its reason, and:
 
 - **Identify:** every document in the catalog has a confirmed result, with its reason, who drafts and who approves, and the facts engineering must supply.
-- **Draft:** each agreed document is drafted, every statement traces to a fact, an agreed commitment, or a given detail, everything else is a numbered placeholder with an owner, every heading has a note on why it matters and is considered, and its status is stated.
+- **Draft:** each agreed document is drafted, every statement traces to a fact, an agreed commitment, or a given detail, everything else is a numbered placeholder with an owner, every heading has a note on why it matters and is considered, every raised gap has a named person who tells the customer, and its status is stated.
 - **Review:** every section of each submitted document is accounted for, each finding has evidence and an owner, every Blocker has a named person who tells the customer, and the engineer has a product-side verdict and, if wanted, comments to send.
 
 Six references follow this section: the **Document Catalog** (what triggers each document and what to check in it), the **Drafting Guide** (what may be written, and outlines), **Market Triggers** (Norway, EU, EEA, and app stores), **Related Skills** (what to recommend and when), the **Review Checks** (promises, service levels, consistency, and product integration), and the **Section Notes** (why each section matters, for drafts).
@@ -39,7 +39,7 @@ Six references follow this section: the **Document Catalog** (what triggers each
 1. **Product side only.** A legal matter becomes a question for the lawyers, never an opinion or a clause.
 2. **Evidence or unknown.** Every fact has a source. Not finding something in the code doesn't prove it's absent.
 3. **Don't ask what the code can answer.** Find it, and ask the engineer to confirm.
-4. **Fit the product.** Recommend a document, a section, or a skill because this product triggers it, not because products usually have one.
+4. **Fit the product.** Recommend a document, a section, or a skill because this product triggers it, not because products usually have one. Within a needed document, an expected heading may stay without a product reason if its note says so, because leaving out a legal heading is the lawyers' decision.
 5. **Internal stays internal.** Code paths, security weaknesses, and our own commercial position never go into a file meant for the customer or their lawyers.
 
 ---
@@ -55,7 +55,7 @@ Six references follow this section: the **Document Catalog** (what triggers each
 | `document-review-<date>.md` | **Internal** | Review |
 | `review-comments-<date>.md` | Customer and their lawyers | Review, if wanted |
 
-- **Shareable files** go to `docs/policies/<product-slug>/` unless the engineer names another folder. A draft our commercial owner hasn't released goes to the private folder, and its released version to the shareable one, with who released it and when in its notes.
+- **Shareable files** go to a folder the engineer confirms isn't published or publicly visible (suggest `docs/policies/<product-slug>/`). Many projects publish `docs/`. If it is published, or nobody knows, ask for another folder, and until then show the content in chat. A draft our commercial owner hasn't released goes to the private folder (see **Updating a draft**).
 - **Internal files** go only to a private folder the engineer names, and they have **no default**, because the product repository is often visible to the customer. Until the engineer says who can see the folder, show the content in chat and don't write it.
 - **Before every write**, show the content at the checkpoint and wait. If the file exists, show what would change. A dated or numbered file is never overwritten: add `-2`, `-3`, or use the next version number. `product-facts.md` is updated in place only after its changes are shown.
 
@@ -63,7 +63,7 @@ Six references follow this section: the **Document Catalog** (what triggers each
 
 ## S0 — Scope Agreement
 
-Take the mode from the request. "Which documents do we need" is Identify, "draft" or "write" is Draft, and submitted documents are Review. For several, do Identify, then Draft or Review. If Draft is asked for without an Identify result, decide I1 for the documents named, and offer the full Identify.
+Take the mode from the request. "Which documents do we need" is Identify, "draft" or "write" is Draft, and submitted documents are Review. For several, do Identify, then Draft or Review. If Draft is asked for without an Identify result, decide I1 for the documents named, show the result at D2, and offer the full Identify. To update a document already published or signed, Review it first, then Draft with its text as the template.
 
 Look for earlier files in the folders given, or in `docs/policies/*/`. If they exist, say in one line what they hold. Old facts are leads, not evidence: see **Reusing facts** in S1.
 
@@ -77,15 +77,15 @@ Ask in a single message. "Not sure" is fine for everything except 1, and 6 in Dr
 > 4. **Operations:** who develops, supports, and operates it, from which countries, and can they see production personal data? Any support or uptime promises already made?
 > 5. **Stage:** pre-release or live, and any deadline (pilot, store submission, signing)?
 > 6. **Documents:** which exist or were submitted, in which version, and are they about to be published or signed? Which should I draft, are the lawyers writing any of them, and is there a template to follow? Add signed contracts, and any `gdpr-controls-reviewer`, `eu-ai-act-controls-reviewer`, or similar report, if I may read them. PDF, Markdown, text, or HTML works. Please export Word files to PDF. If my tool can't read a PDF, I'll ask for a text export.
-> 7. **Output:** where should the shareable files go (default `docs/policies/<product-slug>/`), and which **private** folder, not visible to the customer or public, should the internal files go to? Norwegian or English? In Review, do you also want a comments file to send back?"
+> 7. **Output:** where should the shareable files go (I suggest `docs/policies/<product-slug>/`), and is that folder published as a site or in a public repository? Which **private** folder, not visible to the customer or public, should the internal files go to? Norwegian or English? In Review, do you also want a comments file to send back?"
 
-Don't re-ask what the request answers. For Review, 4 and 5 can wait until a document depends on them. Ask up to three short follow-ups where answers conflict or 1 or 6 is missing. Record the rest as `unknown`.
+Don't re-ask what the request answers. For Review, 4 and 5 can wait until a document depends on them. Ask up to three short follow-ups where answers conflict, 1 or 6 is missing, or the shareable folder's visibility is unknown. Record the rest as `unknown`.
 
 ---
 
 ## S1 — Gather Product Facts (read-only)
 
-Search with the **Grounding signals** in the Document Catalog. In Identify, use them all, lightly: one confirmed example per signal is enough to trigger a document. In Draft and Review, go deeper, and only for what the documents cover. Draft needs **every** instance of what it lists (data, vendors, cookies), not one example. A pattern hit is a lead, so open the file before recording a fact. Skip generated and vendored paths, and don't review code quality.
+Search with the **Grounding signals** in the Document Catalog. In Identify, use them all, lightly: one confirmed example per signal is enough to trigger a document. In Draft and Review, start with the same light pass, which is enough for S2. Go deeper at D1 or R2, only for what the documents cover. A pattern can't promise to find everything. A pattern hit is a lead, so open the file before recording a fact. Skip generated and vendored paths, and don't review code quality.
 
 | Id | Fact | Label | Source | Checked (date, version or commit if known) |
 |---|---|---|---|---|
@@ -98,13 +98,13 @@ Search with the **Grounding signals** in the Document Catalog. In Identify, use 
 - Code shows what can happen, not what operations do. Support hours, backups, restores, incident handling, and who has access usually need a person. Ask the engineer in groups of up to five.
 - Record the kind of data, never its values. If secrets or personal data are where they shouldn't be, say where and don't copy them.
 - **Reusing facts:** open the cited source again for every earlier fact that supports a trigger, a commitment, or a Blocker or Major, or that an absence rests on. Ask whether Reported ones still hold. Update **Checked**. A fact not rechecked in this run is listed as *not rechecked* and can't support a **Matches** verdict or a drafted statement.
-- With no codebase, work from documents and answers, and say plainly that nothing was checked against the product.
+- With no codebase, work from documents and answers, and say plainly that nothing was checked against the product, in chat and in every file written.
 
 ---
 
 ## S2 — Recommend Related Skills
 
-Check the facts against **every** row of Related Skills and recommend each one that applies, with its evidence, what it adds, and when. This runs in every mode. Personal data always means `gdpr-controls-reviewer`, and AI always means `eu-ai-act-controls-reviewer`, unless a current report was supplied.
+Check the facts against **every** row of Related Skills and recommend each one that applies, with its evidence, what it adds, and when. This runs in every mode. Personal data always means `gdpr-controls-reviewer`, and AI always means `eu-ai-act-controls-reviewer`, unless a current report was supplied: one made at the same commit, or since when the code it relies on hasn't changed. If that can't be told, recommend it and say why.
 
 Draft and Review: if one applies **before** drafting or reviewing a document in hand, and what it needs is available, show the recommendations now and wait for the engineer to choose run first, later, or no. Show the others without waiting. Identify: show them at I2. If a report is supplied, use it as Related Skills says.
 
@@ -188,12 +188,12 @@ Draft one document at a time, in the order they're needed. Related documents sha
 
 1. Check **Not drafted here** in the Drafting Guide. If a case applies, do what it says instead.
 2. Record the parties, audience, language, template, who will complete and approve the text, and, for an agreement our company is a party to, our commercial owner. If nobody qualified will approve it, say so first, and draft only if the engineer accepts that it can't be published or signed as it is.
-3. Collect every **Supply** item for the document in the catalog, and list what is missing.
+3. Collect every **Supply** item for the document in the catalog with a deep search. For each list (data, vendors, cookies, components), say how it was found, and ask the engineer to confirm it's complete. List what is missing.
 4. Ask for the missing facts and decisions, in groups of up to five, naming who can answer. Anything still open becomes a placeholder.
 
 ### D2 — Checkpoint: Outline and STOP
 
-Show the outline: each section, its kind (fact, commitment, legal position), the fact ids or owner behind it, why it's considered for this product, and the placeholders expected. Say which sections are left to the lawyers, and which facts conflict or would read badly because the product falls short.
+If Identify wasn't run, show the I1 result for the document first. Then the outline: each section, its kind (fact, commitment, legal position), the fact ids or owner behind it, why it's considered for this product, and the placeholders expected. Say which sections are left to the lawyers, and which facts conflict or would read badly because the product falls short.
 
 > **Is this the right outline?**
 > - Confirm — I'll draft it
@@ -204,20 +204,21 @@ Do NOT draft until the user responds.
 
 ### D3 — Draft and Self-check
 
-Write under the Drafting Guide, with a note under every heading from **Section Notes**. Then check the draft as if it had been submitted:
+Write under the Drafting Guide, with notes from **Section Notes**. Then check the draft as if it had been submitted:
 
 1. Every statement traces to a checked fact, an agreed commitment, or a given detail. Turn the rest into placeholders. Every heading has its note, and no note states law, suggests wording, or takes a position.
 2. Run the **Promise check**, the **Service level checks** (SLA, support), the **Consistency check** against the other drafts and documents, and the **Integration check**.
 3. Compare with **Check** and **Often wrong** in the catalog, and look for product behaviour not mentioned.
-4. Search the draft for code names, paths, security weaknesses, our commercial position, personal data other than the contact details given, and template leftovers. Remove them, and raise any weakness privately, as R4 describes.
+4. Search the draft for code names, paths, security weaknesses, our commercial position, personal data other than the contact details given, and template leftovers. Remove them.
+5. List every **gap**: where the product or team falls short of something the document states, would be expected to state, or left as `[DECIDE]`. Give each the name of who tells the customer, and how, as R4 describes. A security weakness is told privately, and the draft keeps a visible `[DECIDE]` at that place without the detail.
 
 This is a self-check by the drafter, so say it isn't an independent review.
 
 ### D4 — Checkpoint: Show and STOP
 
-Show the **full text**, the placeholders by owner, the product work, and the status:
+Show the **full text**, the placeholders by owner, the gaps and who tells the customer, the product work, and the status:
 
-- **Not ready to send** — any of these is open: a `[CONFIRM]`, a statement the product contradicts, a gap that would mislead the reader, or, where our company is a party, our commercial owner's release. Our own owners may still see it, to answer
+- **Not ready to send** — any of these is open: a `[CONFIRM]`, a statement the product contradicts, a gap that would mislead the reader, a gap with no named person to tell the customer, or, where our company is a party, our commercial owner's release. Our own owners may still see it, to answer
 - **Ready for the lawyers** — none of those is open. `[DECIDE]`, `[LAWYER]`, and `[FILL]` may remain, each with an owner
 
 There is no "ready to publish" or "ready to sign". Only the lawyers and the parties decide that.
@@ -236,22 +237,29 @@ Update `product-facts.md`, then write the draft and its notes, under the rules i
 ```markdown
 # <Document title> — <product>
 
-> **DRAFT v<n>, <date>. Not for publication or signature.** Prepared by the delivery team with `policy-and-agreement-advisor` from how the product works. Not legal advice. <Approver> must complete and approve it. The quoted notes explain why each section is there. Remove them, the open points, and this box before publication. <If so: the need for this document isn't confirmed.>
+> **DRAFT v<n>, <date>. Not for publication or signature.** Prepared by the delivery team with `policy-and-agreement-advisor` from how the product works. Not legal advice. <Approver> must complete and approve it. The quoted notes explain why each section is there. Remove them, the source marks, the last two sections, and this box before publication. <If so: the need for this document isn't confirmed.> <If so: there was no codebase, so nothing here was checked against the product.>
 
 <sections, each with its note and numbered placeholders>
+
+## How This Draft Was Prepared (remove before publication)
+- **Read in the product:** <which statements, by section, and the date>
+- **Reported by people:** <which statements, by section, by role, and the date>
+- **Not checked:** <statements and areas, and each recommended check not done, e.g. "no separate personal-data review was done">
 
 ## Open Points (remove before publication)
 | Id | Section | Question or missing detail | Product facts that help | Owner |
 |---|---|---|---|---|
 ```
 
-The internal notes start with `_INTERNAL: do not share._` and hold: status, source map (section, statement, fact ids or who decided and when), self-check results, product work with owners, sections left out and why, statements *not covered* by a recommended skill, and assumptions.
+The internal notes start with `_INTERNAL: do not share._` and hold: status, source map (section, statement, fact ids or who decided and when), self-check results, **gaps** (gap, who tells the customer, how, told on), product work with owners, original text of any template statement replaced, release (who, role, date), sections left out and why, statements *not covered by* a recommended skill, and assumptions.
 
 Then draft the next document, or go to [Handoff](#handoff).
 
 ### Updating a draft
 
-Read the latest draft, its notes, and the answers received. Recheck the facts (S1, **Reusing facts**), apply each answer with its source, role, and date, and write the next version through D4 and D5. Once the lawyers have taken over the text, stop drafting and use Review on their version.
+Read the latest draft, its notes, and the answers received. Recheck the facts (S1, **Reusing facts**), apply each answer with its source, role, and date, and write the next version through D3 to D5. Once the lawyers have taken over the text, stop drafting and use Review on their version.
+
+Our commercial owner's release of a draft agreement is such an answer. Record who released it, their role, and the date, check the status again at D4, and write the released version to the shareable folder. A later change to a commitment needs a new release.
 
 ---
 
@@ -368,7 +376,7 @@ State the paths, the statuses, verdicts, or counts, what is internal and what ma
 
 - repeat the related skills not yet run, with their decisions, and add any that a later finding now triggers;
 - after Identify: Draft the needed documents, or Review when the lawyers' own arrive;
-- after Draft: the engineer sends the draft to its owner, then updates it from the answers, and runs Review on the lawyers' version. A qualified person must approve every document before it is published or signed;
+- after Draft: say the status and who may see the draft now. *Not ready to send* stays inside the delivery team and our company. Anyone outside who can settle a point gets the question, not the draft. List every gap the customer hasn't been told about. Once *Ready for the lawyers*, the engineer sends it to its owner, then updates it from the answers, and runs Review on the lawyers' version. A qualified person must approve every document before it is published or signed;
 - after Review: run it again on the next version, and `release-readiness-checklist` before shipping.
 
 ---

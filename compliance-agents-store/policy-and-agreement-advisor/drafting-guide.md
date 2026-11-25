@@ -6,11 +6,13 @@ Used in Draft. A draft is a **working document for the lawyers to complete and a
 
 | Kind | Write | Condition |
 |---|---|---|
-| **Fact:** what the product or service does | Plain sentences | Observed or Reported, checked in this run, and confirmed by the engineer. Otherwise `[CONFIRM: … — who]` |
-| **Commitment:** what someone promises | The promise, with its number | It passes the **Promise check** (and **Service level checks**), **and** a named owner entitled to make it has agreed. Otherwise `[DECIDE: … — who]` |
-| **Legal position:** who bears which risk, rights, or duty | The heading, its note, then `[LAWYER: question]` and any product facts they need. **No clause wording**, except as rule 1 and *Wording supplied by the lawyers* say | Always |
-| **Section note:** why the section matters and why it's considered here | Under **every** heading, as **Section Notes** says. Removed before publication | Always |
-| **Party detail:** legal name, number, address, contact | As given | Given by the engineer or a document. Otherwise `[FILL: …]` |
+| **Fact:** what the product or service does | Plain sentences | Observed or Reported, checked in this run, and confirmed by the engineer. Otherwise `[CONFIRM-1: … — who]` |
+| **Commitment:** what someone promises | The promise, with its number | It passes the **Promise check** (and **Service level checks**), **and** a named owner entitled to make it has agreed. Otherwise `[DECIDE-1: … — who]` |
+| **Legal position:** who bears which risk, rights, or duty | The heading, its note, then `[LAWYER-1: question — who]` and any product facts they need. **No clause wording**, except as rule 1 and *Wording supplied by the lawyers* say | Always |
+| **Section note:** why the section matters and why it's considered here | Under every heading, as **Section Notes** says. Removed before publication | Always |
+| **Party detail:** legal name, number, address, contact | As given | Given by the engineer or a document. Otherwise `[FILL-1: … — who]` |
+
+**Fact or commitment?** A description of what exists today is a **fact** ("the main database is hosted in Norway"). A period, target, limit, notice time, or statement of what someone will, won't, or will only do is a **commitment**, even if the product does it today ("deleted after 30 days", "data stays in Norway"). **Agreed** means a person entitled to decide for the party that's bound has agreed. Record the name or role, the date, and who passed it on, in the draft notes. The engineer's own confirmation isn't agreement.
 
 **Always a legal position:** legal basis, controller or processor role, transfer mechanism, statutory rights and withdrawal, licence grant and ownership, warranty, liability, indemnity, credits and penalties, termination rights, governing law, disputes, precedence between documents, changes to terms, age of consent, and whether the document is required.
 
@@ -18,12 +20,12 @@ An existing commitment in a signed contract is used as written and cited. Wordin
 
 ## Rules
 
-1. Start from the template the customer or their lawyers supplied, if there is one, and keep its wording and order. Mark its legal clauses `[from the template]` without assessing them, and check its factual statements and promises like any other. Otherwise use the outline below. Never copy another company's document, or reproduce a standard form from memory.
+1. Start from the template the customer or their lawyers supplied, if there is one, and keep its wording and order. Mark its legal clauses `[from the template]` without assessing them, and check its factual statements and promises like any other. One that fails its check is replaced by a placeholder, and the original is quoted in the draft notes. Otherwise use the outline below. Never copy another company's document, or reproduce a standard form from memory.
 2. Write for the document's reader: short sentences, no code names, no internal detail. Use one term for one thing.
-3. Describe what the product does **today**. A planned function is `[DECIDE: confirm before launch — who]`, never present tense.
-4. If today's behaviour is awkward, describe it truthfully or use `[DECIDE]` and raise the gap. Never soften it, and never drop the topic so that the draft misleads. Security weaknesses stay out of the text, and so does any claim they contradict.
+3. Describe what the product does **today**. A planned function is `[DECIDE]`, to confirm before launch, never present tense.
+4. If today's behaviour is awkward, describe it truthfully or use `[DECIDE]` and raise the gap. Never soften it, and never drop the topic so that the draft misleads. Security weaknesses stay out of the text, and so does any claim they contradict. A visible `[DECIDE]` stays in its place, and the customer is told privately (D3, gaps).
 5. Prefer the specific. Replace "we may collect information" with the data listed. No absolutes ("always", "fully secure").
-6. Every placeholder has an id (`D1`, `L1`, `C1`, `P1`), an owner, and appears in the list at the end. Remove none without an answer, a source, and a date.
+6. Every placeholder is numbered within its type, as in `[CONFIRM-2: are crash reports kept 90 days? — operations lead]`, has an owner, and appears in the list at the end with today's behaviour and its value, if known and shareable ("backups are kept 35 days today"). Rules here name the type only. A replaced number isn't reused. Remove none without an answer, a source, and a date.
 7. Drafting in Norwegian: use the Norwegian titles in the catalog and ask for a native speaker's check. Draft one language first and translate only after the content is settled. Ask the lawyers which version prevails.
 
 ## Not drafted here

@@ -1,6 +1,6 @@
 # Section Notes
 
-Used in D2 and D3. **Every heading in a draft gets a note** saying why the section matters and why this product's document needs to consider it, so that whoever completes it knows what is at stake. The notes replace legal wording. They don't hint at any.
+Used in D2 and D3. **Every heading in a draft gets a note** saying why the section matters and why this product's document needs to consider it, so that whoever completes it knows what is at stake. The notes replace legal wording. They don't hint at any. The table is general background, not read by a lawyer. Nothing in it is legal advice.
 
 ## Format
 
@@ -19,8 +19,9 @@ Directly under the heading, before the text and placeholders:
 - **Why it matters** comes from the table, shortened or fitted to the document. It is practical, not legal: never "the law requires", "this limits your liability", or "this protects you".
 - **Why it's considered here** names something true of **this** product. A signed contract or store rule is named as such. If only a market trigger supports it, write a question: "Norway may have rules on this. For the lawyers to confirm." If nothing about the product supports it, but this kind of document normally covers it, write "Usual in this kind of document. No product-specific reason was found." Leave the section out only as the Drafting Guide says.
 - **To consider** lists open points and product facts, never a recommended position, number, or wording.
-- Keep the note to about three short sentences, in the draft's language. It is read by the customer and their lawyers, so rule 4 of the Drafting Guide and *Internal stays internal* apply.
-- Topics joined in an outline, such as "Ownership, warranty, liability, law, disputes", each get their **own heading and note**.
+- A heading that only states a detail (*Version*, *Contact*) needs one line. A sub-heading needs its own note only if its topic differs from its parent's. No notes in a shipped open-source notice file, or in the last two sections (*How This Draft Was Prepared*, *Open Points*).
+- Keep the note to about three short sentences, in the draft's language. It is read by the customer and their lawyers, so rule 4 of the Drafting Guide and *Internal stays internal* apply: no weaknesses, past failures, insurance, price, or negotiating position. Where our company falls short (not measured, not tested, not staffed), write the note without it and list it as a gap (D3).
+- Legal topics joined in an outline, such as "Ownership, warranty, liability, law, disputes", each get their **own heading and note**.
 - The notes are removed before publication, together with the open points. In a supplied template, put them under its headings without changing its text.
 
 ## Notes by topic
@@ -39,7 +40,7 @@ Use the closest row. A topic not listed: write the note from the product facts, 
 | Cookies and consent | What runs before a choice is made is visible to anyone who looks | Run-time tags, categories, how a choice is changed |
 | AI and automated decisions | People may act on output they don't know is automated or may be wrong | Where AI is used, known limits, data sent, human review, marking |
 | Children | Children may be users even when they aren't the audience | Intended age, checks that exist, guardian involvement |
-| Security | Specific claims are tested after an incident | Measures that are real and may be stated, shared duties |
+| Security | Readers rely on specific claims, and check them after an incident | Measures that are real and may be stated, shared duties |
 | Rights and complaints | A right without a working route can't be used | Product functions, who answers, how long it takes today |
 | Accounts and eligibility | Decides who may use the product and who answers for an account | Sign-up rules, shared accounts, administrators |
 | Plans, payment, renewal, refunds, withdrawal | Unexpected charges are a common cause of disputes | Price display, renewal, cancellation path, refunds, consumer or business buyers |
@@ -60,12 +61,12 @@ Use the closest row. A topic not listed: write the note from the product facts, 
 | Open source | Components carry their own terms | Complete list for the shipped build, unknown or copyleft licences |
 | Store or platform terms | A listing can be rejected or removed | Current store documentation, required links |
 | API access and keys | A leaked key or sudden limit affects other products | Key handling, limits, who is told |
-| Ownership | Without it, rights to the product, content, and feedback are unclear | Customer content, custom work, third-party parts |
-| Warranty | Sets what a user may expect if the product doesn't work as described | Claims made in marketing and documents, known limits |
-| Liability and indemnity | Decides who carries the cost when something goes wrong | Realistic failures, effect on users, insurance, other contracts |
-| Credits, caps, fees | Puts a price on missing a commitment | Which commitments they attach to, how a miss is shown |
+| Ownership | People ask who may use the product, their content, and their feedback, and for what | Whose content the product holds, custom work, third-party parts |
+| Warranty | People ask what they can expect if the product doesn't work as described | Public claims about the product, published limits |
+| Liability and indemnity | People ask what happens if use of the product causes a loss | What users rely on the product for, who else provides part of it |
+| Credits, caps, fees | People ask what happens when a commitment is missed, and how they'd know | Which commitments are measured, and where a miss shows |
 | Suspension, termination, exit | The end is when access and data are most often disputed | Notice, export formats, time, deletion afterwards |
-| Governing law and disputes | Parties may be in different countries | Where the parties and users are, consumers or businesses |
-| Notice, assistance, audit | One party can meet its own duties only if the other answers in time | Detection, owner, upstream notice times, evidence available |
+| Governing law and disputes | People ask where a disagreement is handled, and parties may be in different countries | Where the parties and users are, consumers or businesses |
+| Notice, assistance, audit | Each party depends on the other to answer in time | Detection, owner, upstream notice times, evidence available |
 | Vulnerability reporting | Researchers need a safe route, or they publish or stay silent | Monitored channel, scope, real response times |
 | Pilot limits, feedback, confidentiality | Testers may rely on something unfinished | Known limits, real or test data, end date |

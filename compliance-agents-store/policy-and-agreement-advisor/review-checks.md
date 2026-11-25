@@ -52,7 +52,8 @@ For an SLA or support agreement:
 - nothing contradicts a signed contract or SSA supplied (quote both, and leave the precedence question to the lawyers);
 - links, cross-references, annexes, and section numbers resolve, and contact routes exist (ask, don't send anything);
 - consumer and business terms aren't mixed, and language versions say the same;
-- no leftovers: another company or product name, unfilled brackets, closed services, outdated consent wording.
+- no leftovers: another company or product name, unfilled brackets, closed services, outdated consent wording;
+- no drafting leftovers: the draft banner, quoted section notes, `[CONFIRM]`-style placeholders, `[from the template]` or `[from the lawyers]` marks, *How This Draft Was Prepared*, and *Open Points*. At least **Major** if the document is about to be published or signed.
 
 ## Integration check
 
