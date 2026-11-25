@@ -4,50 +4,54 @@ Used in S1 (what to look for), I1 (what is needed), and R2 (what to check). "Pre
 
 ## Grounding signals
 
-Case-insensitive leads for S1. Search only what the documents in scope need, and open each file before recording a fact.
+Case-insensitive leads for S1. In Identify use all of them. In Review use the ones the submitted documents touch. Distinctive terms aren't anchored with `\b`, because that would miss names such as `OPENAI_API_KEY` or `user_email`. Expect false positives: open the file before recording a fact, and ignore UI or tree uses of `children`.
+
+The lists are examples. A vendor or data field with another name won't match, so also read dependency manifests, environment templates, and outbound URLs, and look through the data models.
 
 ```text
-Personal data:      \b(e?mail|first_?name|last_?name|phone|address|birth|dob|national_?id|passport|ip_?address|device_?id|latitude|avatar)\b
+Personal data:      e-?mail|first[_-]?name|last[_-]?name|full[_-]?name|surname|phone|address|street|birth|\bdob\b|_dob\b|\bdob_|national[_-]?id|f[oø]dselsnummer|personnummer|\bssn\b|_ssn\b|\bssn_|passport|ip[_-]?addr|device[_-]?id|latitude|avatar
                     glob: **/migrations/** **/models/** **/entities/** **/schema*.{prisma,sql,graphql}
-Sensitive/children: \b(health|medical|biometric|face_?id|ethnic|religio|criminal|minor|child|age_?gate|parental)\b
-Trackers, cookies:  \b(gtag|googletagmanager|analytics|segment|mixpanel|amplitude|posthog|hotjar|clarity|fbq|set-?cookie|document\.cookie|localStorage|sessionStorage|consent)\b
-Vendors:            \b(stripe|paypal|adyen|sendgrid|mailchimp|twilio|auth0|okta|entra|firebase|sentry|datadog|intercom|zendesk|hubspot|salesforce)\b
-AI providers:       \b(openai|anthropic|azure[_-]?openai|bedrock|vertex|gemini|mistral|cohere|langchain|embedding)\b
-Retention, rights:  \b(ttl|retention|purge|soft_?delete|anonymi[sz]e|export_?data|delete_?account|unsubscribe|opt_?out)\b
-Accounts, licence:  \b(licen[cs]e_?key|activation|subscription|trial|seat|plan|tier|entitlement|suspend|terminate)\b
-Payments:           \b(invoice|refund|auto_?renew|cancel_?subscription|proration|in_?app_?purchase)\b
-User content:       \b(upload|comment|post|review|moderation|report_?abuse|flag_?content|takedown)\b
-Service levels:     \b(health_?check|uptime|slo|sla|alert|pagerduty|opsgenie|status_?page|backup|restore|failover|maintenance)\b
-Hosting, regions:   glob: **/*.tf **/*.bicep **/*.{yaml,yml} **/Dockerfile   (region|location)\s*[:=]
+Sensitive/children: health|medical|patient|diagnos|biometric|face[_-]?id|ethnic|religio|criminal|\bminors?\b|is[_-]?minor|child|age[_-]?(gate|limit|verif)|parental|guardian
+Trackers, cookies:  gtag|googletagmanager|analytics|segment|mixpanel|amplitude|posthog|hotjar|clarity|\bfbq\b|set-?cookie|document\.cookie|localStorage|sessionStorage|consent
+Vendors:            stripe|paypal|adyen|vipps|sendgrid|mailchimp|twilio|auth0|okta|\bentra\b|entra[_-]?id|firebase|sentry|datadog|intercom|zendesk|hubspot|salesforce
+AI providers:       openai|anthropic|bedrock|vertex[_-]?ai|gemini|mistral|cohere\b|cohere[_-]|langchain|embedding
+Retention, rights:  \bttl|[_-]ttl|ttl[_-]?(sec|min|hour|day)|retention|purge|soft[_-]?delete|anonymi[sz]|export[_-]?(my[_-]?)?data|data[_-]?export|delete[_-]?(my[_-]?)?account|account[_-]?deletion|unsubscribe|opt[_-]?out
+Accounts, licence:  licen[cs]e[_-]?key|activation|subscription|trial|\b(seat|plan|tier)\b|(seats|plans|tiers)\b|(seat|plan|tier)_?(id|type|name|code|count|limit)|entitlement|suspend|terminat
+Payments:           invoice|refund|auto[_-]?renew|cancel[_-]?subscription|proration|in[_-]?app[_-]?purchase
+User content:       upload|(comments|posts)\b|(comment|post)_?(id|text|body)|moderat|report[_-]?(abuse|content)|flag[_-]?content|takedown
+Service levels:     health[_-]?check|healthz|uptime|\bsl[ao]\b|_sl[ao]\b|\bsl[ao]_|alert[_-]?(rule|manager|ing)|pagerduty|opsgenie|status[_-]?page|backup|restore|failover|maintenance
+Hosting, regions:   (region|location)\s*[:=]   glob: **/*.tf **/*.bicep **/*.{yaml,yml} **/Dockerfile
 Permissions:        glob: **/AndroidManifest.xml **/Info.plist **/PrivacyInfo.xcprivacy **/manifest.json
 Open source:        glob: **/package.json **/*.csproj **/pom.xml **/build.gradle* **/requirements*.txt **/pyproject.toml **/go.mod **/Cargo.toml **/LICENSE* **/NOTICE*
-Existing documents: glob: **/*privacy* **/*terms* **/*eula* **/*licen* **/*sla* **/*support* **/SECURITY.md **/security.txt **/*cookie* **/*accessib*
-Acceptance flow:    \b(accept_?terms|terms_?version|agreed_?at|consent_?version|i agree)\b
+Existing documents: glob: **/*privacy* **/*terms* **/*eula* **/*licen* **/*sla* **/*support* **/SECURITY.md **/security.txt **/*cookie* **/*accessib* **/*personvern* **/*vilkar*
+Acceptance flow:    accept(ed)?[_-]?terms|terms[_-]?(version|accepted)|agreed[_-]?at|consent[_-]?version|i agree
 ```
 
 ## When each document is needed
 
+The **Triggered when** column is the strong trigger. Where a row says *otherwise Recommended*, the weaker case never makes it Needed by itself.
+
 | Document (Norwegian title) | Triggered when | Between | Usually prepared by | Needed by |
 |---|---|---|---|---|
 | **Privacy policy** (personvernerklæring) | Any personal data, including logs and analytics | Publisher → users | Customer's lawyers | Before real personal data is collected |
-| **Cookie policy** (informasjonskapsler) | Cookies, SDKs, or device storage | Publisher → users | Customer's lawyers, cookie list from engineering | Before public access |
-| **Terms of service** (brukervilkår) | A hosted product, site, or account | Publisher → users or customer organisations | Customer's lawyers | Before sign-up opens |
+| **Cookie policy** (informasjonskapsler) | Cookies, SDKs, or device storage beyond the strictly necessary. Strictly necessary only: *otherwise Recommended*, usually inside the privacy policy | Publisher → users | Customer's lawyers, cookie list from engineering | Before public access |
+| **Terms of service** (brukervilkår) | People or organisations outside the publisher sign up for or use a hosted product. Internal tool: *otherwise Recommended*, ask whether the employer's own policies cover it | Publisher → users or customer organisations | Customer's lawyers | Before sign-up opens |
 | **EULA** (lisensavtale) | Software installed on the user's device or premises, or a store app needing its own licence | Licensor → end user | Customer's lawyers | Before distribution |
-| **Acceptable use policy** (retningslinjer for bruk) | Users can upload, message, share, automate, or use shared resources | Publisher → users | Customer's lawyers | Before sign-up opens |
+| **Acceptable use policy** (retningslinjer for bruk) | People outside the publisher's organisation can publish, message, upload for others, or run automated traffic. *Otherwise Recommended* if misuse is a named risk | Publisher → users | Customer's lawyers | Before sign-up opens |
 | **SLA** (tjenestenivåavtale) | Someone commits to availability, performance, or recovery | Provider → customer. Confirm which: us → customer, or customer → their customers | Provider's lawyers and commercial owner, technical annex from engineering | Before signing |
 | **Support agreement** (support-/vedlikeholdsavtale) | Someone commits to support hours, response, or maintenance | As for the SLA | As for the SLA | Before signing |
 | **DPA** (databehandleravtale) and **sub-processor list** | One party processes personal data for another | Controller ↔ processor | Lawyers of both, list from engineering | Before the processor gets access |
 | **Open-source notices** | Third-party components are shipped | Publisher → recipients | Engineering, lawyers for licence questions | Before distribution |
 | **AI notice / AI terms** | Users interact with AI, or get or are affected by AI output | Publisher → users | Customer's lawyers, AI facts from engineering | Before the feature is live |
-| **Accessibility statement** (tilgjengelighetserklæring) | Public-sector site or app. Consumer service sold into the EU: ask the lawyers | Publisher → public | Customer, with an assessment | At launch |
-| **Vulnerability disclosure policy** | Internet-facing or distributed software | Publisher → researchers | Customer's security owner | At launch |
+| **Accessibility statement** (tilgjengelighetserklæring) | Market trigger only: public-sector site or app, or a consumer service sold into the EU. *Lawyers to confirm* | Publisher → public | Customer, with an assessment | At launch |
+| **Vulnerability disclosure policy** | A contract or customer policy asks for one, or software is distributed to others. Internet-facing service alone: *otherwise Recommended* | Publisher → researchers | Customer's security owner | At launch |
 | **Subscription, refund, cancellation policy** | Paid plans, trials, auto-renewal, in-app purchases | Seller → buyer | Customer's lawyers and finance | Before the first sale |
-| **Retention and deletion policy; account-deletion page** | Accounts, regulated data, or store apps with accounts | Publisher → users | Customer's lawyers, facts from engineering | Before launch or store submission |
+| **Retention and deletion policy; account-deletion page** | A store app with accounts, or a contract or policy that refers to a separate document. *Otherwise Recommended*, usually inside the privacy policy | Publisher → users | Customer's lawyers, facts from engineering | Before launch or store submission |
 | **Content and notice policy** | User-generated content | Publisher → users and rights holders | Customer's lawyers | Before publishing opens |
 | **API terms** | Third parties call the API | Publisher → developers | Customer's lawyers | Before keys are issued |
 | **Beta or pilot terms** | Pre-release use by real users | Publisher → testers | Customer's lawyers | Before the pilot |
-| **Data export and exit terms** | Hosted service that customers can leave | Provider → customer | Provider's lawyers | Before signing |
-| **Sector agreement** (health, finance, public) | A sector rule or customer policy asks for one | As the rule says | Specialist lawyers | Before real data |
+| **Data export and exit terms** | A hosted service sold under contract to other organisations that hold their data in it. *Otherwise Recommended* | Provider → customer | Provider's lawyers | Before signing |
+| **Sector agreement** (health, finance, public) | A contract or customer policy asks for one. A sector rule alone: *lawyers to confirm* | As the rule says | Specialist lawyers | Before real data |
 
 A document not listed: review it with the general checks, agree its purpose and parties first, and mark it "not in catalog".
 

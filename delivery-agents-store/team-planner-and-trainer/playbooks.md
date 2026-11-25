@@ -52,7 +52,7 @@ Taken from each skill's own instructions. If a skill's opening questions differ,
 | `agentic-ai-reviewer` | An agentic-AI codebase | `agentic-ai-audit-report.md` | No code yet: later phase |
 | `eu-ai-act-controls-reviewer` | An AI codebase, and whether you are provider, deployer, or both | `eu-ai-act-fitness-report.md` | No code yet: later phase |
 | `gdpr-controls-reviewer` | A codebase that handles personal data, whether you are controller or processor, and whether it's live | `gdpr-fitness-report.md` | No code yet: later phase |
-| `policy-and-agreement-advisor` | A product description. To review: the submitted documents as PDF, Markdown, text, or HTML. Optional: codebase, infrastructure code, contracts, a `gdpr-controls-reviewer` report | `docs/policies/<product>/`: `document-requirements.md`, or `document-review-<date>.md` and optional comments to send; plus internal `product-facts.md` | No lawyers on the customer side: name the gap. It doesn't draft the documents |
+| `policy-and-agreement-advisor` | A product description, and a private folder for the internal files. To review: the submitted documents as PDF, Markdown, text, or HTML. Optional: codebase, infrastructure code, contracts, a `gdpr-controls-reviewer` report | `docs/policies/<product>/`: `document-requirements.md`, or `document-review-<date>.md` and optional comments to send. `product-facts.md` and the review are internal and go to a private folder | No lawyers on the customer side: name the gap. It doesn't draft the documents |
 | `iac-generator` | A codebase to scan and answers on cloud and environments | Infrastructure code and `infra-docs/` | No code yet: later phase |
 | `user-intent-extractor` | A codebase with real features or services to match. Optional: login, LLM provider | A design document, and code once approved | |
 | `auth-implementer` | Codebase, stack, auth and authorization model. Optional: compliance framework | A design document, and code once approved | |
@@ -105,7 +105,7 @@ A default when the product owner has no preference. Use the named skill if it's 
 | UX designer | The UX store | Design direction |
 | DevOps engineer | The DevOps store, `deployment-architect` | Infrastructure changes |
 | Data engineer | The data-platform store. `data-platform-validator` goes to someone other than the developer | Schema and pipeline changes |
-| Security, privacy, or compliance owner | The rest of the compliance store, `owasp-security-scanner` | Risk acceptance. The customer's lawyers approve policies and agreements |
+| Security, privacy, or compliance owner | The rest of the compliance store, `owasp-security-scanner` | Risk acceptance. Policies are approved by the customer's lawyers. Agreements our company is party to (SLA, support, DPA) also need our commercial and legal owners |
 | Pre-sales or engagement lead | `estimate`, `proposal`, `casestudy-drafter`, `ai-readiness-assessment` | Commercial commitments, what goes to a client |
 
 ## Working Agreements

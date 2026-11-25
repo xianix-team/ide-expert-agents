@@ -4,7 +4,7 @@ Used in R2. Record the result with its evidence. Don't propose other numbers or 
 
 ## Promise check
 
-For every commitment ask: **who decided it, what delivers it, and how would we know it was broken?** A missing answer is a **Can't keep** finding. The options are change the product, change the process (with an owner), or ask the lawyers to change the text.
+For every commitment ask: **who decided it, what delivers it, and how would we know it was broken?** Then apply the same rule as R3: if the answer **isn't known yet**, the commitment is *unverified*, with who can answer. It is a **Can't keep** finding only when someone entitled to say, or the product itself, confirms the capability, process, owner, or measurement **doesn't exist**. The options are change the product, change the process (with an owner), or ask the lawyers to change the text.
 
 | Promise | Check |
 |---|---|
@@ -26,7 +26,7 @@ For every commitment ask: **who decided it, what delivers it, and how would we k
 
 For an SLA or support agreement:
 
-1. **Make the number concrete.** Downtime allowed in a 30-day month (720 hours), around the clock:
+1. **Make the number concrete.** Downtime allowed in a 30-day month (720 hours), around the clock. For a business-hours SLA or another period, recalculate from the agreed hours: allowed = agreed minutes × (100% − target):
 
    | Target | 99% | 99.5% | 99.9% | 99.95% | 99.99% |
    |---|---|---|---|---|---|
@@ -34,7 +34,7 @@ For an SLA or support agreement:
 
 2. **Definition:** formula, period, measuring point, what counts as "down", partial outages, exclusions, and planned maintenance. Anything undefined is **Unclear to deliver**.
 3. **Dependencies:** services that must all work multiply: 99.95% × 99.99% × 99.9% ≈ 99.84%. This is a rough ceiling that assumes independent failures and no redundancy. Ask the engineer for the vendor SLA of the tier in use. A vendor SLA is the point where it owes credit, not a prediction.
-4. **History:** measured results, or "no baseline". No measurement is a **Can't keep** finding.
+4. **History:** measured results. "We don't measure it" is a **Can't keep** finding. "Don't know" is *unverified*.
 5. **Recovery:** RTO and RPO against the backup schedule and the last **tested** restore.
 6. **People:** hours × time zones × severity against the real rota, holidays, and leave. A 15-minute response out of hours needs someone on call.
 7. **Chain:** a commitment that relies on another party (vendor, customer IT, first-line support) can't be faster than theirs.

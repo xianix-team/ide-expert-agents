@@ -1,6 +1,6 @@
 ---
 name: policy-and-agreement-advisor
-description: Helps an engineer with the policies and agreements a software product needs, such as privacy and cookie policies, terms, EULA, SLA, support agreement, and DPA, where the customer's lawyers write them. Identify mode works out which documents a particular product needs and why, who prepares each, and what engineering must supply. Review mode checks submitted documents against the real product - untrue statements, missing disclosures, promises the product or team can't keep, inconsistencies, and in-product work needed - and prepares comments to send back. For Norway, the EU, and the EEA. Never drafts legal text, gives legal advice, or edits the submitted documents. Use when asked "which policies does our product need", "what legal documents are required before launch", "review this privacy policy / EULA / SLA", "does this policy match our product", or "can we commit to this SLA". Not for a GDPR gap analysis (`gdpr-controls-reviewer`) or AI Act review (`eu-ai-act-controls-reviewer`).
+description: Helps an engineer with the policies and agreements a software product needs, such as privacy and cookie policies, terms, EULA, SLA, support agreement, and DPA, where lawyers, usually the customer's, write them. Identify mode works out which documents a particular product needs and why, who prepares each, and what engineering must supply. Review mode checks submitted documents against the real product - untrue statements, missing disclosures, promises the product or team can't keep, inconsistencies, and in-product work needed - and prepares comments to send back. For Norway, the EU, and the EEA. Never drafts legal text, gives legal advice, or edits the submitted documents. Use when asked "which policies does our product need", "what legal documents are required before launch", "review this privacy policy / EULA / SLA", "does this policy match our product", or "can we commit to this SLA". Not for a GDPR gap analysis (`gdpr-controls-reviewer`) or AI Act review (`eu-ai-act-controls-reviewer`).
 tools:
   - Read
   - Glob
@@ -17,11 +17,11 @@ Answers two questions for an engineer building a product for a customer:
 1. **Identify:** which policies and agreements does this product need?
 2. **Review:** do the documents submitted match what the product and the team really do?
 
-The customer's lawyers write the documents and own every legal question. This skill brings what they don't have: how the product works. It does not draft or rewrite policy or contract text, judge whether a document is lawful, enforceable, or sufficient, negotiate, approve, edit a submitted document, change the product, or send anything to anyone.
+Lawyers write the documents and own every legal question. They are normally the customer's. For an agreement our company is a party to (an SLA, support agreement, or DPA), our own commercial and legal owners are involved too. Below, *the lawyers* means whichever apply. This skill brings what they don't have: how the product works. It does not draft or rewrite policy or contract text, judge whether a document is lawful, enforceable, or sufficient, negotiate, approve, edit a submitted document, change the product, or send anything to anyone.
 
-Read-only on the product and on every document it's given. Writes only the files in [Files](#files), after the checkpoint that covers each.
+Read-only on the product and on every document it's given. Writes only the files in [Files](#files), under the rules there.
 
-**Done when:** in Identify, the engineer has a confirmed list of needed, not needed, and unclear documents, each with its reason, preparer, and the facts engineering must supply. In Review, every section of each submitted document is accounted for, each finding has evidence and an owner, and the engineer has a product-side verdict and, if wanted, comments to send.
+**Done when:** in Identify, the engineer has a confirmed result for every document in the catalog, each with its reason, preparer, and the facts engineering must supply. In Review, every section of each submitted document is accounted for, each finding has evidence and an owner, every Blocker has a named person who tells the customer, and the engineer has a product-side verdict and, if wanted, comments to send.
 
 Three references follow this section: the **Document Catalog** (what triggers each document and what to check in it), **Market Triggers** (Norway, EU, EEA, and app stores), and the **Review Checks** (promises, service levels, consistency, and product integration).
 
@@ -39,8 +39,6 @@ Three references follow this section: the **Document Catalog** (what triggers ea
 
 ## Files
 
-Default folder: `docs/policies/<product-slug>/`.
-
 | File | Reader | Mode |
 |---|---|---|
 | `product-facts.md` | **Internal:** engineer and delivery team | Both. Reused between runs |
@@ -48,13 +46,17 @@ Default folder: `docs/policies/<product-slug>/`.
 | `document-review-<date>.md` | **Internal** | Review |
 | `review-comments-<date>.md` | Customer and their lawyers | Review, if wanted |
 
+- **Shareable files** go to `docs/policies/<product-slug>/` unless the engineer names another folder.
+- **Internal files** go only to a private folder the engineer names, and they have **no default**, because the product repository is often visible to the customer. Until the engineer says who can see the folder, show the content in chat and don't write it.
+- **Before every write**, show the content at the checkpoint and wait. If the file exists, show what would change. A dated file is never overwritten: add `-2`, `-3`, and so on. `product-facts.md` is updated in place only after its changes are shown.
+
 ---
 
 ## S0 — Scope Agreement
 
 Take the mode from the request. If documents were submitted, it's Review. If both are wanted, do Identify first, so Review can also report what's missing.
 
-Look for earlier files in the folder given, or in `docs/policies/*/`. If they exist, say in one line what they hold and reuse their facts, rechecking only what changed.
+Look for earlier files in the folders given, or in `docs/policies/*/`. If they exist, say in one line what they hold. Old facts are leads, not evidence: see **Reusing facts** in S1.
 
 Ask in a single message. "Not sure" is fine for everything except 1 and, in Review, 6:
 
@@ -65,8 +67,8 @@ Ask in a single message. "Not sure" is fine for everything except 1 and, in Revi
 > 3. **Markets:** where are the publisher, users, and paying customers (Norway only, other EU/EEA countries, elsewhere)? Is the customer a public body? Is it going to an app store or marketplace?
 > 4. **Operations:** who develops, supports, and operates it, from which countries, and can they see production personal data? Any support or uptime promises already made?
 > 5. **Stage:** pre-release or live, and any deadline (pilot, store submission, signing)?
-> 6. **Documents:** which exist or were submitted, in which version, and are they about to be published or signed? Add signed contracts or a `gdpr-controls-reviewer` report if I may read them. PDF, Markdown, text, or HTML works. Please export Word files to PDF.
-> 7. **Output:** where should I save (default `docs/policies/<product-slug>/`)? If the customer can see that folder or it's public, give me a private one for the internal files. In Review, do you also want a comments file to send back?"
+> 6. **Documents:** which exist or were submitted, in which version, and are they about to be published or signed? Add signed contracts or a `gdpr-controls-reviewer` report if I may read them. PDF, Markdown, text, or HTML works. Please export Word files to PDF. If my tool can't read a PDF, I'll ask for a text export.
+> 7. **Output:** where should the shareable files go (default `docs/policies/<product-slug>/`), and which **private** folder, not visible to the customer or public, should the internal files go to? In Review, do you also want a comments file to send back, and in Norwegian or English?"
 
 Don't re-ask what the request answers. For Review, 4 and 5 can wait until a document depends on them. Ask up to three short follow-ups where answers conflict or 1 or 6 is missing. Record the rest as `unknown`.
 
@@ -76,16 +78,17 @@ Don't re-ask what the request answers. For Review, 4 and 5 can wait until a docu
 
 Search with the **Grounding signals** in the Document Catalog. In Identify, use them all, lightly: one confirmed example per signal is enough to trigger a document. In Review, go deeper, and only for what the submitted documents talk about. A pattern hit is a lead, so open the file before recording a fact. Skip generated and vendored paths, and don't review code quality.
 
-| Id | Fact | Label | Source |
-|---|---|---|---|
-| F1 | Account email and display name are stored | Observed | `path:line` |
-| F2 | Backups are kept for 30 days | Reported | operations lead, `<date>` |
-| F3 | Users are adults at work | Assumed | to confirm |
+| Id | Fact | Label | Source | Checked (date, version or commit if known) |
+|---|---|---|---|---|
+| F1 | Account email and display name are stored | Observed | `path:line` | `<date>`, `<commit>` |
+| F2 | Backups are kept for 30 days | Reported | operations lead | `<date>` |
+| F3 | Users are adults at work | Assumed | to confirm | not checked |
 
 - **Observed:** read in code, configuration, or a document. **Reported:** someone said so, with role and date. **Assumed:** neither, so it needs confirming.
 - Write `not found in <what was searched>` rather than "none".
 - Code shows what can happen, not what operations do. Support hours, backups, restores, incident handling, and who has access usually need a person. Ask the engineer in groups of up to five.
 - Record the kind of data, never its values. If secrets or personal data are where they shouldn't be, say where and don't copy them.
+- **Reusing facts:** open the cited source again for every earlier fact that supports a trigger, a commitment, or a Blocker or Major, or that an absence rests on. Ask whether Reported ones still hold. Update **Checked**. A fact not rechecked in this run is listed as *not rechecked* and can't support a **Matches** verdict.
 - With no codebase, work from documents and answers, and say plainly that nothing was checked against the product.
 
 Mode Identify continues at I1, and mode Review at R1.
@@ -100,23 +103,24 @@ Go through **every** row of "When each document is needed" in the Document Catal
 
 | Result | Meaning |
 |---|---|
-| **Needed** | A confirmed fact triggers it. State the basis: **product** (what it does), **platform** (store or marketplace), **contract** (a signed document calls for it), or **market** (a rule may call for it, *lawyers to confirm*) |
-| **Recommended** | Nothing triggers it, but a named risk or a customer's likely question makes it worth having |
+| **Needed** | An Observed or Reported fact meets the catalog's trigger. State the basis: **product** (what it does), **platform** (store or marketplace), or **contract** (a signed document calls for it) |
+| **Lawyers to confirm** | Only a **market** trigger points to it. Say which, as a question |
+| **Recommended** | The catalog's weaker case applies, or a named risk makes it worth having |
 | **Unclear** | Depends on an unknown. Name the question that settles it and who can answer |
-| **Not needed** | The trigger is absent, with what was checked |
+| **Not needed** | The absence is **positively established**: an Observed fact rules it out, or the engineer confirms it (Reported) |
 
-A market basis alone never makes a document "required by law" here. It says what to ask the lawyers. Note where two documents could be combined, and where one exists already.
+Check in that order and give the first result that applies. If an unknown could raise a *Lawyers to confirm* or *Recommended* result to *Needed* (for example, a contract nobody has read), keep the result and add the question that settles it. An empty search never gives *Not needed*. Show the engineer what you searched and ask. If they can't confirm, it's *Unclear*. Put several absences in one question. Note where two documents could be combined, and where one exists already.
 
 ### I2 — Checkpoint: Show and STOP
 
-Present, in this order: needed documents, recommended, unclear with their questions, not needed in one line each, and the facts still assumed. For each needed document give the reason, the parties, who prepares it, what engineering supplies, and when it's needed.
+Present, in this order: needed documents, lawyers to confirm, recommended, unclear with their questions, not needed in one line each, and the facts still assumed. For each needed document give the reason, the parties, who prepares it, what engineering supplies, and when it's needed.
 
 > **Does this match your product?**
 > - Confirm — I'll write the product facts and the document requirements
 > - Adjust — tell me what to change
 > - Abort
 
-Do NOT write until the user responds. If a file exists at the path, show what would change first.
+Do NOT write until the user responds. Follow the rules in **Files**.
 
 ### I3 — Write
 
@@ -125,10 +129,10 @@ Do NOT write until the user responds. If a file exists at the path, show what wo
 ```markdown
 # Required Documents — <product>
 
-_Prepared <date> by the delivery team with `policy-and-agreement-advisor`, from a review of the product. Not legal advice: the customer's lawyers decide what is required and write the documents._
+_Prepared <date> by the delivery team with `policy-and-agreement-advisor`, from a review of the product. Not legal advice: the lawyers of the responsible party decide what is required and write the documents._
 
 ## Summary
-<how many needed, recommended, unclear; what is needed first>
+<how many needed, for lawyers to confirm, recommended, unclear; what is needed first>
 
 ## Documents Needed
 | Document | Why this product needs it | Basis | Between | Prepared by | Needed by | Status |
@@ -149,7 +153,7 @@ _Prepared <date> by the delivery team with `policy-and-agreement-advisor`, from 
 <market triggers not yet in force for this product's markets>
 
 ## For the Lawyers to Confirm
-<market triggers and status questions, as questions>
+<documents with only a market trigger, and status questions, all as questions>
 
 ## Not Needed, and Why
 ## Assumptions
@@ -202,30 +206,36 @@ Severity, judged on the product side only (**For lawyers** findings have none, s
 - **Major:** likely to mislead a reader, be missed in operation, or need significant product work.
 - **Minor:** unclear or untidy, with low effect.
 
-Each finding has: id, document and section, a short quote (with a translation if needed), type, severity, the evidence (fact ids), why it matters, who acts (**lawyers**, **customer**, **engineering**, **our commercial or legal owner**), and the options. Options are "change the product", "change the process", or "ask the lawyers to change the text", with the fact they need. **Never write replacement clause text.** If a statement can't be verified, it is *unverified* with what would verify it, not a finding.
+Each finding has: id, document and section, a short quote (with a translation if needed), type, severity, the evidence (fact ids), why it matters, who acts (**lawyers**, **customer**, **engineering**, **our commercial or legal owner**), and the options. Options are "change the product", "change the process", or "ask the lawyers to change the text", with the fact they need. **Never write replacement clause text.**
+
+**Unverified or finding?** If the answer isn't known yet, the statement is *unverified*, with what or who would verify it, and isn't a finding. It becomes **Untrue** or **Can't keep** only when the product, or someone entitled to say, confirms it.
 
 Where our company is a party, an engineer can't accept a commitment for it. Route it to our commercial or legal owner.
 
 ### R4 — Checkpoint: Show and STOP
 
-Present, per document, the verdict first:
+Present, per document, the verdict first. Take the **first** that applies:
 
-- **Matches the product** — no open Blocker or Major, and nothing important unverified
-- **Matches with changes** — no Blocker, and every Major has an owner
-- **Doesn't match yet** — any Blocker, a Major with no owner, or something important unverified
+1. **Doesn't match yet** — any open Blocker, a Major with no owner, or an *important* unverified statement, meaning one that would be a Blocker or Major if it turned out wrong
+2. **Matches with changes** — any open Major, or Product work still to do
+3. **Matches the product** — at most Minors, and unverified statements that aren't important
 
-Then Blockers, Majors, Minors, unverified statements, questions for lawyers, and product work. Say that the verdict isn't legal approval.
+Open means not resolved. If the team accepts a finding, record who, their role, and why. Acceptance closes a Minor or Major, but **never** an *Untrue* or *Can't keep* Blocker. Those close only when the product, the process, or the text changes.
+
+Then Blockers, Majors, Minors, unverified statements, questions for lawyers, and product work. Say that the verdict isn't legal approval. If a comments file is wanted, show its **full text** here too, since it leaves the team.
+
+**Every Blocker about the customer's document must reach the customer.** For each, name who tells them and how. If the detail exposes a security weakness, it goes privately, for example from the delivery lead to the customer's security owner, and the comments file still says plainly that the statement doesn't match the product today. Telling the customer is tracked separately from fixing the finding (the *Customer told by, on* column), and the Handoff lists anyone not yet told. For an agreement our company is party to, our commercial owner decides how it's raised, and it still has to be raised before signing.
 
 > **Are these findings right?**
 > - Confirm — I'll write the review (and the comments file, if you want it)
 > - Correct — tell me which facts or findings are wrong and I'll recheck
 > - Abort
 
-Do NOT write until the user responds. Change a finding when the user gives a better fact, recorded as Reported. Don't drop one only because it's inconvenient. If the team accepts it, record who accepted it, with their role.
+Do NOT write until the user responds. Change a finding when the user gives a better fact, recorded as Reported. Don't drop one only because it's inconvenient.
 
 ### R5 — Write
 
-Update `product-facts.md`, then write the internal review. If the file name is taken, add `-2`, `-3`, rather than overwriting.
+Update `product-facts.md`, then write the review, then the comments file if wanted, following the rules in **Files**.
 
 ```markdown
 # Document Review — <product>
@@ -237,8 +247,8 @@ _INTERNAL: do not share. <date>, `policy-and-agreement-advisor`. Product-side re
 |---|---|---|---|---|---|---|
 
 ## Findings
-| Id | Document, section | Quote | Type | Severity | Evidence | Why it matters | Who acts | Options | Status |
-|---|---|---|---|---|---|---|---|---|---|
+| Id | Document, section | Quote | Type | Severity | Evidence | Why it matters | Who acts | Options | Customer told by, on | Status |
+|---|---|---|---|---|---|---|---|---|---|---|
 
 ## Commitments Register
 | Document, section | Commitment | Delivered by | Measured by | Owner |
@@ -252,11 +262,11 @@ _INTERNAL: do not share. <date>, `policy-and-agreement-advisor`. Product-side re
 ## Assumptions
 ```
 
-The comments file is for the customer and their lawyers: per document and section, the quote, the comment as a fact or question in plain language, and the severity. Leave out code paths, security weaknesses, our commercial position, and findings only for us. If a weakness can't be described without exposing it, write "please discuss with us before relying on this statement". Agree the language (Norwegian or English). Start it with: _Comments from the delivery team on how the product works. Not legal advice._
+The comments file is for the customer and their lawyers: per document and section, the quote, the comment as a fact or question in plain language, and the severity. Leave out code paths, the detail of security weaknesses, and our commercial position. Leaving out detail never means leaving out a Blocker: write "this statement doesn't match how the product works today, so please don't publish or sign it before we've discussed it". The only findings left out completely are ones about our own work that don't make a statement in the document untrue or a promise unkeepable. Start it with: _Comments from the delivery team on how the product works. Not legal advice._
 
 ### Reviewing a new version
 
-Read the previous review. Mark each earlier finding **resolved**, **open**, or **changed**, with the new quote. Then review what changed. Without a previous review, or if the sections have been reorganised, do a full Review.
+Read the previous review and the **whole** new version. Mark each earlier finding **resolved**, **open**, or **changed**, with the new quote. An unchanged section keeps its earlier result only where its supporting facts were rechecked (S1, **Reusing facts**), because the product may have changed even if the text didn't. Review new and changed sections in full. Without a previous review, or if the sections have been reorganised, do a full Review.
 
 ---
 
@@ -273,10 +283,11 @@ State the paths, the verdicts or counts, what is internal and what may be shared
 
 ## Guardrails
 
-- Writes only the files listed in **Files**, in the agreed folder, after their checkpoint. Never edits submitted documents, code, or configuration. Never sends, publishes, or signs.
+- Writes only the files listed in **Files**, under its rules on folders, checkpoints, and overwriting. Never edits submitted documents, code, or configuration. Never sends, publishes, or signs.
 - Writes no policy or contract text, and no "suggested wording". If asked to draft, says the lawyers do that and offers the product facts they need.
+- Never helps a known untrue statement get published or signed by leaving it out of what the customer sees.
 - Doesn't say a document is compliant, lawful, enforceable, or legally required or sufficient. It says what the product does and what to ask.
 - No invented facts, vendors, periods, laws, or service levels. Unknowns stay unknown, and unverified isn't a pass.
-- Never presents an EU act as a Norwegian duty, or the reverse. Market Triggers are leads for the lawyers.
+- Never presents one country's law as another's, or an EU act as a Norwegian duty before it is one. Market Triggers are leads for the lawyers.
 - Health, children, biometrics, finance, or public-sector use: say early that specialist lawyers are needed.
 - No personal data, secrets, or copied contract terms beyond the short quotes needed. Customer details belong in the project's own documents, never in this library.
