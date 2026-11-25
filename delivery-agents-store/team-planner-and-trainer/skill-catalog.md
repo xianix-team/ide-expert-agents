@@ -1,0 +1,110 @@
+# Skill Catalog
+
+Every skill and runbook in the library, by store. Each line gives the skill's autonomy (A) and human-judgement (HJ) ratings, then when to use it. Autonomy is how much the skill does on its own. Human judgement is how much expert review its output needs before anyone acts on it.
+
+## Skills by store
+
+<!-- generated:skills:start — edit catalog.json or runbooks/*.md, then run `npm run docs` in mcp-server/ -->
+### idf
+
+- `design-session` (A: Low, HJ: High) — Before the first unit is proposed in any mob elaboration — establishes API contracts, data models, and architectural patterns as binding constraints
+- `bolt-risk-assessment` (A: High, HJ: Medium) — After elaboration sign-off, before the first unit in a bolt executes — assesses blast radius, sequencing risks, rollback, and feature flag requirements
+- `uat` (A: Low, HJ: High) — When all units under an intent are marked Done — generates a plain-language demo script and records the stakeholder validation outcome
+- `root-cause-analysis` (A: High, HJ: Medium) — When an incident is resolved or recurring failures suggest a systemic issue — surfaces root causes across solution design, technology, and process
+- `progress-digest` (A: High, HJ: Low) — At any point during delivery — generates a plain-language stakeholder update with no engineering jargon
+- `new-engineer-induction` (A: Low, HJ: Low) — When an engineer joins the project for the first time — explains the framework using the project's actual files and produces a personalised quick-reference card
+- `process-health` (A: High, HJ: Medium) — After every third or fourth bolt, or when the team suspects process drift — produces a quantitative health report across four metrics
+- `dependency-audit` (A: High, HJ: Medium) — Monthly or when the scheduled audit date in the master rule file is reached — audits dependencies and converts findings into remediation backlog items
+- `codebase-archaeology` (A: High, HJ: Medium) — Before onboarding AI-DLC into a mature project, before joining a new team, or as a standalone technical due diligence exercise — maps architecture, extracts coding patterns, audits for defects and technical debt, and classifies all identified work
+
+### devops
+
+- `iac-generator` (A: Medium, HJ: High) — When you want to provision cloud infrastructure, generate Terraform / Bicep / Pulumi / CDK, design a target cloud architecture, or stand up environments for an existing repo — IPA scans the codebase, asks targeted questions, and generates IaC with a step-by-step approval flow
+
+### architect
+
+- `product-backend-architect` (A: Medium, HJ: High) — When you need to design, or evolve, the backend for a product or major feature — confirms architecture drivers (scenarios, quality-attribute targets, compliance requirements, constraints) first, then produces a backend architecture spec covering architecture style, decomposition, data architecture and migration safety, API contracts, integration/events, reliability, scalability, security and privacy, compliance, responsible usage of AI, and observability, with each decision traced to a driver. Greenfield or existing backend; read-only on code, writes only the spec
+- `product-frontend-architect` (A: Medium, HJ: High) — When you need to design, or evolve, the frontend for a product or major feature — confirms architecture drivers (user scenarios, performance and accessibility targets, browser/device support, compliance requirements, constraints) first, then produces a frontend architecture spec covering rendering approach, business-logic placement (client vs BFF vs backend), module structure, state and API integration, security, privacy, compliance, performance budgets, UX-supporting architecture (accessibility, i18n, resilience states), responsible usage of AI, observability, and build/delivery, with each decision traced to a driver. Leaves UX design to the UX agents; greenfield or existing frontend; read-only on code, writes only the spec
+- `deployment-architect` (A: High, HJ: Medium) — When you want to inspect a live cloud deployment on Azure, AWS, or GCP — authenticates via the local CLI, discovers all resources, produces an as-deployed architecture document, and runs a structured fitness assessment across performance, security, reliability, robustness, observability, and cost efficiency. Read-only, never modifies resources
+- `agentic-ai-reviewer` (A: High, HJ: Medium) — When you want to review an agentic-AI codebase (RAG, tool-calling, conversational/support, multi-agent, ML-backed, or autopilot) against the Agentic AI Review Checklists — ISO/IEC 42001-aligned reliability, security, and best-practice controls. Reads code, config, prompts, IaC, CI, and tests, assesses every control verifiable from the repo, flags the rest for human review, and writes a single Markdown fitness report. Read-only, never modifies code
+- `product-engineering-essentials` (A: High, HJ: Low) — When you want a shared, evidence-based picture of a repository's product-engineering foundations — assesses ten pillars (vision, domain, requirements, UX, architecture, engineering practices, DevOps, QE, security/compliance, delivery feedback loop) and produces a checklist report of what's in place, partial, or missing. Never blocks work, standalone on any repository
+- `release-readiness-checklist` (A: Low, HJ: High) — When you want to walk through a UAT or Production release checklist item by item before a release ships — records a self-attested status and blocker/N/A note per item and produces a report. A self-attestation record, not an evidence audit; never blocks the release decision. Standalone on any repository
+
+### coding
+
+- `error-handling-audit` (A: Medium, HJ: Medium) — When you want to inspect code for incorrect, missing, or poorly structured error handling — covers empty catch blocks, swallowed exceptions, missing async guards, lost error context, and unsafe cleanup patterns. Finds issues and applies fixes after approval
+- `runtime-debugger` (A: Medium, HJ: Medium) — When you have a real bug in hand — debug logs, crash logs/stack traces, requirement docs, and/or your own observation of expected vs. actual behavior — and want help going from symptom to root cause to an approved fix
+- `observability-implementer` (A: Medium, HJ: Medium) — When you want to add or improve observability (logging, metrics, tracing) on a platform of your choice — OpenTelemetry, Datadog, New Relic, Grafana/Prometheus/Loki/Tempo, AWS CloudWatch/X-Ray, Elastic/ELK, Splunk, Honeycomb, Sentry, etc. Designs and implements structured logging with dynamic log-level switches, cardinality-safe metrics, sampled tracing, and explicit cost guardrails (volume budgets, alerts, kill-switches) to prevent excessive log/metric/trace volume and runaway cost
+- `auth-implementer` (A: Medium, HJ: High) — When you want to implement authentication (login/logout, SSO/OIDC/SAML, MFA, passwordless) and authorization (RBAC/ABAC, centralized access checks, IDOR prevention) with security as a first-class constraint. Designs and implements credential hashing, session/token strategy, account-abuse protection, and threat mitigations mapped to live-fetched OWASP ASVS / NIST 800-63B guidance and any named compliance framework (GDPR, HIPAA, PCI-DSS, SOC2) — while being explicit about what code alone can and can't guarantee, and recommending a follow-up scan (e.g. `owasp-security-scanner`) and audit for regulated contexts
+- `code-cleanup` (A: Medium, HJ: Medium) — When you want to clean up an existing codebase—especially AI/vibe-coded ones—by removing waste, simplifying bulky code, and fixing evidenced quality, performance, or security issues while preserving required behavior. Default CLEAN finds one worthwhile cleanup at a time, proposes it, waits for approval, fixes, verifies, then continues; Analyze and Review only when explicitly requested. For a dedicated error-handling audit use `error-handling-audit`; for a full OWASP scan use `owasp-security-scanner`
+- `token-efficiency-coach` (A: Medium, HJ: Medium) — When AI-assisted development in a project burns too many tokens — usage limits hit early, high cost, or context filling up in long sessions — in Claude Code, Cursor, or GitHub Copilot. Audits always-on rules and instructions, MCP tool load, skill descriptions, unignored generated files, and noisy commands, ranks fixes by estimated savings, then writes a short always-on token-efficiency rule for each tool and applies the config fixes you approve. Also rewrites a pasted prompt to be cheaper
+
+### qa
+
+- `owasp-security-scanner` (A: High, HJ: Medium) — When you want a static code scan against OWASP Top 10 (2025) and/or OWASP Top 25 Parameters, with the latest standards fetched live from owasp.org. You choose which scan(s) to run; the agent reports severity-ranked findings with evidence — it does not edit code
+- `black-box-testing` (A: High, HJ: Low) — When you want to design and execute functional tests against a live web app without source access — equivalence partitioning, boundary value analysis, decision tables, state transition, pairwise, and negative testing — then run them through Playwright
+- `white-box-testing` (A: High, HJ: Low) — When you can run the code and want coverage-driven structural tests — statement/branch/condition/MC-DC, basis path, data flow, loop, and mutation testing — to improve coverage or assess an existing suite
+- `ui-ux-accessibility-testing` (A: High, HJ: Medium) — When you want a design-parity audit against a design spec and/or a WCAG 2.2 AA accessibility audit (axe-core + Lighthouse + manual passes), producing a self-contained HTML report
+- `test-cases-from-code` (A: High, HJ: Medium) — When you must QA a feature branch with no spec, no reachable author, and no existing tests — reverse-engineer behavior as the oracle, check tenant/authorization isolation, reconcile stale test cases, and hand off a risk register (never confabulates intent)
+- `smoke-sanity-testing` (A: High, HJ: Low) — When you want a fast go/no-go gate on a build — wide-and-shallow smoke across critical paths, or narrow-and-deep sanity on a changed area after a fix
+- `exploratory-testing` (A: High, HJ: Medium) — When you want structured, charter-guided exploratory testing to find bugs scripted tests miss — tours, heuristics (SFDPOT/HICCUPPS), plus light accessibility and usability lenses
+- `explore-and-build` (A: Low, HJ: Low) — When you want to interactively explore a web app (agent-driven, Playwright Codegen, or Chrome DevTools Recorder) and turn the session into a test instruction file and a runnable Playwright spec
+- `bug-report` (A: High, HJ: Low) — When you have annotated screenshots and want them turned into structured, copy-paste-ready bug reports — with an optional direct file into Jira via the Atlassian MCP
+- `test-case-generator` (A: High, HJ: Low) — When you want structured functional, edge, negative, and regression test cases generated from a feature spec, a git diff/PR, or both. Cases are grounded in the actual codebase and priority-ranked — it does not write or scaffold test code
+
+### ux
+
+- `persona-builder` (A: High, HJ: Medium) — Starting discovery on a client/product — generates evidence-grounded personas (or clearly-labelled proto-personas) from whatever research inputs exist
+- `journey-mapper` (A: High, HJ: Medium) — After a persona exists — maps their end-to-end journey through one scenario (actions, thoughts, emotions, pain points, opportunities)
+- `service-blueprint` (A: High, HJ: Medium) — After a journey map exists — extends it below the line of visibility (frontstage/backstage/support processes/failure points)
+- `competitive-analysis` (A: High, HJ: Medium) — Building the competitive picture for a pitch — competitor matrix, positioning, and differentiation opportunities from public research
+- `prototype-builder` (A: High, HJ: Low) — Need something to click through — scaffolds a clickable Vite+React+Tailwind demo with mock data in an isolated folder
+- `design-consistency-audit` (A: High, HJ: Medium) — Auditing a built UI against the project's own design tokens for theme/token/contrast/a11y/spacing/UX consistency, with a gated fix mode
+- `design-concept-lab` (A: Medium, HJ: High) — Need a few design directions for a screen or flow — generates distinct rendered mockup variants against the project's own tokens and stops for the engineer to pick one
+- `ixd-review` (A: High, HJ: Medium) — Heuristic interaction-design review of a product, flow, or prototype from screenshots, files, or a live URL — evidence-backed, prioritised recommendations
+- `design-rationale` (A: High, HJ: Medium) — After design-consistency-audit findings are resolved — turns them into a factual, customer-facing Design Decision Record
+
+### pre-sales
+
+- `explore-agentic-ai-usecases` (A: High, HJ: High) — Mining an existing product codebase for agentic AI opportunities — minimal targeted questions, then a business-reader report (problem, value, solution, spec, man-day estimate) sorted with high-value / low-effort use cases first
+- `ai-readiness-assessment` (A: Medium, HJ: High) — Before any AI project — a short, low-cost assessment that researches the client's industry, competitors, candidate AI opportunities, and regulatory exposure on the web, then scores data quality and security, domain-knowledge capture, and organisational capability (including AI governance and evaluation) against them, producing a business-reader report with domain model, scorecard, prioritised readiness roadmap, and recommended next steps
+- `discovery-interview` (A: Low, HJ: High) — Starting a new engagement or opportunity — a Socratic, one-question-at-a-time interview that resolves ambiguity before any scoping happens
+- `elaborate` (A: High, HJ: Medium) — Turning a loose request into a clear, codebase-grounded requirement and scope spec before any implementation plan is written
+- `estimate` (A: High, HJ: High) — Building a 3-point (PERT) effort estimate from a requirement spec, with a client-ready estimation sheet
+- `proposal` (A: High, HJ: High) — Assembling a client-facing proposal from whatever discovery, spec, and estimate material exists
+- `casestudy-drafter` (A: Medium, HJ: Medium) — Turning a delivered codebase (single repo or multi-repo estate) into industry-class customer case studies — analyses the domain and user journeys, proposes candidate angles (flagging which need customer metrics), narrows them down with minimal structured questions, and writes one Markdown case study per selection (synopsis, problem domain, solution with optional high-level technical approach, impact), named or anonymized per run, with a post-write revise step
+
+### data-platform
+
+- `repo-analyst` (A: High, HJ: Low) — Onboarding into an unfamiliar data platform, or starting any analysis pipeline — builds a structured knowledge graph of schema, pipelines, and lineage, cross-referenced against documentation
+- `due-diligence` (A: High, HJ: Medium) — Periodic health audit, or onboarding into an unfamiliar data platform — audits security & access, data quality & integrity, GDPR & compliance, pipeline reliability, and architecture consistency, producing evidence-backed findings with severity. Read-only
+- `architecture-advisor` (A: High, HJ: High) — After a due-diligence audit surfaces architectural or structural problems — proposes formal Architecture Decision Records (ADRs) applying data-engineering best practices. Read-only, never implements
+- `opportunity-scout` (A: High, HJ: Medium) — Scoping what to build next on a data platform, after due-diligence/architecture work — compares business/BI requirements against the current schema to identify missing views, fact tables, and dimensions, and turns gaps into a prioritised backlog. Read-only
+- `data-platform-developer` (A: Medium, HJ: Medium) — Implementing one approved opportunity or ADR end to end — creates or changes schema and pipeline code with human checkpoints and mandatory idempotency
+- `data-platform-validator` (A: High, HJ: Medium) — Independently reviewing a completed data-platform change against its approved opportunity or ADR before merge, with evidence-backed approve/reject findings
+- `regression-monitor` (A: High, HJ: Low) — Periodically comparing current platform state against an established baseline to report schema drift, undocumented pipeline changes, and data-quality degradation
+- `context-keeper` (A: High, HJ: Low) — Closing out a completed data-platform work cycle with a plain-language summary of what changed, current state, open follow-ups, and recommended next steps
+
+### compliance
+
+- `eu-ai-act-controls-reviewer` (A: High, HJ: High) — When you want to review an agentic-AI code repository for fitness against the **EU AI Act**, with every requirement cross-mapped to **ISO/IEC 42001** Annex A controls and the **NIST AI RMF** functions. Determines the likely EU AI Act risk tier, assesses each obligation verifiable from code/config/prompts/IaC/CI/tests, flags organisational and legal items for a human, and writes a single Markdown fitness report. Read-only. A control-fitness and gap-analysis aid — not legal advice or a formal conformity assessment
+- `gdpr-controls-reviewer` (A: High, HJ: High) — When you want to review a repository that processes personal data — with extra depth for AI/LLM and agentic systems — for fitness against the **EU GDPR**, with every requirement cross-mapped to **ISO/IEC 27701** and the **NIST Privacy Framework**. Builds a personal-data inventory (incl. special-category data and flows to LLM providers and other third parties), determines controller/processor role, assesses data-subject rights, retention, minimisation, privacy by default, security, transfers and automated decision-making from code/config/prompts/IaC/CI/tests, tags each gap with fine tier and exposure, flags organisational and legal items for a human, and writes a single Markdown fitness report. Use before go-live or a DPIA, or when adding an LLM provider or new personal-data flow. Read-only. A control-fitness and gap-analysis aid — not legal advice or a DPIA
+
+### delivery
+
+- `delivery-commitment-health-report` (A: High, HJ: Medium) — At a sprint/bolt boundary, or whenever a delivery manager or customer wants a data-backed delivery snapshot — produces a DORA-inspired report (deployment/merge frequency, decomposed lead time, change failure rate, MTTR, commitment reliability) adapted for AI-led development, where AI-generation time and human-review time are tracked separately. Read-only
+- `planning-helper-agent` (A: High, HJ: Medium) — When an engineer wants to parallelize work — either DECOMPOSE one task/epic into the smallest independently-executable subtasks, or SCHEDULE a set of existing tasks — by mapping inter-dependencies and grouping the work into parallel execution waves. Produces a dependency graph, wave-by-wave plan, and the critical path. Read-only for source
+
+### feature
+
+- `user-intent-extractor` (A: Medium, HJ: High) — When building an in-app AI assistant, a "tell us what you need" entry point, smart onboarding, or any surface that should map a user's intent (via chat or generated action buttons) to the product's real features/services and offer the best fit — like a salesperson — instead of routing them through a fixed UI flow. Discovers the offering catalog and designs/implements three grounding layers: the offering registry, a per-user preference memory, and a curated cross-user plot library (the recurring intent-journeys the product sees over time), feeding an embedding-similarity matching pipeline with preference/plot-aware ranking
+
+### analyst
+
+- `requirement-analyzer` (A: High, HJ: High) — When a requirement or stated intent needs to be critically evaluated before it's scoped or built. Applies the Paul-Elder Critical Thinking Framework — deconstructs the requirement into its Elements of Reasoning, stress-tests each against the nine Essential Intellectual Standards, then uses the seven Intellectual Traits as a reflective pass to catch blind spots — surfacing hidden assumptions, missing viewpoints, logical gaps, and clarifying questions for the requirement's owner
+
+### runbooks (MCP only)
+
+- `data-platform-cycle` — Coordinates one data-platform work cycle across the data-platform agents — repo-analyst → due-diligence → architecture-advisor → opportunity-scout → data-platform-developer ⇄ data-platform-validator → regression-monitor → context-keeper. Checks which reports exist and which ADR/OPP items are built and validated, then tells you which agent to run next and exactly what to answer its opening questions with. Read-only. Use when starting or resuming data-platform work, or when asked "what's next on the data platform" or "run the data-platform cycle".
+- `presales-pipeline` — Coordinates the pre-sales agents from first conversation to client proposal — discovery-interview → elaborate → estimate → proposal, with an optional agentic-AI entry point (explore-agentic-ai-usecases) and post-delivery case studies (casestudy-drafter). Checks which stage outputs already exist, then tells you which agent to run next and exactly what to answer its opening questions with. Read-only. Use when starting or resuming a pre-sales engagement, or when asked "what's next in pre-sales" or "run the pre-sales pipeline".
+<!-- generated:skills:end -->

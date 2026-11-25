@@ -13,6 +13,8 @@
 //   Runbooks
 //   - missing `name`, `title`, `description`, or `agents` frontmatter
 //   - an `agents` entry that is not a real agent, or that the body never mentions
+//   Trainer playbooks (delivery-agents-store/team-planner-and-trainer/playbooks.md)
+//   - a `backticked-name` that is not a real agent or runbook (renamed or removed)
 //   Both
 //   - the same `name` used twice across agents and runbooks (only one would be served)
 //   catalog.json
@@ -138,6 +140,17 @@ for (const rel of runbookFiles) {
   for (const agent of data.agents) {
     if (!allAgents.has(agent)) err(rel, `agents lists '${agent}', which is not an agent in any store`);
     else if (!content.includes(`\`${agent}\``)) err(rel, `agents lists '${agent}', but the body never mentions \`${agent}\``);
+  }
+}
+
+// ── Trainer playbooks ───────────────────────────────────────────────────────
+// Hand-written, but they name skills all over the library, so a rename or removal
+// would leave the trainer recommending something that does not exist.
+const playbooksRel = "delivery-agents-store/team-planner-and-trainer/playbooks.md";
+if (fs.existsSync(path.join(root, playbooksRel))) {
+  const text = fs.readFileSync(path.join(root, playbooksRel), "utf-8");
+  for (const name of new Set([...text.matchAll(/`([^`\n]+)`/g)].map(m => m[1]))) {
+    if (!seenNames.has(name)) err(playbooksRel, `names \`${name}\`, which is not an agent or runbook`);
   }
 }
 

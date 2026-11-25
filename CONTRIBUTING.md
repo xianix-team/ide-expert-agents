@@ -72,9 +72,10 @@ Whenever an agent is **added**, **removed**, or **updated** (name, prompt name, 
 
 1. **`catalog.json`** — add/remove/edit the agent's entry under its store (`title`, `whenToUse`), and update the store's `description` if the change alters what the store covers.
 2. **Runbooks** — if a runbook in [`runbooks/`](runbooks/README.md) lists the agent under `agents`, update it.
-3. **Regenerate** — run `npm run docs` in `mcp-server/` and commit the README changes it makes.
+3. **Regenerate** — run `npm run docs` in `mcp-server/` and commit the changes it makes: the READMEs, and the skill list served with `team-planner-and-trainer`.
+4. **Trainer playbooks** — if you renamed or removed an agent, update [playbooks.md](delivery-agents-store/team-planner-and-trainer/playbooks.md). For a new agent, add it to the playbook it fits.
 
-`npm run check` (and CI) fails if `catalog.json` disagrees with the agents on disk, a runbook names an agent that doesn't exist, or the READMEs weren't regenerated. If you're unsure whether a change is significant enough to warrant a description update, update it anyway.
+`npm run check` (and CI) fails if `catalog.json` disagrees with the agents on disk, a runbook or trainer playbook names an agent that doesn't exist, or the docs weren't regenerated. If you're unsure whether a change is significant enough to warrant a description update, update it anyway.
 
 ## Customer IP notice
 
