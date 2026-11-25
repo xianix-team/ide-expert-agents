@@ -279,7 +279,7 @@
       }
     },
     "delivery-agents-store": {
-      "description": "Delivery management — DORA-inspired commitment health reporting, and parallel-execution planning (dependency mapping + wave scheduling), adapted for AI-led development",
+      "description": "Delivery management — DORA-inspired commitment health reporting, parallel-execution planning (dependency mapping + wave scheduling), and team skill planning and training (which skills in this library to use for a delivery intent, and how), adapted for AI-led development",
       "agents": {
         "delivery-commitment-health-report": {
           "title": "Delivery Commitment Health Report",
@@ -288,6 +288,10 @@
         "planning-helper-agent": {
           "title": "Planning Helper",
           "whenToUse": "When an engineer wants to parallelize work — either DECOMPOSE one task/epic into the smallest independently-executable subtasks, or SCHEDULE a set of existing tasks — by mapping inter-dependencies and grouping the work into parallel execution waves. Produces a dependency graph, wave-by-wave plan, and the critical path. Read-only for source"
+        },
+        "team-planner-and-trainer": {
+          "title": "Team Planner and Trainer",
+          "whenToUse": "When a product owner or delivery lead wants a team to get better results from this skill library — describe the delivery intent (what to build, for whom, by when, with which team) and get a small starter set plus a phased skill plan with owners, inputs, prerequisites, human decisions, gaps, and success measures, and a role-by-role training guide with exercises on the team's own backlog. Coach mode then walks an engineer through their part on a real task. Never runs other skills. For breaking work into parallel tasks use `planning-helper-agent`; for AI-DLC framework induction use `new-engineer-induction`"
         }
       }
     },

@@ -72,6 +72,9 @@ for you. Review the content:
 - [ ] **Runbooks** in `runbooks/` that coordinate this agent still describe its
       inputs, outputs, and default paths correctly (a renamed or re-scoped agent
       can leave a runbook's stage table stale even when CI passes)
+- [ ] **Trainer playbooks** — `delivery-agents-store/team-planner-and-trainer/playbooks.md`
+      still states correctly what the agent needs and produces (a new agent has a row;
+      CI only warns if it's missing)
 - [ ] The generated tables were **not hand-edited** — the diff in README tables
       should match what `npm run docs` produces
 - [ ] If a change is borderline (e.g. a wording tweak to `description` that doesn't

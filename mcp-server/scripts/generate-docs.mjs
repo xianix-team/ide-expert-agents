@@ -1,18 +1,21 @@
-// Regenerates the agent and runbook tables in the READMEs from catalog.json and
-// runbook frontmatter. Only the text between generated-region markers is
-// rewritten; everything else in each README stays hand-written.
+// Regenerates the agent and runbook tables in the READMEs, and the skill list that
+// team-planner-and-trainer is served with, from catalog.json and runbook frontmatter.
+// Only the text between generated-region markers is rewritten; everything else in
+// each file stays hand-written.
 //
 //   <store>/README.md   "## Available Agents" table   <- catalog.json stores.<store>.agents
 //                                                        + autonomy / human-judgement from agent frontmatter
 //   README.md           "## Agent stores" table       <- catalog.json stores (count from disk)
 //   README.md           "## Runbooks" table           <- runbooks/*.md frontmatter
 //   runbooks/README.md  "## Available runbooks" table <- runbooks/*.md frontmatter
+//   delivery-agents-store/team-planner-and-trainer/skill-catalog.md
+//                       "## Skills by store" list     <- all of the above
 //
 // A README without markers yet gets them wrapped around the first table under
 // its heading on the first run.
 //
 // Usage: node scripts/generate-docs.mjs           write the READMEs (`npm run docs`)
-//        node scripts/generate-docs.mjs --check   exit 1 if any README is out of date
+//        node scripts/generate-docs.mjs --check   exit 1 if any file is out of date
 // Set MCP_AGENTS_ROOT to run against a different checkout.
 
 import fs from "fs";
@@ -122,6 +125,31 @@ if (fs.existsSync(path.join(root, "runbooks/README.md"))) {
   update("runbooks/README.md", md => render(md, "runbooks", "## Available runbooks", runbookTable(""), "runbooks/README.md"));
 }
 
+// The trainer recommends other skills, so it is served with the full list. It is
+// part of a prompt, so one compact line per skill instead of a table. The trainer
+// leaves itself out.
+const TRAINER = "team-planner-and-trainer";
+const trainerCatalog = `delivery-agents-store/${TRAINER}/skill-catalog.md`;
+if (fs.existsSync(path.join(root, path.dirname(trainerCatalog)))) {
+  if (!fs.existsSync(path.join(root, trainerCatalog))) {
+    console.error(`error    ${trainerCatalog} is missing; ${TRAINER} has no skill list without it`);
+    process.exit(1);
+  }
+  const oneLine = text => String(text ?? "").replace(/\s*\n\s*/g, " ").trim();
+  const sections = Object.entries(catalog.stores).map(([store, { agents }]) => {
+    const lines = Object.entries(agents)
+      .filter(([name]) => name !== TRAINER)
+      .map(([name, a]) => {
+        const fm = agentFrontmatter(store, name);
+        return `- \`${name}\` (A: ${level(fm.autonomy)}, HJ: ${level(fm["human-judgement"])}) — ${oneLine(a.whenToUse)}`;
+      });
+    return `### ${store.replace(/-agents-store$/, "")}\n\n${lines.join("\n")}`;
+  });
+  const runbookLines = runbooks.map(r => `- \`${r.name}\` — ${oneLine(r.description)}`);
+  sections.push(`### runbooks (MCP only)\n\n${runbookLines.join("\n")}`);
+  update(trainerCatalog, md => render(md, "skills", "## Skills by store", sections.join("\n\n"), trainerCatalog));
+}
+
 const stale = [];
 for (const [rel, content] of outputs) {
   const current = fs.readFileSync(path.join(root, rel), "utf-8");
@@ -132,7 +160,7 @@ for (const [rel, content] of outputs) {
 
 if (check) {
   for (const rel of stale) console.error(`error    ${rel} is out of date — run \`npm run docs\` in mcp-server/`);
-  console.log(`\nDocs check: ${outputs.size} README(s) checked, ${stale.length} out of date.`);
+  console.log(`\nDocs check: ${outputs.size} file(s) checked, ${stale.length} out of date.`);
   process.exit(stale.length > 0 ? 1 : 0);
 }
-console.log(stale.length ? `Updated ${stale.join(", ")}` : "All READMEs already up to date.");
+console.log(stale.length ? `Updated ${stale.join(", ")}` : "All generated docs already up to date.");

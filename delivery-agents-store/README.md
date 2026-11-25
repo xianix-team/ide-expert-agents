@@ -1,6 +1,6 @@
 # Delivery Agents Store
 
-Agents for delivery management — measuring and reporting on how well a team is delivering, independent of whether they run Scrum sprints, Kanban flow, or AI-DLC bolts.
+Agents for delivery management — planning how a team works, training it to use this skill library, and measuring how well it is delivering, independent of whether they run Scrum sprints, Kanban flow, or AI-DLC bolts.
 
 All agents in this store are served via the repository's MCP server. See [mcp-server/README.md](../mcp-server/README.md) for setup instructions.
 
@@ -13,6 +13,7 @@ All agents in this store are served via the repository's MCP server. See [mcp-se
 |---|---|---|---|---|
 | **Delivery Commitment Health Report** | `delivery-commitment-health-report` | High | Medium | At a sprint/bolt boundary, or whenever a delivery manager or customer wants a data-backed delivery snapshot — produces a DORA-inspired report (deployment/merge frequency, decomposed lead time, change failure rate, MTTR, commitment reliability) adapted for AI-led development, where AI-generation time and human-review time are tracked separately. Read-only |
 | **Planning Helper** | `planning-helper-agent` | High | Medium | When an engineer wants to parallelize work — either DECOMPOSE one task/epic into the smallest independently-executable subtasks, or SCHEDULE a set of existing tasks — by mapping inter-dependencies and grouping the work into parallel execution waves. Produces a dependency graph, wave-by-wave plan, and the critical path. Read-only for source |
+| **Team Planner and Trainer** | `team-planner-and-trainer` | Medium | Medium | When a product owner or delivery lead wants a team to get better results from this skill library — describe the delivery intent (what to build, for whom, by when, with which team) and get a small starter set plus a phased skill plan with owners, inputs, prerequisites, human decisions, gaps, and success measures, and a role-by-role training guide with exercises on the team's own backlog. Coach mode then walks an engineer through their part on a real task. Never runs other skills. For breaking work into parallel tasks use `planning-helper-agent`; for AI-DLC framework induction use `new-engineer-induction` |
 <!-- generated:agents:end -->
 
 ---

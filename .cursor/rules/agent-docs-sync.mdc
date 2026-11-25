@@ -22,6 +22,7 @@ Whenever an agent is **added**, **removed**, or **updated** (name, prompt name, 
    - Add/remove/edit the agent's entry under its store: key = the frontmatter `name` (which must match the folder name), `title`, `whenToUse`.
    - Update the store's `description` if the change alters what the store covers. If unsure, update it.
 2. **Update any runbook** in `runbooks/` that lists the agent under `agents` (renamed or removed agents).
-3. **Regenerate and check** — in `mcp-server/`: `npm run docs`, then `npm run check`. This rewrites the store README and root README tables (including the agent counts) and fails on any mismatch between disk, `catalog.json`, runbooks, and the READMEs. CI runs the same check on every PR.
+3. **Update the trainer playbooks** — `delivery-agents-store/team-planner-and-trainer/playbooks.md`: the agent's row in "What each skill needs and produces", and any playbook it fits or is named in. `skill-catalog.md` beside it is generated; don't edit it.
+4. **Regenerate and check** — in `mcp-server/`: `npm run docs`, then `npm run check`. This rewrites the store README and root README tables (including the agent counts) and the trainer's `skill-catalog.md`, and fails on any mismatch between disk, `catalog.json`, runbooks, the trainer playbooks, and the generated files. CI runs the same check on every PR.
 
 A change that adds/removes/updates an agent without updating `catalog.json` and the regenerated READMEs is incomplete.
