@@ -155,7 +155,7 @@
       }
     },
     "ux-agents-store": {
-      "description": "UX design and research — persona/journey/service-blueprint/competitive-analysis/prototype generation, design-consistency auditing, design-concept generation, interaction-design review, and design-rationale documentation",
+      "description": "UX design and research — persona/journey/service-blueprint/competitive-analysis/prototype generation, design-consistency and UI-copy-consistency auditing, design-concept generation, interaction-design review, and design-rationale documentation",
       "agents": {
         "persona-builder": {
           "title": "Persona Builder",
@@ -180,6 +180,10 @@
         "design-consistency-audit": {
           "title": "Design Consistency Audit",
           "whenToUse": "Auditing a built UI against the project's own design tokens for theme/token/contrast/a11y/spacing/UX consistency, with a gated fix mode"
+        },
+        "ui-copy-consistency-audit": {
+          "title": "UI Copy Consistency Audit",
+          "whenToUse": "Auditing a product's user-facing text against one agreed casing rule and its own i18n files — casing, terminology, punctuation, hardcoded strings, missing and unused translation keys, and optional locale drift — with a gated fix mode that edits only the base locale file and the code strings named in accepted findings, and never deletes or renames keys or touches other locales"
         },
         "design-concept-lab": {
           "title": "Design Concept Lab",
