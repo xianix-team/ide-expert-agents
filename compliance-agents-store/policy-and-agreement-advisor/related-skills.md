@@ -1,6 +1,6 @@
 # Related Skills
 
-Used in S2. Other skills in this library that make the documents more accurate, or build what they promise. This skill **recommends** them and the engineer decides and runs them.
+Used in S2. This skill **recommends** other skills in this library, and the engineer decides and runs them.
 
 ## When to recommend
 
@@ -8,9 +8,8 @@ Go through every row. If an Observed or Reported fact meets the signal, recommen
 
 | Signal in the facts | Recommend | What it gives the documents | When | Needs |
 |---|---|---|---|---|
-| Personal data of any kind, including logs, analytics, support tools, and AI prompts | `gdpr-controls-reviewer` | Personal-data inventory, vendor flows, retention, rights functions, and the role question, for the privacy policy, cookie policy, DPA, sub-processor list, and retention policy | **Before drafting or reviewing** those | Codebase |
+| Personal data of any kind, including logs, analytics, support tools, and AI prompts (so AI that uses personal data gets both this row and the next) | `gdpr-controls-reviewer` | Personal-data inventory, vendor flows, retention, rights functions, and the role question, for the privacy policy, cookie policy, DPA, sub-processor list, and retention policy | **Before drafting or reviewing** those | Codebase |
 | AI features: model calls, generated content, scoring, recommendations, automated decisions, agents | `eu-ai-act-controls-reviewer` | Provisional risk tier, role, and transparency gaps, for the AI notice and AI terms. Its description says *agentic*, but its risk and transparency modules also fit other AI features. It reviews against the EU act: see **Market Triggers** for its status in Norway | **Before drafting or reviewing** those | Codebase with AI |
-| AI that processes personal data | Both of the above | As above, plus data sent to AI providers | **Before drafting or reviewing** | Codebase |
 | AI agents that use tools or act for the user | `agentic-ai-reviewer` | Whether stated human oversight, limits, and safeguards exist | Before making those statements | Agentic codebase |
 | A document describes security measures (DPA annex, security statement) | `owasp-security-scanner` | Code weaknesses that contradict a stated measure. Not proof that a measure works | Before making those statements | Codebase, web access |
 | Sign-in, access control, or MFA is promised and is missing or weak | `auth-implementer` | Builds it | Before the promise takes effect | Codebase |
