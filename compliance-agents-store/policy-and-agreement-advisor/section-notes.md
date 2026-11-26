@@ -1,6 +1,6 @@
 # Section Notes
 
-Used in D2 and D3. **Every heading in a draft gets a note** on why the section matters and why this product's document needs to consider it. The notes replace legal wording and don't hint at any. The list below is general background, not read by a lawyer, and not legal advice.
+Used in D2 and D3. **Every heading in a draft gets a note** on why the section matters and why this product's document needs to consider it. The notes replace legal wording and don't hint at any. The list below is general background, not legal advice, and it has not had a legal read. The lawyers confirm the notes when they approve the draft.
 
 ## Format
 

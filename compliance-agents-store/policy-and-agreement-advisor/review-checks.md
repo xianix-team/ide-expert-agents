@@ -26,11 +26,11 @@ For every commitment ask: **who decided it, what delivers it, and how would we k
 
 For an SLA or support agreement:
 
-1. **Make the number concrete.** Downtime allowed in a 30-day month (720 hours), around the clock. For a business-hours SLA or another period, recalculate from the agreed hours: allowed = agreed minutes × (100% − target):
+1. **Make the number concrete.** Write the target as a fraction of 1 first (99.9% is 0.999). Allowed downtime = period × (1 − target). For 99.9% over a 720-hour month: 720 × (1 − 0.999) = 0.72 hours = 43 min 12 s. Do not multiply by (100 − 99.9). Check a 720-hour, around-the-clock month against this table, and recalculate the same way for business hours or another period:
 
    | Target | 99% | 99.5% | 99.9% | 99.95% | 99.99% |
    |---|---|---|---|---|---|
-   | Allowed | 7 h 12 min | 3 h 36 min | 43 min 12 s | 21 min 36 s | 4 min 19 s |
+   | Allowed in 720 hours | 7 h 12 min | 3 h 36 min | 43 min 12 s | 21 min 36 s | 4 min 19 s |
 
 2. **Definition:** formula, period, measuring point, what counts as "down", partial outages, exclusions, and planned maintenance. Anything undefined is **Unclear to deliver**.
 3. **Dependencies:** services that must all work multiply: 99.95% × 99.99% × 99.9% ≈ 99.84%. This is a rough ceiling that assumes independent failures and no redundancy. Ask the engineer for the vendor SLA of the tier in use. A vendor SLA is the point where it owes credit, not a prediction.
