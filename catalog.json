@@ -52,7 +52,7 @@
       }
     },
     "architect-agents-store": {
-      "description": "Architecture design, review, and cloud deployment inspection — product backend and frontend architecture design, deployment fitness assessment, agentic AI review, product-engineering foundations checklist, and release readiness checklist",
+      "description": "Architecture design, review, and cloud infrastructure review — product backend and frontend architecture design, infrastructure review of IaC, pipelines, and live cloud deployments, agentic AI review, product-engineering foundations checklist, and release readiness checklist",
       "agents": {
         "product-backend-architect": {
           "title": "Product Backend Architect",
@@ -64,7 +64,7 @@
         },
         "deployment-architect": {
           "title": "Deployment Architect",
-          "whenToUse": "When you want to inspect a live cloud deployment on Azure, AWS, or GCP — authenticates via the local CLI, discovers all resources, produces an as-deployed architecture document, and runs a structured fitness assessment across performance, security, reliability, robustness, observability, and cost efficiency. Read-only, never modifies resources"
+          "whenToUse": "When you want an infrastructure architecture review and improvement advice for a product on Azure, AWS, or GCP — examines the IaC (Terraform, Bicep/ARM, CloudFormation/CDK, Pulumi, Kubernetes/Helm, Dockerfiles) and CI/CD pipelines in the repo, inspects the live deployment through a read-only CLI session you log in to, detects drift between code and what is running, and scores it against Well-Architected best practice across security, reliability, performance, robustness, observability, cost, IaC quality, and pipeline safety. Writes an as-deployed architecture document and an infrastructure review with evidence-backed findings, a prioritised roadmap, and a target-state recommendation. Read-only on the cloud and the repo; can run code-only or live-only"
         },
         "agentic-ai-reviewer": {
           "title": "Agentic AI Reviewer",
