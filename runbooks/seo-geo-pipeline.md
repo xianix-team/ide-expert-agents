@@ -36,7 +36,7 @@ Check which stage outputs exist by looking for:
 
 1. `docs/seo/seo-audit.md` (or any `*seo-audit*` file under `docs/`)
 2. `docs/seo/geo-audit.md` (or any `*geo-audit*` file under `docs/`)
-3. Evidence of recent technical SEO changes — look for `llms.txt` in `public/`, AI-crawler entries in `robots.txt`, JSON-LD in key page files
+3. Evidence of recent technical SEO changes — look for `llms.txt` in `public/`, AI-crawler entries in `robots.txt`, JSON-LD in key page files. **Important:** the presence of `llms.txt` or JSON-LD alone does not make Stage 2 Done. Cross-check against the audit report: if the audit report has unaddressed Critical or Important findings that those files should fix, Stage 2 is Partial, not Done.
 4. Any content-optimizer change log comments or recent meta description updates
 
 ---

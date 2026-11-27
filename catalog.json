@@ -334,7 +334,7 @@
         },
         "mobile-security-scanner": {
           "title": "Mobile Security Scanner",
-          "whenToUse": "When you want a read-only security audit of a mobile project against the OWASP Mobile Top 10 (2024) — insecure data storage (plain SharedPreferences/UserDefaults/AsyncStorage for PII/tokens), hardcoded secrets and API keys, debug flags left in production builds, sensitive data in logs, deep link open-redirect risks, missing certificate pinning, excessive AndroidManifest/Info.plist permissions, and binary protection gaps (ProGuard/R8, symbol stripping). Supports React Native, Flutter, native Android, and native iOS. Strictly read-only. Use before a production release, before a security review, or alongside mobile-app-compliance for a full pre-submission audit"
+          "whenToUse": "When you want a read-only security audit of a mobile project against the OWASP Mobile Top 10 (2024) — insecure data storage (plain SharedPreferences/UserDefaults/AsyncStorage for PII/tokens), hardcoded secrets and API keys, debug flags left in production builds, sensitive data in logs, deep link open-redirect risks, missing certificate pinning, excessive AndroidManifest/Info.plist permissions, and binary protection gaps (ProGuard/R8, symbol stripping). Supports React Native, Flutter, native Android, and native iOS. Strictly read-only. Use before a production release, before a security review, or alongside rn-app-compliance for a full pre-submission audit"
         },
         "rn-new-arch-migrator": {
           "title": "RN New Architecture Migrator",

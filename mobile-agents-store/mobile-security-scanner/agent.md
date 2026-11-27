@@ -1,13 +1,13 @@
 ---
 name: mobile-security-scanner
-description: "Read-only security audit of a mobile project against the OWASP Mobile Top 10 (2024) and mobile-specific threat patterns: insecure data storage (plain SharedPreferences/UserDefaults/AsyncStorage for PII/tokens), hardcoded secrets and API keys, debug flags left in production builds, sensitive data in logs, deep link open-redirect risks, missing certificate pinning, excessive AndroidManifest/Info.plist permissions, and binary protection gaps (ProGuard/R8, bitcode). Supports React Native, Flutter, native Android (Java/Kotlin), and native iOS (Objective-C/Swift). Strictly read-only — never modifies code. Use before a production release, before a security review, or when asked to audit mobile security."
+description: "Read-only security audit of a mobile project against the OWASP Mobile Top 10 (2024) and mobile-specific threat patterns: insecure data storage (plain SharedPreferences/UserDefaults/AsyncStorage for PII/tokens), hardcoded secrets and API keys, debug flags left in production builds, sensitive data in logs, missing certificate pinning, excessive AndroidManifest/Info.plist permissions, and binary protection gaps (ProGuard/R8, symbol stripping). Supports React Native, Flutter, native Android (Java/Kotlin), and native iOS (Objective-C/Swift). Strictly read-only — never modifies code. Use before a production release, before a security review, or when asked to audit mobile security."
 tools:
   - Read
   - Glob
   - Grep
   - WebFetch
 autonomy: high
-human-judgement: medium
+human-judgement: high
 ---
 
 # Mobile Security Scanner
@@ -205,6 +205,27 @@ If network calls are present but no pinning config found: flag as Medium (inform
 
 ---
 
+### Check 5b — Cleartext Traffic (M5)
+
+**Android**
+
+Read `android/app/src/main/AndroidManifest.xml`. Check:
+- `android:usesCleartextTraffic="true"` on the `<application>` element — flag as High; cleartext HTTP is blocked by default on API 28+, and explicitly enabling it is a security regression.
+
+Glob `android/app/src/main/res/xml/network_security_config.xml`. If present, check for:
+- `<base-config cleartextTrafficPermitted="true">` — flag as High
+- Domain-specific `<domain-config cleartextTrafficPermitted="true">` — flag as Medium (may be intentional for local dev; verify no production domains are included)
+
+**iOS**
+
+Read `ios/*/Info.plist`. Check for:
+- `NSAllowsArbitraryLoads: true` under `NSAppTransportSecurity` — flag as High; disables ATS for all HTTP connections
+- `NSExceptionAllowsInsecureHTTPLoads: true` under a domain exception — flag as Medium per domain
+
+Severity: High for blanket cleartext allowance; Medium for scoped exceptions requiring verification.
+
+---
+
 ### Check 6 — Excessive Permissions (M8)
 
 **Android: AndroidManifest.xml**
@@ -242,10 +263,9 @@ Read `android/app/build.gradle`. Check:
 
 If `minifyEnabled false` for release: flag High.
 
-**iOS: Bitcode / Symbol stripping**
+**iOS: Symbol stripping**
 
 Glob `ios/*.xcodeproj/project.pbxproj`. Check:
-- `ENABLE_BITCODE = YES` for archive builds (iOS < 16 — improves binary protection; deprecated in Xcode 14+ for iOS 16+ targets)
 - `STRIP_INSTALLED_PRODUCT = YES` for release builds
 - `DEPLOYMENT_POSTPROCESSING = YES` for release builds
 

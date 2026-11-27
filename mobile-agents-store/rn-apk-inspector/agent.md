@@ -79,8 +79,8 @@ Build first:
 ## A2 — Extract Native Libraries
 
 ```bash
-TMPDIR=$(mktemp -d)
-unzip -o "$APK_PATH" "lib/arm64-v8a/*.so" "lib/armeabi-v7a/*.so" "lib/x86_64/*.so" -d "$TMPDIR" 2>/dev/null
+WORK_DIR=$(mktemp -d)
+unzip -o "$APK_PATH" "lib/arm64-v8a/*.so" "lib/armeabi-v7a/*.so" "lib/x86_64/*.so" -d "$WORK_DIR" 2>/dev/null
 ```
 
 If no `.so` files are extracted: `No native libraries found in APK — no binary alignment checks required.` Stop here.
@@ -91,11 +91,25 @@ If ABI filter is `arm64-v8a` only, skip `armeabi-v7a` and `x86_64`.
 
 ## A3 — Check Each .so for 16 KB Alignment
 
+**Zip alignment check (run once per APK):**
+```bash
+zipalign -c -P 16 -v 4 "$APK_PATH" 2>&1
+```
+If `zipalign` is not on PATH, skip this check and note it as unverified. A failure here means the APK zip entries are not 16-byte aligned, which is a separate issue from ELF alignment but also required for Android 15+.
+
+**ELF LOAD segment alignment (run per .so):**
+
 For each extracted `.so`, run:
 
-**readelf (preferred):**
+**readelf (preferred) — use `-W` flag to prevent line-wrapping of 64-bit ELF headers:**
 ```bash
-readelf -l "$SO_FILE" 2>/dev/null | grep -E "LOAD|p_align"
+readelf -lW "$SO_FILE" 2>/dev/null
+```
+
+Parse the output: for each `LOAD` segment line, extract the `Align` column (last field on the line). Example output:
+```
+  LOAD           0x000000 0x00000000 0x00000000 0x12345 0x12345 R   0x10000
+  LOAD           0x013000 0x00013000 0x00013000 0x05678 0x05678 RWE 0x10000
 ```
 
 **objdump (fallback):**
@@ -103,11 +117,12 @@ readelf -l "$SO_FILE" 2>/dev/null | grep -E "LOAD|p_align"
 objdump -p "$SO_FILE" 2>/dev/null | grep -i "align"
 ```
 
-**Pass/fail rule:**
-- `p_align = 0x4000` (16384) → **PASS** — 16 KB compliant
-- `p_align = 0x1000` (4096) → **FAIL** — 4 KB only, will crash on 16 KB page-size devices
+**Pass/fail rule for each LOAD segment's `Align` value:**
+- `Align ≥ 0x4000` (e.g. `0x4000` or `0x10000`) → **PASS** — 16 KB compliant
+- `Align = 0x1000` (4096) → **FAIL** — 4 KB only, will crash on 16 KB page-size devices
+- If multiple LOAD segments, the library passes only when **all** LOAD segments pass.
 
-Record: library name, ABI, alignment value, pass/fail.
+Record: library name, ABI, alignment value(s), pass/fail.
 
 ---
 
@@ -117,8 +132,8 @@ For each failing `.so`, map to its npm package using the table below. If the lib
 
 | `.so` file | npm package | Min compliant version |
 |------------|-------------|----------------------|
-| `libhermes.so` | `react-native` | 0.74.0 |
-| `libturbomodulejsijni.so` | `react-native` | 0.74.0 |
+| `libhermes.so` | `react-native` | 0.77.0 |
+| `libturbomodulejsijni.so` | `react-native` | 0.77.0 |
 | `libreanimated.so` | `react-native-reanimated` | 3.6.0 |
 | `librnscreens.so` | `react-native-screens` | 3.30.0 |
 | `libvisionreactnative.so` | `react-native-vision-camera` | 4.0.0 |
@@ -129,7 +144,7 @@ For each failing `.so`, map to its npm package using the table below. If the lib
 ## A5 — Clean Up
 
 ```bash
-rm -rf "$TMPDIR"
+rm -rf "$WORK_DIR"
 ```
 
 ---
@@ -143,14 +158,14 @@ APK Inspector — 16 KB Page-Size Alignment
 APK: app-release.apk
 
 arm64-v8a  (4 libraries)
-  ✓  libhermes.so              p_align=0x4000  (16 KB)
-  ✓  libturbomodulejsijni.so   p_align=0x4000  (16 KB)
-  ✗  libreanimated.so          p_align=0x1000  (4 KB)   → upgrade react-native-reanimated ≥ 3.6.0
-  ✓  libfbjni.so               p_align=0x4000  (16 KB)
+  ✓  libhermes.so              Align=0x10000  (64 KB — passes ≥16 KB check)
+  ✓  libturbomodulejsijni.so   Align=0x10000  (64 KB)
+  ✗  libreanimated.so          Align=0x1000   (4 KB)   → upgrade react-native-reanimated ≥ 3.6.0
+  ✓  libfbjni.so               Align=0x10000  (64 KB)
 
 armeabi-v7a  (2 libraries)
-  ✓  libhermes.so              p_align=0x4000  (16 KB)
-  ✗  libreanimated.so          p_align=0x1000  (4 KB)   → upgrade react-native-reanimated ≥ 3.6.0
+  ✓  libhermes.so              Align=0x10000  (64 KB)
+  ✗  libreanimated.so          Align=0x1000   (4 KB)   → upgrade react-native-reanimated ≥ 3.6.0
 
 Summary: 4 of 6 libraries compliant across all ABIs.
 
@@ -174,5 +189,5 @@ Recommend next step: use `rn-app-compliance` to check and fix build-config viola
 - Read-only on all project files. The only write is the temp directory created and removed in A2–A5.
 - Never modifies the APK, build config, or any source file.
 - Does not install upgrades — only reports what to upgrade and the minimum version required.
-- If the APK was built without the compliance config fixes applied, results may not reflect a fixed build — say so if `rn-app-store-compliance` violations were noted.
+- If the APK was built without the compliance config fixes applied, results may not reflect a fixed build — say so if `rn-app-compliance` violations were noted.
 - Keeps output generic — no customer names, internal codenames, or secrets.

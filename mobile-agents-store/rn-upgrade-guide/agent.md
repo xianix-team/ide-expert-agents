@@ -86,7 +86,6 @@ Extract: breaking changes section, deprecation notices, required Node/JDK/NDK/Xc
 ### Classify diff items
 
 Parse the fetched diff and classify each changed file into one of:
-- **Auto (codemod available)** — standard RN template changes with an available `@react-native-community/upgrade-support` codemod
 - **Auto (direct edit)** — config file changes (Gradle, Podfile, build.gradle, metro.config.js, babel.config.js, tsconfig.json) this agent can apply directly
 - **Manual** — native iOS/Android project file changes requiring manual application or Xcode/Android Studio action
 - **Informational** — changes that only apply to new projects (e.g. new screen templates)
@@ -137,7 +136,6 @@ BREAKING CHANGES (from release notes)
   • <change 2>
 
 DIFF SUMMARY
-  Auto (codemod):       <n> files
   Auto (direct edit):   <n> files
   Manual:               <n> files
   Informational:        <n> files (skipped)
@@ -153,14 +151,14 @@ PLATFORM REQUIREMENTS
   NDK:   ≥ <version>
   Xcode: ≥ <version>
 
-Auto-applicable changes: <n>  |  Manual changes: <n>
+Auto-editable changes: <n>  |  Manual changes: <n>
 ```
 
 Then ask:
 
 > **Ready to apply changes?**
-> - **Yes, apply all auto changes** — apply codemods + direct config edits + incompatible library upgrades
-> - **Config changes only** — apply direct config edits only, skip codemods and library upgrades
+> - **Yes, apply all auto changes** — apply direct config edits + incompatible library upgrades
+> - **Config changes only** — apply direct config edits only, skip library upgrades
 > - **Report only** — stop here; I'll apply changes manually
 
 Do NOT make any changes until the user responds.
@@ -170,23 +168,6 @@ Do NOT make any changes until the user responds.
 ## U5 — Apply Changes
 
 Apply only what the user approved. After every file edit, re-read the file to confirm the change applied before continuing.
-
-### Run codemods (if approved)
-
-Check codemod availability:
-
-```bash
-npx react-native-codemod --list 2>/dev/null
-```
-
-For each applicable codemod for this version range, run it in dry-run first, then apply:
-
-```bash
-npx react-native-codemod <codemod-name> <projectPath>/src --dry-run
-npx react-native-codemod <codemod-name> <projectPath>/src
-```
-
-Record: codemod name, files affected, success/failure.
 
 ### Apply direct config edits
 
@@ -228,7 +209,6 @@ Upgrade Changes Applied
 ✓  android/gradle/wrapper/...    Gradle 8.3 → 8.6
 ✓  android/app/build.gradle      targetSdk 33 → 34
 ✓  ios/Podfile                   platform :ios, '13.0' → '13.4'
-✓  Codemod: class-components     12 files updated
 ✓  react-native-reanimated       3.3.0 → 3.6.0
 
 Remaining manual actions:
@@ -236,7 +216,7 @@ Remaining manual actions:
   • Update Xcode to ≥16.0 (current requirement for target SDK)
   • Run `cd ios && pod install` after Podfile changes
   • Run `cd android && ./gradlew clean` before first build
-  • Rebuild the app and run apk-inspector to verify 16 KB page-size alignment
+  • Rebuild the app and run rn-apk-inspector to verify 16 KB page-size alignment
 
 Files changed: <list all edited files>
 Commit these changes with your usual workflow.

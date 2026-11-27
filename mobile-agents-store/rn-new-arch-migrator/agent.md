@@ -45,7 +45,7 @@ Read `<projectPath>/package.json`. Extract:
 
 Read `android/gradle.properties`. Check current value of `newArchEnabled`.
 
-Read `ios/Podfile`. Check for `RCT_NEW_ARCH_ENABLED=1` in the `post_install` block.
+Read `ios/Podfile`. Check for `ENV['RCT_NEW_ARCH_ENABLED'] = '1'` before the `target` block (top-level, not inside `post_install`).
 
 Log:
 ```
@@ -81,9 +81,9 @@ Parse the table of library names, their New Architecture status, and the minimum
 | `react-native-maps` | Compatible | 1.14.0 |
 | `react-native-navigation` | Partial — interop layer required | 7.36.0 |
 | `react-native-camera` | Incompatible — migrate to `react-native-vision-camera` ≥4 | — |
-| `@react-native-community/async-storage` | Compatible | 1.21.0 |
+| `@react-native-async-storage/async-storage` | Compatible | 1.21.0 |
 | `react-native-mmkv` | Compatible | 2.11.0 |
-| `react-native-firebase` | Compatible | 20.0.0 |
+| `@react-native-firebase/app` | Compatible | 20.0.0 |
 | `react-native-push-notification` | Incompatible — migrate to `@notifee/react-native` | — |
 
 ---
@@ -193,25 +193,13 @@ newArchEnabled=true
 
 ### Enable New Architecture — iOS
 
-**ios/Podfile**: in the `post_install` block, add or update:
-
-```ruby
-react_native_post_install(
-  installer,
-  config[:reactNativePath],
-  :mac_catalyst_enabled => false,
-  :ccache_enabled => false
-)
-__apply_Xcode_12_5_M1_post_install_workaround(installer) if installer.pods_project
-```
-
-Ensure the file contains the following at the top-level (not inside a target block):
+**ios/Podfile**: add or update at the top level, **before** the `target` declaration (not inside `post_install`):
 
 ```ruby
 ENV['RCT_NEW_ARCH_ENABLED'] = '1'
 ```
 
-Place it before the `target` declaration.
+Ensure the `post_install` block calls `react_native_post_install` with the correct arguments for the project's RN version. Do not add `__apply_Xcode_12_5_M1_post_install_workaround` — that helper was removed from the RN template in 0.72 and will cause `pod install` to fail on 0.73+ projects.
 
 ### Upgrade incompatible libraries (if approved)
 
@@ -296,6 +284,6 @@ Recommend next steps:
 - Re-reads every edited file after each change to confirm the fix applied.
 - Never modifies files in `node_modules/`, `.git/`, `build/`, or `dist/`.
 - Codegen spec scaffolds are marked as incomplete — always notes that method signatures must be filled in manually.
-- For Expo managed workflow projects: warns that New Architecture enablement is controlled by the Expo SDK and cannot be overridden via `gradle.properties`; recommends upgrading to Expo SDK 50+ which enables it by default.
+- For Expo managed workflow projects: warns that New Architecture enablement is controlled by the Expo SDK and cannot be overridden via `gradle.properties`; recommends upgrading to Expo SDK 52+ which enables it by default.
 - Never opens a pull request, creates a branch, or runs any `git` command. Version control is the user's responsibility.
 - Keeps output generic — no customer names, internal codenames, or secrets.

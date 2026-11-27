@@ -63,6 +63,8 @@ https://developers.google.com/search/docs/appearance/structured-data/intro-struc
 
 Extract and cache the key thresholds (title length, description length, structured-data requirements). If the fetch fails, fall back to known-good values: title 50–60 chars, meta description 150–160 chars, and note the fallback in the report.
 
+> **Note:** The Google Search Central pages fetched above do not explicitly state title and description character length limits — Google trims displayed snippets based on pixel width, and no official length is documented. The fallback values (50–60 / 150–160 chars) are widely used industry heuristics, not authoritative thresholds. Always note in the report that length thresholds are heuristic, and report them as advisory-level findings rather than Critical or Important.
+
 ---
 
 ## S2 — Crawlability Checks
@@ -149,7 +151,7 @@ For pages with no JSON-LD:
 
 These are config signals, not runtime measurements. Flag the absence of:
 
-- **Image optimization**: images served via `<img>` without `loading="lazy"` and explicit `width`/`height` (or framework image component). Flag `<img src="...">` without these attributes.
+- **Image optimization**: images served via `<img>` without `loading="lazy"` and explicit `width`/`height` (or framework image component). Flag `<img src="...">` without these attributes. **Exception:** do not flag the first (or hero/LCP) image for missing `loading="lazy"` — the LCP image must NOT be lazy-loaded, as that delays the Largest Contentful Paint. Only flag images that are clearly below the fold or not the primary hero image.
 - **Font loading**: `font-display: swap` or `optional` in CSS or font config. Flag blocking font loads.
 - **Script loading**: `<script>` tags without `async` or `defer` in `<head>` (unless framework-managed).
 - **Render-blocking CSS**: large inline `<style>` blocks in `<head>` (> 5 KB).

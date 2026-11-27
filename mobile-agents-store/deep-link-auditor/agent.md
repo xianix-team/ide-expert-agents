@@ -7,7 +7,7 @@ tools:
   - Grep
   - WebFetch
 autonomy: high
-human-judgement: low
+human-judgement: high
 ---
 
 # Deep Link Auditor
@@ -102,12 +102,15 @@ Parse and validate:
 - `target.package_name` matches the app's `applicationId` from `android/app/build.gradle`
 - `target.sha256_cert_fingerprints` is a non-empty array
 
-**If fetch fails:** flag as Error — App Links verification will fail on Android, falling back to custom scheme.
+**If fetch fails (network error, 404, timeout):** mark as **Warning** — cannot verify; add to Manual Verification list with note "assetlinks.json unreachable — verify domain and hosting before release".
 
 **Common issues to flag:**
-- `assetlinks.json` served with wrong `Content-Type` (must be `application/json`)
 - Only debug keystore fingerprint present, no release fingerprint — App Links fail in production builds
 - Domain redirects on `/.well-known/` path — App Links verification does not follow redirects
+
+**Manual Verification (WebFetch cannot reliably determine):**
+- `Content-Type` header of assetlinks.json response (must be `application/json`)
+- Full HTTP redirect chain on `/.well-known/assetlinks.json`
 
 ---
 

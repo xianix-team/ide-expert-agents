@@ -73,25 +73,34 @@ Score this dimension:
 - Max dimension score: 60 pts
 
 **AI crawlers in robots.txt**:
-Check for explicit `Allow` or `Disallow` directives for each known AI crawler:
+Check for explicit `Allow` or `Disallow` directives for each known AI crawler. Split by crawler type — only search/grounding crawlers are needed for citation:
 
-| Crawler | User-Agent |
-|---|---|
-| OpenAI GPTBot | `GPTBot` |
-| OpenAI ChatGPT-User | `ChatGPT-User` |
-| Google Gemini | `Google-Extended` |
-| Perplexity | `PerplexityBot` |
-| Anthropic | `ClaudeBot`, `anthropic-ai` |
-| Bing AI | `bingbot` (covered by default) |
-| Common Crawl | `CCBot` |
+**Search / grounding crawlers** (these crawlers fetch content to answer user queries in real time; blocking them prevents citation):
+
+| Crawler | User-Agent | Engine |
+|---|---|---|
+| OpenAI SearchBot | `OAI-SearchBot` | ChatGPT Browse / web search |
+| Anthropic | `Claude-SearchBot`, `Claude-User` | Claude.ai web search |
+| Perplexity | `PerplexityBot` | Perplexity.ai |
+
+**Training crawlers** (these crawlers collect training data; blocking them is a deliberate IP/privacy choice, **not a GEO defect**):
+
+| Crawler | User-Agent | Note |
+|---|---|---|
+| OpenAI GPTBot | `GPTBot` | Training data only |
+| OpenAI ChatGPT-User | `ChatGPT-User` | Training data only |
+| Google Extended | `Google-Extended` | Opts out of AI training use; does NOT control AI Overviews or search grounding |
+| Common Crawl | `CCBot` | Training data aggregator |
+| Anthropic training | `ClaudeBot`, `anthropic-ai` | Training data only |
 
 Flag:
-- Crawlers explicitly blocked: Critical (the site will not be cited by that engine's grounded answers)
-- Crawlers not mentioned (default allow): Noted, not a defect — confirm intentional
-- `Disallow: /` for all bots (overly restrictive robots.txt): Critical
+- Search/grounding crawlers (`OAI-SearchBot`, `Claude-SearchBot`, `Claude-User`, `PerplexityBot`) explicitly blocked: **Critical** — the site will not be cited by that engine's grounded answers
+- Training crawlers blocked: **Noted** — deliberate choice, not a defect; include in report under "Training crawler access" but do not score against
+- `Disallow: /` for all bots (overly restrictive robots.txt): **Critical**
+- Crawlers not mentioned (default allow): Noted, not a defect
 
 Score:
-- No AI crawlers blocked: +20 pts
+- No search/grounding crawlers blocked: +20 pts
 - Sitemap directive present: +5 pts
 - Max dimension score: 25 pts
 
@@ -241,6 +250,10 @@ Citation-Worthiness      __     40
 ─────────────────────────────────
 Total                    __    240
 Tier: GEO [Ready|Partial|Weak|Absent]
+
+⚠ Heuristic score only. No major AI engine has publicly confirmed it reads llms.txt or uses
+  it as a citation signal. Scores reflect structural best-practice alignment, not measured
+  citation probability.
 
 TOP 3 ACTIONS:
 1. ...

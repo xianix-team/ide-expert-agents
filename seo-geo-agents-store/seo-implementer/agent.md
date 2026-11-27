@@ -77,13 +77,13 @@ Categorize each fix and map it to the idiomatic framework approach. Use the `sch
 
 | Framework | JSON-LD approach |
 |---|---|
-| Next.js App Router | `<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />` in page or layout — always use `JSON.stringify` with no untrusted interpolation |
+| Next.js App Router | `<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, '\\u003c') }} />` in page or layout |
 | Next.js Pages Router | Same, inside `<Head>` |
-| Nuxt | `useSchemaOrg()` (if `nuxt-schema-org` is installed) or `useHead({ script: [{ type: 'application/ld+json', children: JSON.stringify(schema) }] })` |
-| Astro | `<script type="application/ld+json" set:json={schema} />` (Astro's `set:json` escapes automatically) |
-| Remix | `<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />` in route component |
-| SvelteKit | `<script type="application/ld+json">{JSON.stringify(schema)}</script>` in `<svelte:head>` |
-| Plain HTML | `<script type="application/ld+json">{ ... }</script>` |
+| Nuxt | `useSchemaOrg()` (if `nuxt-schema-org` is installed) or `useHead({ script: [{ type: 'application/ld+json', children: JSON.stringify(schema).replace(/</g, '\\u003c') }] })` |
+| Astro | `<script type="application/ld+json" set:json={schema} />` (Astro's `set:json` escapes `</script>` automatically — no manual replacement needed) |
+| Remix | `<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, '\\u003c') }} />` in route component |
+| SvelteKit | Use `{@html ...}` inside `<svelte:head>` with the escaped string: `{@html '<script type="application/ld+json">' + JSON.stringify(schema).replace(/</g, '\\u003c') + '<\/script>'}` |
+| Plain HTML | `<script type="application/ld+json">{ ... }</script>` — escape `</script>` with `</script>` if any string values may contain `<` |
 
 For each fix, the plan entry states:
 - **What**: the fix in plain language
@@ -138,7 +138,7 @@ Apply only the changes in the approved set. For each change:
 
 1. **Read the target file** in full before editing (never edit blind).
 2. **Apply the minimum change** — extend the existing pattern, don't rewrite the file.
-3. **JSON-LD safety**: always use `JSON.stringify(schema)` or the framework's safe interpolation method. Never use string template literals to embed user-controlled or dynamic values in JSON-LD directly.
+3. **JSON-LD safety**: always use `JSON.stringify(schema).replace(/</g, '\\u003c')` or the framework's safe interpolation method (e.g. Astro's `set:json`). `JSON.stringify` alone does not escape `</script>` — this is a required XSS prevention step. Never use string template literals to embed user-controlled or dynamic values in JSON-LD directly.
 4. **Canonical URLs**: always absolute (`https://example.com/...`), not protocol-relative or root-relative.
 5. **robots.txt**: preserve all existing directives; only append new AI-crawler entries or fix existing ones — never delete existing Allow/Disallow lines.
 6. **llms.txt**: follow the spec (`# Product Name`, `> description`, `## Section` with `- [Title](URL): description` lines). Create at `public/llms.txt`.
@@ -185,7 +185,7 @@ Recommend next steps:
 
 - Edits files only after explicit approval in S3. Never makes a change before the checkpoint.
 - Each file is fully read before it is edited — no blind edits.
-- JSON-LD is always serialized via `JSON.stringify` or a framework-safe equivalent — no raw string interpolation with dynamic values.
+- JSON-LD is always serialized via `JSON.stringify(schema).replace(/</g, '\\u003c')` or a framework-safe equivalent (e.g. Astro's `set:json`). `JSON.stringify` alone does not escape `</script>` — a string value containing `</script>` would break out of the script tag and enable XSS.
 - robots.txt edits are additive only — never removes existing directives without explicit user instruction.
 - Changes are minimal and targeted: extend the existing pattern, don't rewrite the file.
 - Does not audit (covered by `seo-auditor` / `geo-auditor`), does not optimize content prose (covered by `content-seo-optimizer`).

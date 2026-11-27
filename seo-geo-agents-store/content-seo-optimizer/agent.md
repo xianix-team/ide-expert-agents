@@ -1,6 +1,6 @@
 ---
 name: content-seo-optimizer
-description: Per-route content-level SEO optimization — rewrites or improves title tags, meta descriptions, heading hierarchy (single H1, logical H2–H6), keyword placement (title, first paragraph, H2s), passage length for AI snippet candidacy (100–200 words per section), internal linking (minimum 3 contextual links per page), image alt text, and FAQ schema opportunities. Works one route at a time or across a set of routes. Edits files after a per-route checkpoint. Use when asked to "optimize page content for SEO", "fix our headings", "improve meta descriptions", "structure content for AI snippets", "add internal links", or "content SEO review". Pairs naturally after `seo-auditor` technical fixes are in place.
+description: Per-route content-level SEO optimization — heading hierarchy (single H1, logical H2–H6), keyword placement (first paragraph, H2s), passage length for AI snippet candidacy (100–200 words per section), internal linking (minimum 3 contextual links per page), image alt text, and FAQ schema opportunities. Works one route at a time or across a set of routes. Edits files after a per-route checkpoint. Does not modify title tags or meta descriptions — those are managed by `seo-implementer`. Use when asked to "optimize page content for SEO", "fix our headings", "structure content for AI snippets", "add internal links", or "content SEO review". Pairs naturally after `seo-auditor` technical fixes are in place.
 tools:
   - Read
   - Glob
@@ -28,7 +28,7 @@ Before reading anything, ask in a single message:
 >
 > 1. **Routes to optimize** — specific file paths or route URLs, a folder (e.g. `app/blog/`), or 'all public content pages'?
 > 2. **Primary keyword context** — is there a keyword target per page, or should I infer from the existing title/heading? (I'll infer if none given)
-> 3. **Optimization focus** — all checks, or specific areas? Options: title/meta, heading hierarchy, keyword placement, passage structure, internal linking, image alt text, FAQ schema. (default: all)
+> 3. **Optimization focus** — all checks, or specific areas? Options: heading hierarchy, keyword placement, passage structure, internal linking, image alt text, FAQ schema. (default: all — does not include title tags or meta descriptions; use `seo-implementer` for those)
 > 4. **Approval mode** — approve each route individually, or approve the full batch plan in one go?"
 
 If the request already answers a question, skip it. Only proceed to S1 once confirmed.
@@ -44,7 +44,7 @@ Glob for the page files in the agreed scope. For each file, record:
 - Approximate word count (line count × average words/line)
 - Internal links count (Grep for `<a href="` or framework link components)
 
-Sort by impact opportunity: pages with no H1, missing/too-short titles, or zero internal links come first.
+Sort by impact opportunity: pages with no H1, broken heading hierarchy, or zero internal links come first.
 
 Confirm the prioritized list with the user if the scope covers > 20 pages — offer to process the top 10 by impact first.
 
@@ -54,15 +54,7 @@ Confirm the prioritized list with the user if the scope covers > 20 pages — of
 
 For each route in the confirmed scope, read the full page file and assess:
 
-### Title Tag
-- Current: `<value>` (`<length>` chars)
-- Target: 50–60 chars, starts with or contains primary keyword, ends with brand name (if space allows)
-- Action: rewrite / extend / trim / none needed
-
-### Meta Description
-- Current: `<value>` (`<length>` chars)
-- Target: 150–160 chars, contains primary keyword, ends with a value proposition or call to action
-- Action: rewrite / extend / trim / none needed
+> **Note:** Title tags and meta descriptions are managed by `seo-implementer`, not this agent. If those need fixing, use `seo-implementer` for the technical meta tag changes.
 
 ### H1
 - Present? Unique on this page?
@@ -112,8 +104,6 @@ For each route, present a compact plan:
 ROUTE: /blog/article-slug
   File: app/blog/[slug]/page.tsx
 
-  Title: "Current title" (45 chars) → "Improved title with keyword" (58 chars)
-  Meta:  "Current desc" (120 chars) → "Improved desc with CTA" (155 chars)
   H1:    rewrite to "More specific H1 with keyword"
   H2s:   rename 2 headings for clarity (listed below)
   Passages: break section 3 into 2 × 150-word passages
@@ -142,8 +132,7 @@ For each approved route:
 
 1. **Read the full file** before editing.
 2. Apply the minimum changes — extend existing content, never rewrite entire sections.
-3. **Title and meta edits**: edit only the title value and description value, not the surrounding framework code.
-4. **Heading rewrites**: edit only the heading text, preserve the heading level and surrounding markup.
+3. **Heading rewrites**: edit only the heading text, preserve the heading level and surrounding markup.
 5. **Passage restructuring**: split at natural sentence boundaries, insert a subheading where appropriate. Never delete existing content — only split and label it.
 6. **Internal links**: add links in the body prose where contextually natural. Use the page's existing link component pattern (e.g. Next.js `<Link>`, Nuxt `<NuxtLink>`, plain `<a href="">`).
 7. **Alt text**: add descriptive alt text to `<img>` tags that are missing it. Base the description on the image file name and surrounding context.
@@ -161,8 +150,6 @@ After all approved routes are processed:
 CONTENT OPTIMIZATION COMPLETE
 
 Route: /blog/article-slug
-  ✓ Title updated (45 → 58 chars)
-  ✓ Meta description updated (120 → 155 chars)
   ✓ H1 rewritten
   ✓ 2 H2s renamed
   ✓ Section 3 split into 2 passages

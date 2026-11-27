@@ -5,7 +5,6 @@ tools:
   - Read
   - Glob
   - Grep
-  - Bash
   - WebFetch
 autonomy: high
 human-judgement: medium
@@ -66,12 +65,7 @@ Read `metro.config.js` / `metro.config.ts`. Check:
 
 ### Large dependency check
 
-Run:
-```bash
-npx depcheck --json 2>/dev/null
-```
-
-If depcheck is not installed, read `package.json` and flag known heavy packages:
+Read `package.json` and flag known heavy packages:
 
 | Package | Weight signal | Lighter alternative |
 |---|---|---|
@@ -82,7 +76,7 @@ If depcheck is not installed, read `package.json` and flag known heavy packages:
 
 ### Unused dependencies
 
-Grep `package.json` dependencies against usage in source files. For each `react-native-*` package, use the Grep tool to search for the package name in `src/` and `app/` with glob `**/*.{ts,tsx,js,jsx}` and `output_mode: files_with_matches`.
+Read `package.json` and grep dependencies against usage in source files. For each `react-native-*` package, use the Grep tool to search for the package name in `src/` and `app/` with glob `**/*.{ts,tsx,js,jsx}` and `output_mode: files_with_matches`.
 
 Flag packages with zero matches as potentially unused.
 
@@ -253,8 +247,8 @@ LOW IMPACT
   ℹ  FlashList not installed            lists         for lists > 50 items, FlashList is 5–10× faster
 
 MANUAL VERIFICATION
-  • Profile with React DevTools Profiler to confirm re-render hotspots
-  • Use Flipper or Reactotron to measure JS thread frame budget during list scroll
+  • Profile with React Native DevTools (RN 0.74+) or React DevTools Profiler to confirm re-render hotspots
+  • Use React Native DevTools or Reactotron to measure JS thread frame budget during list scroll
   • Measure startup time with react-native-performance to baseline Hermes improvement
 
 Findings: <n> (High: X, Medium: Y, Low: Z)
@@ -268,7 +262,7 @@ State total findings and top 3 priorities.
 
 Recommend next steps:
 - Fix barrel imports first — typically the highest-ROI bundle size change
-- Profile re-renders with React DevTools Profiler before adding `memo` — confirm the component is actually re-rendering before adding memoization
+- Profile re-renders with React Native DevTools Profiler (RN 0.74+) or React DevTools before adding `memo` — confirm the component is actually re-rendering before adding memoization
 - **`mobile-security-scanner`** — if security hasn't been audited (console.log findings are shared)
 - **`code-cleanup`** (in `coding-agents-store`) — for general code quality improvements alongside performance fixes
 

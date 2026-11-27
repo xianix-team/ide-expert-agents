@@ -9,7 +9,7 @@ tools:
   - Edit
   - Write
   - WebFetch
-autonomy: high
+autonomy: medium
 human-judgement: medium
 ---
 
@@ -50,8 +50,9 @@ Extract from the fetched content:
 |---|---|---|
 | `targetSdkVersion` minimum | target-sdk | "new apps and app updates must target API level X" |
 | 16 KB required from API level | page-sizes | "Android X (API Y)" |
-| iOS min deployment target | upcoming-requirements | "iOS X or later" near "App Store" |
 | Xcode minimum | upcoming-requirements | "Xcode X or later" |
+
+> **Note:** The iOS minimum deployment target is not reliably stated on `upcoming-requirements`. Use the embedded fallback value for the deployment target check; do not update it from the live fetch.
 
 **If fetch succeeds:** use live values. Log: `✓ Live policy thresholds fetched.`
 
@@ -138,7 +139,7 @@ Read `android/gradle/wrapper/gradle-wrapper.properties`. Extract version from `d
 
 **React Native library requirements** (record for A4 — do not resolve yet)
 
-If `android-16kb-page-size` fails → note `react-native ≥ 0.74.0` required.
+If `android-16kb-page-size` fails → note `react-native ≥ 0.77.0` required.
 
 ### iOS checks (skip if scope is `android` only)
 
@@ -169,7 +170,7 @@ For Expo managed projects, also read `app.json` / `app.config.js` for `ios.deplo
 
 **React Native library requirements** (record for A4)
 
-If `ios-min-deployment-target` fails → note `react-native ≥ 0.73.0` required.
+If `ios-min-deployment-target` fails → note `react-native ≥ 0.73.0` required. Record for A4 — do not resolve in this stage.
 
 **Xcode version**
 
@@ -206,7 +207,7 @@ Auto-fixable:  5 of 6
 Manual only:   1 (Xcode version file)
 
 Library upgrades required (applied alongside config fixes if approved):
-  ⬆  react-native  installed: 0.71.13  →  required: ≥ 0.74.0  (16 KB page size)
+  ⬆  react-native  installed: 0.71.13  →  required: ≥ 0.77.0  (16 KB page size) — use rn-upgrade-guide
 ```
 
 If no violations: `✓ All checks passing. Project is compliant.` — stop here.
@@ -239,12 +240,38 @@ For KTS syntax:
 namespace = "com.example.app"
 ```
 
-### 16 KB page size — gradle.properties
+### 16 KB page size — gradle.properties and build.gradle
 
-Read `android/gradle.properties`. If `android.bundle.enableUncompressedNativeLibs` exists, update to `true`. If missing, append:
+**For AGP ≥ 8.5.1:** `android.bundle.enableUncompressedNativeLibs` is deprecated. Use the `packaging` block in `android/app/build.gradle` instead. Add or update inside the `android {}` block:
+
+```groovy
+android {
+    // ...
+    packaging {
+        jniLibs {
+            useLegacyPackaging false
+        }
+    }
+}
+```
+
+For KTS syntax:
+```kotlin
+android {
+    packaging {
+        jniLibs {
+            useLegacyPackaging = false
+        }
+    }
+}
+```
+
+**For AGP < 8.5.1:** in `android/gradle.properties`, if `android.bundle.enableUncompressedNativeLibs` exists update to `true`; if missing, append:
 ```
 android.bundle.enableUncompressedNativeLibs=true
 ```
+
+Determine which path applies by checking the AGP version found in A2.
 
 ### 16 KB page size — cmake arg (only if CMake block detected in A2)
 
@@ -279,7 +306,9 @@ distributionUrl=https\://services.gradle.org/distributions/gradle-8.6-all.zip
 
 ### PrivacyInfo.xcprivacy missing
 
-Create `ios/PrivacyInfo.xcprivacy`:
+Before creating the file, present each `NSPrivacyAccessedAPITypes` entry found in A2 to the user and ask them to confirm the correct reason code per API category. The default codes below are valid starting points, but the user must review and confirm them — Apple may reject the app if codes do not accurately describe the actual usage.
+
+Then create `ios/PrivacyInfo.xcprivacy` with the confirmed entries:
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -297,9 +326,11 @@ Create `ios/PrivacyInfo.xcprivacy`:
 </plist>
 ```
 
+**Manual action required:** After the file is created, it must be added to the Xcode project target (`Build Phases → Copy Bundle Resources`). Record this in the remaining manual actions list in A5.
+
 ### Required Reason APIs missing
 
-For each API category found in source but absent from `ios/PrivacyInfo.xcprivacy`, add the entry to `NSPrivacyAccessedAPITypes`. Use the first valid reason code as default:
+For each API category found in source but absent from `ios/PrivacyInfo.xcprivacy`, present the finding to the user with the suggested reason code and ask for confirmation before adding the entry to `NSPrivacyAccessedAPITypes`.
 
 | Category | Default reason code |
 |---|---|
@@ -318,13 +349,15 @@ For Expo managed projects, update `app.json` → `"deploymentTarget": "15.1"` un
 
 ### Library upgrades (if approved)
 
-For each library recorded in A2:
+> **React Native version upgrades are not applied here.** If `react-native` itself needs upgrading to meet the 16 KB page size requirement (≥ 0.77.0), inform the user and recommend running **`rn-upgrade-guide`** for a safe, diff-guided upgrade. Do not run `yarn add react-native@X` or equivalent — React Native upgrades involve native template changes that this agent cannot safely apply.
+
+For each **non-React-Native** library recorded in A2 (e.g. updated `react-native-reanimated` or other third-party packages):
 
 1. Detect package manager: check for `yarn.lock` → use `yarn add`; check for `bun.lockb` → use `bun add`; otherwise `npm install`.
 2. Determine the minimum required version dynamically from the checks in A2 — do not hardcode.
 3. Install, e.g.:
 ```bash
-yarn add react-native@0.74.0
+yarn add react-native-reanimated@3.6.0
 ```
 4. After install, re-read `package.json` and confirm the installed version meets the requirement.
 
@@ -350,8 +383,10 @@ Fixes Applied
 
 Remaining manual actions:
   • Add .xcode-version file with content "16.0" to ensure CI uses Xcode 16+
+  • Add PrivacyInfo.xcprivacy to Xcode project target: Build Phases → Copy Bundle Resources
   • Run `cd ios && pod install` to update CocoaPods lockfile after deployment target change
-  • Rebuild and run apk-inspector to verify 16 KB alignment in the compiled binary
+  • Rebuild and run rn-apk-inspector to verify 16 KB alignment in the compiled binary
+  • If react-native upgrade to ≥ 0.77.0 is required: use rn-upgrade-guide for a safe, diff-guided upgrade
 
 Files changed: <list all edited/created files>
 Commit these changes with your usual workflow.
